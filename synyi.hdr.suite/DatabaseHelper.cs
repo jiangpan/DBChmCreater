@@ -29,14 +29,34 @@ namespace synyi.hdr.suite
 
         public static string HdrV106 { get; set; }
 
+
+        public static string HdrV108 { get; set; }
+
+
+        public static Dictionary<string, string> sdf = null;
+
         static DatabaseHelper()
         {
+            if (sdf == null)
+            {
+                sdf = new Dictionary<string, string>();
+            }
+            foreach (ConnectionStringSettings item in ConfigurationManager.ConnectionStrings)
+            {
+                sdf.Add(item.Name, item.ConnectionString);
+
+            } 
+
+
+
             HdrNew = "hdr_new"; //曾用连接
             HdrOld = "hdr_old";  //曾用连接
             HdrNewLocal = "hdr_new_local"; //曾用连接
             HdrCda = "hdr_cda";
             Exampledb = "exampledb";
             HdrV106 = "hdr_v106";
+
+            HdrV108 = "hdr_v108";
             //设置当前连接串
             dbConnectionString = ConfigurationManager.ConnectionStrings[HdrNewLocal].ConnectionString;
             dbProviderName = ConfigurationManager.ConnectionStrings[HdrNewLocal].ProviderName; //默认连接
