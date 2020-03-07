@@ -24,5 +24,21 @@ namespace DBChmCreater
         {
             InitializeComponent();
         }
+
+        private void ConnDbBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ConnWindow cw = new ConnWindow(0);
+            cw.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            cw.ShowDialog();
+            if (cw.chosed)
+            {
+                //
+                //cbbDbtype.SelectedIndex = fc.index;
+                //txtConn.Text = fc.conn;
+
+                //
+
+            }
+        }
     }
 }
