@@ -1,0 +1,31 @@
+﻿<Window x:Class="DBChmCreater.wndConn"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DBChmCreater"
+        mc:Ignorable="d"
+        Title="wndConn" Height="303" Width="457">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Label Grid.Row="0" Grid.Column="0">数据库类型：</Label>
+        <Label Grid.Row="1" Grid.Column="0">服务器地址：</Label>
+        <Label Grid.Row="2" Grid.Column="0">数据库实：例：</Label>
+        <Label Grid.Row="3" Grid.Column="0">用户名：</Label>
+        <Label Grid.Row="4" Grid.Column="0">密码：</Label>
+        <TextBlock Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" >aaaa</TextBlock>
+    </Grid>
+</Window>

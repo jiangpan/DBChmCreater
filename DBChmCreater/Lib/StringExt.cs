@@ -2,7 +2,7 @@
 using System.Data;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
+//using System.Windows.Forms;
 
 
 namespace System.Runtime.CompilerServices
@@ -30,6 +30,8 @@ namespace DBChmCreater.Ext
             return string.Format(s, args);
         }
         #endregion
+
+        /*
 
         //全选
         public static void SelectedAll(this CheckedListBox ckb, string key = null)
@@ -85,7 +87,7 @@ namespace DBChmCreater.Ext
                 ckb.SetItemChecked(i, !check);
             }
         }
-
+        */
         #region DataTable条件查询获取子DataTable
         /// <summary>
         /// DataTable条件查询获取子DataTable
@@ -107,6 +109,7 @@ namespace DBChmCreater.Ext
 
         #endregion
 
+        /*
         public static void EnableControl(this Form frm, bool enabled)
         {
             foreach (Control control in frm.Controls)
@@ -114,6 +117,6 @@ namespace DBChmCreater.Ext
                 control.Enabled = enabled;
             }
         }
-
+        */
     }
 }
