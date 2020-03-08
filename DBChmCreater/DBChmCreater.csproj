@@ -145,4 +145,9 @@
     <Resource Include="synyibitbug_favicon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>powershell -Command "(gc $(ProjectDir)\Properties\AssemblyInfo.cs) -replace 'assembly: AssemblyInformationalVersion\(".*"\)',('assembly: AssemblyInformationalVersion(\"git-{0}\")' -f (git rev-parse --short HEAD)) | Out-String | Out-File -Encoding UTF8 $(ProjectDir)\Properties\AssemblyInfo.cs"
+
+powershell -Command "(gc -Raw $(ProjectDir)\Properties\AssemblyInfo.cs) -replace '(\r\n){3,}','$1' | Out-File -Encoding UTF8 $(ProjectDir)\Properties\AssemblyInfo.cs"</PreBuildEvent>
+  </PropertyGroup>
 </Project>
