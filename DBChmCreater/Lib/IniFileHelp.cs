@@ -44,55 +44,29 @@ namespace DBChmCreater.Common
         private static class NativeMethods
         {
             [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-            public static extern int GetPrivateProfileSectionNames(IntPtr lpszReturnBuffer,
-                                                                   uint nSize,
-                                                                   string lpFileName);
+            public static extern int GetPrivateProfileSectionNames(IntPtr lpszReturnBuffer,uint nSize,string lpFileName);
 
             [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-            public static extern uint GetPrivateProfileString(string lpAppName,
-                                                              string lpKeyName,
-                                                              string lpDefault,
-                                                              StringBuilder lpReturnedString,
-                                                              int nSize,
-                                                              string lpFileName);
+            public static extern uint GetPrivateProfileString(string lpAppName,string lpKeyName,string lpDefault,StringBuilder lpReturnedString,int nSize,string lpFileName);
 
             [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-            public static extern uint GetPrivateProfileString(string lpAppName,
-                                                              string lpKeyName,
-                                                              string lpDefault,
-                                                              [In, Out] char[] lpReturnedString,
-                                                              int nSize,
-                                                              string lpFileName);
+            public static extern uint GetPrivateProfileString(string lpAppName,string lpKeyName,string lpDefault,[In, Out] char[] lpReturnedString,int nSize,string lpFileName);
 
             [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-            public static extern int GetPrivateProfileString(string lpAppName,
-                                                             string lpKeyName,
-                                                             string lpDefault,
-                                                             IntPtr lpReturnedString,
-                                                             uint nSize,
-                                                             string lpFileName);
+            public static extern int GetPrivateProfileString(string lpAppName,string lpKeyName,string lpDefault,IntPtr lpReturnedString,uint nSize,string lpFileName);
 
             [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-            public static extern int GetPrivateProfileInt(string lpAppName,
-                                                          string lpKeyName,
-                                                          int lpDefault,
-                                                          string lpFileName);
+            public static extern int GetPrivateProfileInt(string lpAppName,string lpKeyName,int lpDefault,string lpFileName);
 
             [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-            public static extern int GetPrivateProfileSection(string lpAppName,
-                                                              IntPtr lpReturnedString,
-                                                              uint nSize,
-                                                              string lpFileName);
+            public static extern int GetPrivateProfileSection(string lpAppName,IntPtr lpReturnedString,uint nSize,string lpFileName);
 
             //We explicitly enable the SetLastError attribute here because 
             // WritePrivateProfileString returns errors via SetLastError. 
             // Failure to set this can result in errors being lost during 
             // the marshal back to managed code. 
             [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-            public static extern bool WritePrivateProfileString(string lpAppName,
-                                                                string lpKeyName,
-                                                                string lpString,
-                                                                string lpFileName);
+            public static extern bool WritePrivateProfileString(string lpAppName,string lpKeyName,string lpString,string lpFileName);
 
 
         }
@@ -142,9 +116,7 @@ namespace DBChmCreater.Common
         /// <paramref name="sectionName"/> or <paramref name="keyName"/> are 
         /// a null reference  (Nothing in VB) 
         /// </exception> 
-        public string GetString(string sectionName,
-                                string keyName,
-                                string defaultValue)
+        public string GetString(string sectionName,string keyName,string defaultValue)
         {
             if (sectionName == null)
                 throw new ArgumentNullException("sectionName");
@@ -154,12 +126,7 @@ namespace DBChmCreater.Common
 
             StringBuilder retval = new StringBuilder(IniFileHelp.MaxSectionSize);
 
-            NativeMethods.GetPrivateProfileString(sectionName,
-                                                  keyName,
-                                                  defaultValue,
-                                                  retval,
-                                                  IniFileHelp.MaxSectionSize,
-                                                  m_path);
+            NativeMethods.GetPrivateProfileString(sectionName,keyName,defaultValue,retval,IniFileHelp.MaxSectionSize,m_path);
 
             return retval.ToString();
         }
@@ -177,9 +144,7 @@ namespace DBChmCreater.Common
         /// <paramref name="sectionName"/> or <paramref name="keyName"/> are 
         /// a null reference  (Nothing in VB) 
         /// </exception> 
-        public int GetInt16(string sectionName,
-                            string keyName,
-                            short defaultValue)
+        public int GetInt16(string sectionName,string keyName,short defaultValue)
         {
             int retval = GetInt32(sectionName, keyName, defaultValue);
 
@@ -199,9 +164,7 @@ namespace DBChmCreater.Common
         /// <paramref name="sectionName"/> or <paramref name="keyName"/> are 
         /// a null reference  (Nothing in VB) 
         /// </exception> 
-        public int GetInt32(string sectionName,
-                            string keyName,
-                            int defaultValue)
+        public int GetInt32(string sectionName,string keyName,int defaultValue)
         {
             if (sectionName == null)
                 throw new ArgumentNullException("sectionName");
@@ -226,9 +189,7 @@ namespace DBChmCreater.Common
         /// <paramref name="sectionName"/> or <paramref name="keyName"/> are 
         /// a null reference  (Nothing in VB) 
         /// </exception> 
-        public double GetDouble(string sectionName,
-                                string keyName,
-                                double defaultValue)
+        public double GetDouble(string sectionName,string keyName,double defaultValue)
         {
             string retval = GetString(sectionName, keyName, "");
 
@@ -277,10 +238,7 @@ namespace DBChmCreater.Common
             try
             {
                 //Get the section key/value pairs into the buffer. 
-                int len = NativeMethods.GetPrivateProfileSection(sectionName,
-                                                                 ptr,
-                                                                 IniFileHelp.MaxSectionSize,
-                                                                 m_path);
+                int len = NativeMethods.GetPrivateProfileSection(sectionName,ptr,IniFileHelp.MaxSectionSize,m_path);
 
                 keyValuePairs = ConvertNullSeperatedStringToStringArray(ptr, len);
             }
@@ -302,8 +260,7 @@ namespace DBChmCreater.Common
                     equalSignPos = keyValuePairs[i].IndexOf('=');
                     key = keyValuePairs[i].Substring(0, equalSignPos);
 
-                    value = keyValuePairs[i].Substring(equalSignPos + 1,
-                                                       keyValuePairs[i].Length - equalSignPos - 1);
+                    value = keyValuePairs[i].Substring(equalSignPos + 1,keyValuePairs[i].Length - equalSignPos - 1);
 
                     retval.Add(new KeyValuePair<string, string>(key, value));
                 }
@@ -385,12 +342,7 @@ namespace DBChmCreater.Common
             try
             {
                 //Get the section names into the buffer. 
-                len = NativeMethods.GetPrivateProfileString(sectionName,
-                                                            null,
-                                                            null,
-                                                            ptr,
-                                                            IniFileHelp.MaxSectionSize,
-                                                            m_path);
+                len = NativeMethods.GetPrivateProfileString(sectionName,null,null,ptr,IniFileHelp.MaxSectionSize,m_path);
 
                 retval = ConvertNullSeperatedStringToStringArray(ptr, len);
             }
@@ -422,8 +374,7 @@ namespace DBChmCreater.Common
             try
             {
                 //Get the section names into the buffer. 
-                len = NativeMethods.GetPrivateProfileSectionNames(ptr,
-                    IniFileHelp.MaxSectionSize, m_path);
+                len = NativeMethods.GetPrivateProfileSectionNames(ptr,IniFileHelp.MaxSectionSize, m_path);
 
                 retval = ConvertNullSeperatedStringToStringArray(ptr, len);
             }

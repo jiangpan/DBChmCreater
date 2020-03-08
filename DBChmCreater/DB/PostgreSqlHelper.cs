@@ -9,8 +9,6 @@ using NpgsqlTypes;
 
 namespace Synyi.DBChmCreater.DB
 {
-    
-
     public class PostgreSqlHelper : IDisposable
     {
         private NpgsqlConnection connection = null;
