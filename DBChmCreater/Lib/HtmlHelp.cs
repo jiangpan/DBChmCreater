@@ -435,7 +435,15 @@ namespace DBChmCreater.DB
                                 else
                                 {
                                     var arrayValue = dr[dc.ColumnName] as int[];
+                                    if (arrayValue != null)
+                                    {
                                     renderdValue = $"{{{string.Join(",", arrayValue)}}}";
+
+                                    }
+                                    else
+                                    {
+                                        renderdValue = $"{{}}";
+                                    }
                                 }
 
                                 code.AppendLine($"            <td>{renderdValue}</td>");//.FormatString(
