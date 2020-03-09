@@ -8,15 +8,15 @@
         Title="HDR表CHM文档生成器" Height="600" Width="800">
     <Grid >
         <Grid.RowDefinitions>
-            <RowDefinition Height="1.4*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="10*"></RowDefinition>
-            <RowDefinition Height="1.3*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <!--#region 数据库连接部分 -->
-        <StackPanel Margin="5 2.5 5 2.5" Grid.Row="0" Grid.Column="0" Orientation="Vertical">
+        <StackPanel x:Name="sp_dbconn" Margin="5 2.5 5 2.5" Grid.Row="0" Grid.Column="0" Orientation="Vertical">
             <Label Margin="0 2.5 5 2.5" >数据库连接字符串：</Label>
             <WrapPanel Margin="0 2.5 5 2.5" x:Name="spConn" Orientation="Horizontal" >
                 <ComboBox x:Name="cbbDbtype" Margin="0 0 5 0" Width="150" MaxHeight="30" SelectionChanged="cbbDbtype_SelectionChanged" >
@@ -34,8 +34,8 @@
         <!--#region 表选择  数据表选择 -->
         <Grid x:Name="groupbox1" Margin="5 2.5 5 2.5" Grid.Row="1" Grid.Column="0" >
             <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
-                <RowDefinition Height="20*"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*"></ColumnDefinition>
@@ -83,7 +83,7 @@
 
         <!--#region 底部部分 -->
         <DockPanel Margin="5 2.5 5 2.5" Grid.Row="2" Grid.Column="0">
-            <StackPanel DockPanel.Dock="Bottom" Orientation="Vertical">
+            <StackPanel x:Name="sp_bottom1" DockPanel.Dock="Bottom" Orientation="Vertical">
                 <!--#region CHM标题 分步编译CHM -->
                 <WrapPanel  Margin="0 2 0 0" Orientation="Horizontal" >
                     <Label Margin="0 2 5 2">设置CHM文件标题：</Label>

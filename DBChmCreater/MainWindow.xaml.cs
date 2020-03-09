@@ -48,16 +48,6 @@ namespace DBChmCreater
             ckbTables.UnselectAll();
         }
 
-
-
-
-
-        private void ConnDbBtn_Click(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Button textBox = e.Source as Button;
@@ -123,8 +113,7 @@ namespace DBChmCreater
         {
             txtConn.Text = ini.GetString("Set", "index_" + cbbDbtype.SelectedIndex, "");
         }
-
-
+        
         private void btnConn_Click(object sender, RoutedEventArgs e)
         {
             if (txtConn.Text.Length == 0)
@@ -193,8 +182,7 @@ namespace DBChmCreater
 
             this.EnableControl(false);
         }
-
-
+        
         private void btnGenHtml_Click(object sender, RoutedEventArgs e)
         {
             ExportHtml();
@@ -384,7 +372,10 @@ namespace DBChmCreater
 
         private void EnableControl(bool enbale)
         {
-            this.EnableControl(enbale);
+            this.sp_dbconn.IsEnabled = enbale;
+            this.groupbox1.IsEnabled = enbale;
+            this.sp_bottom1.IsEnabled = enbale;
+            //this.EnableControl(enbale);
            
         }
 
