@@ -376,7 +376,7 @@ namespace DBChmCreater
             this.groupbox1.IsEnabled = enbale;
             this.sp_bottom1.IsEnabled = enbale;
             //this.EnableControl(enbale);
-           
+
         }
 
         #endregion
