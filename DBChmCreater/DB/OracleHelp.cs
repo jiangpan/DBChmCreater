@@ -8,6 +8,8 @@
 //using System.Data.Common;
 //using System.Data.OracleClient;
 
+//调整为托管的类
+
 //namespace Synyi.DBChmCreater.DB
 //{
 //    /// <summary>
