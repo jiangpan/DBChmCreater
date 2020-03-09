@@ -31,63 +31,6 @@ namespace DBChmCreater.Ext
         }
         #endregion
 
-        /*
-
-        //全选
-        public static void SelectedAll(this CheckedListBox ckb, string key = null)
-        {
-            bool fileter = !string.IsNullOrEmpty(key);
-            //如果选中项等于所有项总数则表示已经全选了
-            if (ckb.CheckedItems.Count == ckb.Items.Count)
-            {
-                for (var i = 0; i < ckb.Items.Count; i++)
-                {
-                    if (fileter)
-                    {
-                        if (ckb.Items[i].ToString().IndexOf(key) >= 0)
-                        {
-                            //ckb.SetItemCheckState(i, CheckState.Checked);
-                            ckb.SetItemChecked(i, true);
-                        }
-                    }
-                    else
-                    {
-                        //ckb.SetItemCheckState(i, CheckState.Checked);
-                        ckb.SetItemChecked(i, true);
-                    }                   
-                }
-            }
-            else //则所有项均选中
-            {
-                for (var i = 0; i < ckb.Items.Count; i++)
-                {
-                    if (fileter)
-                    {
-                        if (ckb.Items[i].ToString().IndexOf(key) >= 0)
-                        {
-                            //ckb.SetItemCheckState(i, CheckState.Checked);
-                            ckb.SetItemChecked(i, true);
-                        }
-                    }
-                    else
-                    {
-                        //ckb.SetItemCheckState(i, CheckState.Checked);
-                        ckb.SetItemChecked(i, true);
-                    }
-
-                }
-            }
-        }
-        //反选
-        public static void SelectedReverse(this CheckedListBox ckb)
-        {
-            for (var i = 0; i < ckb.Items.Count; i++)
-            {
-                bool check = ckb.GetItemChecked(i);
-                ckb.SetItemChecked(i, !check);
-            }
-        }
-        */
         #region DataTable条件查询获取子DataTable
         /// <summary>
         /// DataTable条件查询获取子DataTable
@@ -109,14 +52,5 @@ namespace DBChmCreater.Ext
 
         #endregion
 
-        /*
-        public static void EnableControl(this Form frm, bool enabled)
-        {
-            foreach (Control control in frm.Controls)
-            {
-                control.Enabled = enabled;
-            }
-        }
-        */
     }
 }
