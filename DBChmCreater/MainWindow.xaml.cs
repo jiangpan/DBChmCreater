@@ -5,6 +5,7 @@ using DBChmCreater.DB;
 using Synyi.DBChmCreater.Entity;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -22,8 +23,6 @@ using System.Windows.Shapes;
 
 namespace DBChmCreater
 {
-
-    public delegate void BuildChm(ChmHelp obj);
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -37,6 +36,7 @@ namespace DBChmCreater
         private ChmHelp chmhlp;
         #endregion
 
+        #region 构造函数
         public MainWindow()
         {
             InitializeComponent();
@@ -48,6 +48,9 @@ namespace DBChmCreater
             ckbTables.UnselectAll();
         }
 
+        #endregion
+
+        #region click事件处理
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Button textBox = e.Source as Button;
@@ -113,7 +116,7 @@ namespace DBChmCreater
         {
             txtConn.Text = ini.GetString("Set", "index_" + cbbDbtype.SelectedIndex, "");
         }
-        
+
         private void btnConn_Click(object sender, RoutedEventArgs e)
         {
             if (txtConn.Text.Length == 0)
@@ -132,7 +135,7 @@ namespace DBChmCreater
             }
             catch (Exception ex)
             {
-                lblMessage.Content = "数据库异常 请确认";
+                lblMessage.Content = $"数据库异常 请确认！{ex.Message}";
                 return;
             }
 
@@ -149,12 +152,23 @@ namespace DBChmCreater
                 lblMessage.Content = "查询表信息异常，请选择正确的数据库!";
                 return;
             }
+
+            ObservableCollection<string> tablesBind = new ObservableCollection<string>();
+
             foreach (DataRow dr in dt.Rows)
             {
-                ckbTables.Items.Add($"{dr["域"].ToString()}.{dr["表名"].ToString()}");
-                ckbData.Items.Add($"{dr["域"].ToString()}.{ dr["表名"].ToString()}");
+                tablesBind.Add($"{dr["域"].ToString()}.{dr["表名"].ToString()}");
             }
+
+            ckbTables.ItemsSource = tablesBind;
+            ckbData.ItemsSource = tablesBind;
+
             groupbox1.IsEnabled = true;
+        }
+
+        private void btnGenHtml_Click(object sender, RoutedEventArgs e)
+        {
+            ExportHtml();
         }
 
         private void btnExport_Click(object sender, RoutedEventArgs e)
@@ -175,23 +189,21 @@ namespace DBChmCreater
             //使用后台线程去导出
 
             Task.Factory.StartNew(
-                (x) => {
+                (x) =>
+                {
                     BuildChmAndExport(x);
                 },
                 chmhlp);
 
             this.EnableControl(false);
         }
-        
-        private void btnGenHtml_Click(object sender, RoutedEventArgs e)
-        {
-            ExportHtml();
-        }
 
         private void btnGenChmProject_Click(object sender, RoutedEventArgs e)
         {
             ExportChmProject(chmhlp);
         }
+
+        #endregion
 
         #region 帮助
         private void btnHelp_Click(object sender, RoutedEventArgs e)
@@ -320,6 +332,7 @@ namespace DBChmCreater
             catch (Exception ex)
             {
                 Dispatcher.Invoke(new Action<bool>(this.EnableControl), true);
+                Dispatcher.Invoke(new Action(() => { lblMessage.Content = ex.Message; }));
             }
             finally
             {

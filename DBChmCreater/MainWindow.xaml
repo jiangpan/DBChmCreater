@@ -46,14 +46,18 @@
             <Label Grid.Row="0" Grid.Column="0" MinHeight="25" >选择导出表结构：</Label>
             <!--<Border Grid.Row="1" Grid.Column="0" BorderThickness="10" BorderBrush="Red"></Border>-->
             <ListBox x:Name="ckbTables" Margin="0 0 0 3" Grid.Row="1" Grid.Column="0" SelectionMode="Multiple" >
-                <ListBoxItem>aa1</ListBoxItem>
-                <ListBoxItem>aa2</ListBoxItem>
-                <ListBoxItem>aa3</ListBoxItem>
-                <ListBoxItem>aa4</ListBoxItem>
-                <ListBoxItem>aa5</ListBoxItem>
-                <ListBoxItem>aa6</ListBoxItem>
-                <ListBoxItem>aa7</ListBoxItem>
-             </ListBox>
+                
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="IsSelected" Value="{Binding Checked,Mode=OneWay}"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
 
             <StackPanel Grid.Row="1" Grid.Column="1">
                 <Button Margin="5 5 5 0" x:Name="btnTbl_SelectAll" Click="Button_Click" Tag="tablesSelectAll">全选</Button>
@@ -63,13 +67,11 @@
 
             <Label Grid.Row="0" Grid.Column="2" MinHeight="25" >选择导出表数据：</Label>
             <ListBox x:Name="ckbData" Margin="0 0 0 3" Grid.Row="1" Grid.Column="2" SelectionMode="Multiple" >
-                <ListBoxItem>aa1</ListBoxItem>
-                <ListBoxItem>aa2</ListBoxItem>
-                <ListBoxItem>aa3</ListBoxItem>
-                <ListBoxItem>aa4</ListBoxItem>
-                <ListBoxItem>aa5</ListBoxItem>
-                <ListBoxItem>aa6</ListBoxItem>
-                <ListBoxItem>aa7</ListBoxItem>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}" />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
 
             <StackPanel Grid.Row="1" Grid.Column="3">

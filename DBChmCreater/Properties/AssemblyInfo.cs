@@ -15,7 +15,7 @@ using System.Windows;
 [assembly: AssemblyCopyright("Copyright ©  2020 上海森亿医疗科技有限公司")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: AssemblyInformationalVersion("git-12ab62e")]
+[assembly: AssemblyInformationalVersion("git-8a87d0a")]
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
