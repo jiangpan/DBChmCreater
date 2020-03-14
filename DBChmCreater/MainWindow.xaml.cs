@@ -20,6 +20,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Newtonsoft.Json;
 
 namespace DBChmCreater
 {
@@ -34,6 +35,8 @@ namespace DBChmCreater
         private IniFileHelp ini = new IniFileHelp(".//set.ini");
         private IDAL dal;
         private ChmHelp chmhlp;
+        private IList<IList<string>> hdrtables;
+
         #endregion
 
         #region 构造函数
@@ -70,7 +73,7 @@ namespace DBChmCreater
                         ckbTables.UnselectAll();
                         break;
                     case "tablesDefaultTable":
-                        ckbTables.UnselectAll();
+                        tablesDefaultTable_Click(sender, e);
                         break;
                     case "dataSelectAll":
                         ckbData.SelectAll();
@@ -79,7 +82,7 @@ namespace DBChmCreater
                         ckbData.UnselectAll();
                         break;
                     case "dataDefaultTableData":
-                        ckbData.UnselectAll();
+                        dataDefaultTableData_Click(sender, e);
                         break;
                     case "btnGenHtml":
                         btnGenHtml_Click(sender, e);
@@ -104,6 +107,65 @@ namespace DBChmCreater
 
                 }
 
+            }
+        }
+
+        /// <summary>
+        /// 数据库中默认的表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tablesDefaultTable_Click(object sender, RoutedEventArgs e)
+        {
+            var result = ini.GetString("Set", "hdrtables", string.Empty);
+            if (hdrtables == null)
+            {
+                hdrtables = JsonConvert.DeserializeObject<IList<IList<string>>>(result);
+            }
+
+
+            for (int i = 0; i < this.ckbTables.Items.Count; i++)
+            {
+                var tablefullname = this.ckbTables.Items[i].ToString();
+
+                var hdrtableitems = hdrtables.FirstOrDefault(p => tablefullname == $"{p[0]}.{p[1]}");
+
+                if (hdrtableitems != null)
+                {
+                    this.ckbTables.SelectedItems.Add(this.ckbTables.Items.GetItemAt(i));
+                }
+            }
+            if ( !(this.ckbTables.SelectedItems.Count == hdrtables.Count))
+            {
+                MessageBox.Show("当前库中表不完整！", "提示", MessageBoxButton.OK,  MessageBoxImage.Information);
+            }
+           
+
+        }
+
+        /// <summary>
+        /// 默认导出的数据的表 mdm
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataDefaultTableData_Click(object sender, RoutedEventArgs e)
+        {
+            var result = ini.GetString("Set", "hdrtables", string.Empty);
+            if (hdrtables == null)
+            {
+                hdrtables = JsonConvert.DeserializeObject<IList<IList<string>>>(result);
+            }
+
+            for (int i = 0; i < this.ckbData.Items.Count; i++)
+            {
+                var tablefullname = this.ckbData.Items[i].ToString();
+
+                var hdrtableitems = hdrtables.FirstOrDefault(p => tablefullname == $"{p[0]}.{p[1]}");
+
+                if (hdrtableitems != null && hdrtableitems[0] == "mdm")
+                {
+                    this.ckbData.SelectedItems.Add(this.ckbData.Items.GetItemAt(i));
+                }
             }
         }
 
@@ -244,7 +306,7 @@ namespace DBChmCreater
 
             //获取需要导出的表结构 选中项
             List<string> selectTabStructList = new List<string>();
-            foreach (var item in ckbTables.SelectedItems ) // CheckedItems)
+            foreach (var item in ckbTables.SelectedItems) // CheckedItems)
             {
                 selectTabStructList.Add(item.ToString());
             }
