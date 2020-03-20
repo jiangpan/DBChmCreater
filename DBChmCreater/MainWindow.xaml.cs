@@ -122,7 +122,11 @@ namespace DBChmCreater
             {
                 hdrtables = JsonConvert.DeserializeObject<IList<IList<string>>>(result);
             }
-
+            if (hdrtables == null)
+            {
+                MessageBox.Show("标准表集合获取失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            IList<string> selected = new List<string>();
 
             for (int i = 0; i < this.ckbTables.Items.Count; i++)
             {
@@ -133,10 +137,16 @@ namespace DBChmCreater
                 if (hdrtableitems != null)
                 {
                     this.ckbTables.SelectedItems.Add(this.ckbTables.Items.GetItemAt(i));
+                    selected.Add(tablefullname);
                 }
             }
-            if ( !(this.ckbTables.SelectedItems.Count == hdrtables.Count))
+            if ( !(selected.Count == hdrtables.Count))
             {
+                var logpath = System.IO.Path.Combine(AppContext.BaseDirectory, $"{DateTime.Now.ToString("yyyyMMddHHmmss")}.log");
+
+                var difftables = hdrtables.Where(p => !selected.Contains($"{p[0]}.{p[1]}")).Select(p=> $"{p[0]}.{p[1]}");
+
+                File.WriteAllText(logpath, $"{DateTime.Now.ToString("yyyyMMddHHmmss")}日志:标准库中{string.Join(";",difftables)}");
                 MessageBox.Show("当前库中表不完整！", "提示", MessageBoxButton.OK,  MessageBoxImage.Information);
             }
            
@@ -162,7 +172,7 @@ namespace DBChmCreater
 
                 var hdrtableitems = hdrtables.FirstOrDefault(p => tablefullname == $"{p[0]}.{p[1]}");
 
-                if (hdrtableitems != null && hdrtableitems[0] == "mdm")
+                if (hdrtableitems != null && (hdrtableitems[0] == "mdm" || hdrtableitems[1] == "hdr_versions" || hdrtableitems[1] == "hdr_versions_modify_rec"))
                 {
                     this.ckbData.SelectedItems.Add(this.ckbData.Items.GetItemAt(i));
                 }
@@ -358,7 +368,10 @@ namespace DBChmCreater
             {
                 Dispatcher.Invoke(new Action(() => { lblMessage.Content = "正在生成表数据数据..."; }));
 
-                var lstDt = dal.GetTableData(selectTabStructList, -1);
+                //读取ini
+                int result = ini.GetInt32 ("Set", "maxrow", -1);
+
+                var lstDt = dal.GetTableData(selectTabStructList, result);
                 //创建常用数据的html
                 var pathTables = $"./tmp/{tableDataDirName}";
                 Directory.CreateDirectory(pathTables);

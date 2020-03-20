@@ -29,7 +29,8 @@ namespace DBChmCreater.Core
 ,cols.ordinal_position 序号
 ,cols.column_name  列名
 ,col_description((cols.table_schema || '.' ||cols.table_name)::regclass::oid,cols.ordinal_position ) as 中文名
-,case when position('_' in cols.udt_name) > 0 then regexp_replace(cols.udt_name,'(_)(.*)','\2[]') else cols.udt_name end  数据类型,case cols.data_type when 'character varying' then cols.character_maximum_length when 'numeric' then cols.numeric_precision else null end 长度
+,case when position('_' in cols.udt_name) > 0 then regexp_replace(cols.udt_name,'(_)(.*)','\2[]') else cols.udt_name end  数据类型
+,case cols.data_type when 'character varying' then cols.character_maximum_length when 'numeric' then cols.numeric_precision else null end 长度
 ,cols.numeric_scale 小数位数
 , CASE WHEN position( 'extval(' in cols.column_default)  > 1 THEN '√' ELSE '' END  标识
 , case when EXISTS ( select a.table_schema,a.table_name,b.constraint_name,a.ordinal_position as position,a.column_name as key_column
