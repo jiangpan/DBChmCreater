@@ -28,6 +28,9 @@ namespace DBChmCreater.DB
     public class HtmlHelp
     {
         #region 导出表数据为html格式
+
+
+        #region 导出单个表结构说明
         /// <summary>
         ///  导出表数据为html格式 居中表格样式
         /// </summary>
@@ -123,8 +126,10 @@ namespace DBChmCreater.DB
             //File.WriteAllText(Path, code.ToString(), Encoding.UTF8);
         }
 
+        #endregion
 
 
+        #region 导出数据库表目录列表
         /// <summary>
         ///  导出表数据为html格式 居中表格样式
         /// </summary>
@@ -288,6 +293,10 @@ namespace DBChmCreater.DB
         }
 
 
+        #endregion
+
+
+        #region 导出库表中的数据
         /// <summary>
         ///  导出表数据为html格式 Oracle导出格式 带搜索框
         /// </summary>
@@ -300,7 +309,7 @@ namespace DBChmCreater.DB
             code.AppendLine("<html>");
             code.AppendLine("<head>");
             code.AppendLine("    <META http-equiv=\"Content-Type\" content=\"text/html; charset=gb2312\"> ");
-            code.AppendLine($"    <title>J{dt.TableName}</title>");//.FormatString(dt.TableName));
+            code.AppendLine($"    <title>{dt.TableName}</title>");//.FormatString(dt.TableName));
             code.AppendLine("    <meta http-equiv=\"content-type\" content=\"text/html; charset=GBK\">");
             code.AppendLine("    <style type=\"text/css\">");
             code.AppendLine("        table");
@@ -437,7 +446,7 @@ namespace DBChmCreater.DB
                                     var arrayValue = dr[dc.ColumnName] as int[];
                                     if (arrayValue != null)
                                     {
-                                    renderdValue = $"{{{string.Join(",", arrayValue)}}}";
+                                        renderdValue = $"{{{string.Join(",", arrayValue)}}}";
 
                                     }
                                     else
@@ -483,6 +492,10 @@ namespace DBChmCreater.DB
             code.AppendLine("</html>");
             File.WriteAllText(Path, code.ToString(), Encoding.GetEncoding("gb2312"));
         }
+
+        #endregion
+
+
         #endregion
     }
 }
