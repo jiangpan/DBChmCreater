@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data;
 using Npgsql;
 using NpgsqlTypes;
+using Dapper;
 
 namespace Synyi.DBChmCreater.DB
 {
@@ -49,6 +50,24 @@ namespace Synyi.DBChmCreater.DB
         }
 
         #endregion
+
+        public  IEnumerable<T> Query<T>(string query)
+        {
+            NpgsqlConnection conn = null;
+            IEnumerable<T> result;
+
+            using (conn = new NpgsqlConnection(this.connectionString))
+            {
+                if (connection.State == ConnectionState.Closed || connection.State == ConnectionState.Broken)
+                {
+                    connection.Open();
+                }
+
+                result = conn.Query<T>(query);
+
+            }
+            return result;
+        }
 
 
         /// <summary>

@@ -9,6 +9,7 @@
    * 修改描述: 
    * 版    本: v1.0.0.0
    * ==============================================================================*/
+using Synyi.DBChmCreater.Entity;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -21,7 +22,7 @@ namespace DBChmCreater.Core
     /// </summary>
     public interface IDAL
     {
-        DataTable GetTables();
+        IList<DataTableItem> GetTables();
         List<DataTable> GetTableStruct(List<string> tables);
         List<DataTable> GetTableData(List<string> tables ,int limitRows);
     }

@@ -219,7 +219,7 @@ namespace DBChmCreater
             ckbTables.Items.Clear();
             ckbData.Items.Clear();
             var dt = dal.GetTables();
-            if (dt.Rows.Count == 0)
+            if (dt.Count == 0)
             {
                 lblMessage.Content = "查询表信息异常，请选择正确的数据库!";
                 return;
@@ -227,9 +227,9 @@ namespace DBChmCreater
 
             ObservableCollection<string> tablesBind = new ObservableCollection<string>();
 
-            foreach (DataRow dr in dt.Rows)
+            foreach (var dr in dt)
             {
-                tablesBind.Add($"{dr["域"].ToString()}.{dr["表名"].ToString()}");
+                tablesBind.Add($"{dr.Domain}.{dr.TableName}");
             }
 
             ckbTables.ItemsSource = tablesBind;
@@ -337,16 +337,16 @@ namespace DBChmCreater
                     var array = dt.TableName.Split('.');
                     var domain = array[0];
                     var tabname = array[1];
-                    var drs = tables.Select("表名='" + tabname + "' and 域='" + domain + "'");
+                    var drs = tables.Where(p => p.TableName == tabname).Where(p => p.Domain == domain).FirstOrDefault();// Select("表名='" + tabname + "' and 域='" + domain + "'");
                     var desp = string.Empty;
-                    if (drs.Length > 0)
+                    if (drs != null)
                     {
-                        desp = drs[0]["表说明"].ToString();
+                        desp = drs.TableDescription;
                     }
                     //创建表字段信息的html
                     HtmlHelp.CreateHtml(dt, true, System.IO.Path.Combine(pathTables, $"{dt.TableName}.html"), true, desp);
                     //构建表目录
-                    dataTableStructures.Add(new DataTableItem { TableNo = tableIndex++, Domain = drs[0]["域"].ToString(), TableName = $"<a href=\"{tableStructureDirName}\\{ dt.TableName}.html\">{ dt.TableName.Split('.').GetValue(1)}</a>", TableDescription = desp });
+                    dataTableStructures.Add(new DataTableItem { TableNo = tableIndex++, Domain = drs.Domain, TableName = $"<a href=\"{tableStructureDirName}\\{ dt.TableName}.html\">{ dt.TableName.Split('.').GetValue(1)}</a>", TableDescription = desp });
                     //改变进度
                     Dispatcher.Invoke(new Action(() => { tpbExport.Value++; }));
 

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using DBChmCreater.Ext;
 using Synyi.DBChmCreater.DB;
+using Synyi.DBChmCreater.Entity;
 
 namespace DBChmCreater.Core
 {
@@ -45,6 +46,8 @@ information_schema.columns cols inner join information_schema.tables tbs  on col
 where tbs.table_type = 'BASE TABLE'
               ORDER BY 1, 2 ";
             dtStruct = help.DirectQuery(strSql);
+
+           
             //            if (type == 2012)
             //                strSql = @"select Row_Number() over ( order by getdate() )  as 序号, t1.name as 表名,
             // case when t2.minor_id = 0 then isnull(t2.value, '') else '' end as 表说明
@@ -52,15 +55,22 @@ where tbs.table_type = 'BASE TABLE'
             //left join sys.extended_properties t2 on t1.id=t2.major_id
             //where type='u'  and ( minor_id=0 or minor_id is null )";
             //            else if (type == 2008 || type == 2005)
-            strSql = @" select ROW_NUMBER () OVER (ORDER BY table_schema) 序号, table_schema as 域, format('%s',quote_ident(table_name))  表名, obj_description(to_regclass(table_schema || '.'|| quote_ident(table_name))) 表说明 from information_schema.tables  where table_type = 'BASE TABLE' and table_schema not in ('pg_catalog','information_schema') ";
-            dt = help.DirectQuery(strSql);
+            //strSql = @" select ROW_NUMBER () OVER (ORDER BY table_schema) 序号, table_schema as 域, format('%s',quote_ident(table_name))  表名, obj_description(to_regclass(table_schema || '.'|| quote_ident(table_name))) 表说明 from information_schema.tables  where table_type = 'BASE TABLE' and table_schema not in ('pg_catalog','information_schema') ";
+            //dt = help.DirectQuery(strSql);
         }
-        public DataTable GetTables()
+        public IList<DataTableItem> GetTables()
         {
-            return dt;
+            var strSql1 = @" select ROW_NUMBER () OVER (ORDER BY table_schema) tableno, table_schema as domain, format('%s',quote_ident(table_name))  tablename, obj_description(to_regclass(table_schema || '.'|| quote_ident(table_name))) tabledescription from information_schema.tables  where table_type = 'BASE TABLE' and table_schema not in ('pg_catalog','information_schema') ";
+
+            var result = help.Query<DataTableItem>(strSql1).ToList();
+
+
+            return result;
         }
         public List<DataTable> GetTableStruct(List<string> tables)
         {
+
+
             List<DataTable> lst = new List<DataTable>();
             foreach (var table in tables)
             {
@@ -94,8 +104,7 @@ where tbs.table_type = 'BASE TABLE'
             }
             return lst;
         }
-
-
+       
     }
 }
 
