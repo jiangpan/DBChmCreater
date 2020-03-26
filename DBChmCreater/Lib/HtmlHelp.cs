@@ -84,7 +84,7 @@ namespace DBChmCreater.DB
             code.AppendLine("                    <td bgcolor=\"#FBFBFB\">");
             code.AppendLine("                        <table cellspacing=\"0\" cellpadding=\"5\" border=\"1\" width=\"100%\" bordercolorlight=\"#D7D7E5\" bordercolordark=\"#D3D8E0\">");
             code.AppendLine("                        <caption>");
-            code.AppendLine($"        <div class=\"styletab\">{dt.TableName}{( string.IsNullOrEmpty(tableDesc) ? string.Empty : "  （" + tableDesc + "） ")}{(hasReturn ? "<a href ='../数据库表目录.html' style = 'float: left; margin-top: 6px;'>返回目录</a>" : string.Empty)}</div>");
+            code.AppendLine($"        <div class=\"styletab\">{dt.TableName}{( string.IsNullOrEmpty(tableDesc) ? string.Empty : "  （" + tableDesc + "） ")}{(hasReturn ? "<a href ='../../数据库表目录.html' style = 'float: left; margin-top: 6px;'>返回目录</a>" : string.Empty)}</div>");
             //.FormatString(dt.TableName,
             //tableDesc.Length == 0 ? string.Empty : "  （" + tableDesc + "） ",
             //(hasReturn ? "<a href='../数据库表目录.html' style='float: right; margin-top: 6px;'>返回目录</a>" : string.Empty));
@@ -198,7 +198,7 @@ namespace DBChmCreater.DB
             code.AppendLine("                    <td bgcolor=\"#FBFBFB\">");
             code.AppendLine("                        <table cellspacing=\"0\" cellpadding=\"5\" border=\"1\" width=\"100%\" bordercolorlight=\"#D7D7E5\" bordercolordark=\"#D3D8E0\">");
             code.AppendLine("                        <caption>");
-            code.AppendLine($"        <div class=\"styletab\">{dt.Name}{(tableDesc.Length == 0 ? string.Empty : "  （" + tableDesc + "） ")}{(hasReturn ? "<a href='../数据库表目录.html' style='float: right; margin-top: 6px;'>返回目录</a>" : string.Empty)}</div>");//.FormatString(
+            code.AppendLine($"        <div class=\"styletab\">{dt.Name}{(tableDesc.Length == 0 ? string.Empty : "  （" + tableDesc + "） ")}{(hasReturn ? "<a href='../../数据库表目录.html' style='float: right; margin-top: 6px;'>返回目录</a>" : string.Empty)}</div>");//.FormatString(
             code.AppendLine("                        </caption>");
             code.AppendLine("                        <tr bgcolor=\"#DEEBF7\">");
             //构建表头

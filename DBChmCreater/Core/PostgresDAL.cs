@@ -103,7 +103,7 @@ where tbs.table_type = 'BASE TABLE'
                 if (dtdefs != null)
                 {
                     DataTableColumnDefCollection col = new DataTableColumnDefCollection();
-                    col.TableName = table;
+                    col.TableName = table;                    
                     col.AddRange(dtdefs.AsEnumerable());
                     result11.Add(col);
                 }

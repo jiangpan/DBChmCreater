@@ -329,11 +329,16 @@ namespace DBChmCreater
                 var lstDt = dal.GetTableStruct(selectTabStructList);
                 var pathTables = $"./tmp/{tableStructureDirName}";
                 Directory.CreateDirectory(pathTables);
+                var tables = dal.GetTables();
+                var allSchemas = tables.Select(p => p.Domain).Distinct();
+                foreach (var item in allSchemas)
+                {
+                    Directory.CreateDirectory(System.IO.Path.Combine(pathTables,item));
+                }
                 var tableIndex = 1;
                 foreach (var dt in lstDt)
                 {
                     //得到表描述
-                    var tables = dal.GetTables();
                     var array = dt.TableName.Split('.');
                     var domain = array[0];
                     var tabname = array[1];
@@ -344,9 +349,9 @@ namespace DBChmCreater
                         desp = drs.TableDescription;
                     }
                     //创建表字段信息的html
-                    HtmlHelp.CreateHtml(dt, true, System.IO.Path.Combine(pathTables, $"{dt.TableName}.html"), true, desp);
+                    HtmlHelp.CreateHtml(dt, true, System.IO.Path.Combine(pathTables, dt[0].tableschema, $"{dt.TableName}.html"), true, desp);
                     //构建表目录
-                    dataTableStructures.Add(new DataTableItem { TableNo = tableIndex++, Domain = drs.Domain, TableName = $"<a href=\"{tableStructureDirName}\\{ dt.TableName}.html\">{ dt.TableName.Split('.').GetValue(1)}</a>", TableDescription = desp });
+                    dataTableStructures.Add(new DataTableItem { TableNo = tableIndex++, Domain = drs.Domain, TableName = $"<a href=\"{tableStructureDirName}\\{drs.Domain}\\{ dt.TableName}.html\">{ dt.TableName.Split('.').GetValue(1)}</a>", TableDescription = desp });
                     //改变进度
                     Dispatcher.Invoke(new Action(() => { tpbExport.Value++; }));
 
@@ -375,9 +380,15 @@ namespace DBChmCreater
                 //创建常用数据的html
                 var pathTables = $"./tmp/{tableDataDirName}";
                 Directory.CreateDirectory(pathTables);
+                var selecttabdataschemas = selectTabStructList.Select(p => p.Split('.')[0]).Distinct();
+                foreach (var item in selecttabdataschemas)
+                {
+                    Directory.CreateDirectory(System.IO.Path.Combine(pathTables, item));
+                }
+
                 foreach (var dt in lstDt)
                 {
-                    HtmlHelp.CreateHtml2(dt, true, System.IO.Path.Combine(pathTables, dt.TableName + ".html"));
+                    HtmlHelp.CreateHtml2(dt, true, System.IO.Path.Combine(System.IO.Path.Combine(pathTables, dt.TableName.Split('.')[0]), dt.TableName + ".html"));
                     Dispatcher.Invoke(new Action(() => { tpbExport.Value++; }));
                 }
             }
