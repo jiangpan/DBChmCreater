@@ -305,7 +305,7 @@ namespace DBChmCreater
             Directory.CreateDirectory(".//tmp");
 
             //定义目录DataTable 结构
-            DataTableStructureCollection dataTableStructures = new DataTableStructureCollection("<b>数据库表目录</b>");
+            Synyi.DBChmCreater.Entity.DataTableCollection dataTableStructures = new Synyi.DBChmCreater.Entity.DataTableCollection("<b>数据库表目录</b>");
 
             //将选中项的总数 设置为进度条最大值 +1项是表目录文件
             Dispatcher.Invoke(new Action(() =>
@@ -346,7 +346,7 @@ namespace DBChmCreater
                     //创建表字段信息的html
                     HtmlHelp.CreateHtml(dt, true, System.IO.Path.Combine(pathTables, $"{dt.TableName}.html"), true, desp);
                     //构建表目录
-                    dataTableStructures.Add(new DataTableStructure { TableNo = tableIndex++, Domain = drs[0]["域"].ToString(), TableName = $"<a href=\"{tableStructureDirName}\\{ dt.TableName}.html\">{ dt.TableName.Split('.').GetValue(1)}</a>", TableDescription = desp });
+                    dataTableStructures.Add(new DataTableItem { TableNo = tableIndex++, Domain = drs[0]["域"].ToString(), TableName = $"<a href=\"{tableStructureDirName}\\{ dt.TableName}.html\">{ dt.TableName.Split('.').GetValue(1)}</a>", TableDescription = desp });
                     //改变进度
                     Dispatcher.Invoke(new Action(() => { tpbExport.Value++; }));
 

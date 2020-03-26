@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 
 namespace Synyi.DBChmCreater.Entity
 {
-    public class DataTableStructureCollection : List<DataTableStructure>
+    public class DataTableCollection : List<DataTableItem>
     {
         public string Name { get; set; }
 
-        public DataTableStructureCollection(string name)
+        public DataTableCollection(string name)
         {
             this.Name = name;
         }
@@ -19,7 +19,7 @@ namespace Synyi.DBChmCreater.Entity
 
     }
 
-    public class DataTableStructure
+    public class DataTableItem
     {
         [Description("序号")]
         public int TableNo { get; set; }

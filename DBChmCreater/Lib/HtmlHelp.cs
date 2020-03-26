@@ -138,7 +138,7 @@ namespace DBChmCreater.DB
         /// <param name="Path">保存路径</param>
         /// <param name="hasReturn">携带返回目录链接</param>
         /// <param name="tableDesc">携带返回目录链接</param>
-        public static void CreateHtml(DataTableStructureCollection dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "")
+        public static void CreateHtml(Synyi.DBChmCreater.Entity.DataTableCollection dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "")
         {
             var code = new StringBuilder();
             code.AppendLine("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
@@ -188,7 +188,7 @@ namespace DBChmCreater.DB
             code.AppendLine("                        <tr bgcolor=\"#DEEBF7\">");
             //构建表头
 
-            Type itemtype = typeof(DataTableStructure);
+            Type itemtype = typeof(DataTableItem);
 
             var dtStructProps = itemtype.GetProperties();
 
@@ -207,7 +207,7 @@ namespace DBChmCreater.DB
                 int count = domainitem.Count();
                 int i = 0;
                 var ere = domainitem.OrderBy(p => p.TableName);
-                foreach (DataTableStructure dritem in ere)
+                foreach (DataTableItem dritem in ere)
                 {
                     code.AppendLine("            <tr>");
                     if (i == 0)

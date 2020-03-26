@@ -102,7 +102,7 @@
     <Compile Include="DB\OracleHelp.cs" />
     <Compile Include="DB\PostgreSqlHelper.cs" />
     <Compile Include="DB\SqlHelp.cs" />
-    <Compile Include="Entity\DataTableStructure.cs" />
+    <Compile Include="Entity\DataTableItem.cs" />
     <Compile Include="Lib\ChmHelp.cs" />
     <Compile Include="Lib\HtmlHelp.cs" />
     <Compile Include="Lib\IniFileHelp.cs" />
