@@ -15,8 +15,6 @@ namespace Synyi.DBChmCreater.Entity
         {
             this.Name = name;
         }
-
-
     }
 
     public class DataTableItem
@@ -29,7 +27,6 @@ namespace Synyi.DBChmCreater.Entity
 
         [Description("表名")]
         public string TableName { get; set; }
-
 
         [Description("表说明")]
         public string TableDescription { get; set; }

@@ -39,7 +39,7 @@ namespace DBChmCreater.DB
         /// <param name="Path">保存路径</param>
         /// <param name="hasReturn">携带返回目录链接</param>
         /// <param name="tableDesc">携带返回目录链接</param>
-        public static void CreateHtml(DataTable dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "")
+        public static void CreateHtml(DataTableColumnDefCollection dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "")
         {
             var code = new StringBuilder();
             code.AppendLine("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
@@ -91,24 +91,39 @@ namespace DBChmCreater.DB
             code.AppendLine("                        </caption>");
             code.AppendLine("                        <tr bgcolor=\"#DEEBF7\">");  //bgcolor="#DEEBF7"
             //构建表头
-            foreach (DataColumn dc in dt.Columns)
+
+            Type itemtype = typeof(DataTableColumnDef);
+            var dtStructProps = itemtype.GetProperties();
+
+            foreach (PropertyInfo dc in dtStructProps)
             {
-                code.AppendLine($"            <td>{dc.ColumnName}</td>");//.FormatString(dc.ColumnName));
+                var prop = dc.GetCustomAttribute<DescriptionAttribute>();
+                code.AppendLine($"            <td>{prop.Description}</td>");//属性描述 作为列名
             }
+
+
+            //foreach (DataColumn dc in dt.Columns)
+            //{
+            //    code.AppendLine($"            <td>{dc.ColumnName}</td>");//.FormatString(dc.ColumnName));
+            //}
             code.AppendLine("                         </tr>");
             //构建数据行
-            foreach (DataRow dr in dt.Rows)
+            var dtsort = dt.OrderBy(p => p.ordinal);
+            foreach (var dr in dtsort)
             {
                 code.AppendLine("            <tr>");
-                foreach (DataColumn dc in dt.Columns)
+
+               
+
+                    foreach (PropertyInfo dc in dtStructProps)
                 {
-                    if (KeepNull && dr[dc.ColumnName] == DBNull.Value)
+                    if (KeepNull &&  dc.GetValue(dr) == DBNull.Value)
                     {
                         code.AppendLine("            <td>&nbsp;</td>");
                     }
                     else
                     {
-                        code.AppendLine($"            <td>{(dr[dc.ColumnName].ToString().Trim().Length > 0 ? dr[dc.ColumnName].ToString() : "&nbsp;")}</td>");//.FormatString(
+                        code.AppendLine($"            <td>{(!string.IsNullOrWhiteSpace( dc.GetValue(dr)?.ToString()) ? dc.GetValue(dr)?.ToString() : "&nbsp;")}</td>");//.FormatString(
                                                                                                                                                               //dr[dc.ColumnName].ToString().Trim().Length > 0 ? dr[dc.ColumnName].ToString() : "&nbsp;"));
                     }
                 }
