@@ -89,7 +89,7 @@ namespace DBChmCreater.Chm.Common
         #endregion
 
         #region 构造所需要的文件
-        private void Create(string path)
+        private void Create(string path, bool isResource)
         {
             //获取文件
             var strFileNames = Directory.GetFiles(path);
@@ -114,30 +114,28 @@ namespace DBChmCreater.Chm.Common
 
                 //添加文件列表到hhp
                 hhpBody.AppendLine(filename);
-                hhcBody.Append(fileItem.ToString());
-
-                var fileItemHHK = new StringBuilder();
-                fileItemHHK.AppendLine("	<LI><OBJECT type=\"text/sitemap\">");
-                fileItemHHK.AppendLine($"		<param name=\"Name\" value=\"{Path.GetFileNameWithoutExtension(filename)}\">");
-                fileItemHHK.AppendLine($"		<param name=\"Local\" value=\"{filename.Replace(rootParent, string.Empty)}\">");
-                //fileItemHHK.AppendLine("		<param name=\"ImageNumber\" value=\"11\">");
-                fileItemHHK.AppendLine("		</OBJECT>");
-
-
-                hhkBody.Append(fileItemHHK.ToString());
+                if (Path.GetExtension(filename).EndsWith("html", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(filename).EndsWith("htm", StringComparison.OrdinalIgnoreCase))
+                {
+                    hhcBody.Append(fileItem.ToString());
+                    hhkBody.Append(fileItem.ToString());
+                }
                 //记录待编译文件总数
                 fileCount++;
             }
             //遍历获取的目录
             foreach (string dirname in strDirectories)
             {
+                bool currentflag = dirname.EndsWith("resources", StringComparison.OrdinalIgnoreCase);
 
-                hhcBody.AppendLine("	<LI> <OBJECT type=\"text/sitemap\">");
-                hhcBody.AppendLine($"		<param name=\"Name\" value=\"{Path.GetFileName(dirname)}\">");//.FormatString(Path.GetFileName(dirname)));
-                hhcBody.AppendLine("		<param name=\"ImageNumber\" value=\"1\">");
-                hhcBody.AppendLine("		</OBJECT>");
+                if (!(isResource | currentflag))
+                {
+                    hhcBody.AppendLine("	<LI> <OBJECT type=\"text/sitemap\">");
+                    hhcBody.AppendLine($"		<param name=\"Name\" value=\"{Path.GetFileName(dirname)}\">");//.FormatString(Path.GetFileName(dirname)));
+                    hhcBody.AppendLine("		<param name=\"ImageNumber\" value=\"1\">");
+                    hhcBody.AppendLine("		</OBJECT>");
+                }
                 //递归遍历子文件夹
-                Create(dirname);
+                Create(dirname, isResource | currentflag);
             }
             //给该目录添加/UL标记
             if (strFileNames.Length > 0 || strDirectories.Length > 0)
@@ -145,7 +143,7 @@ namespace DBChmCreater.Chm.Common
                 hhcBody.AppendLine("	</UL>");
             }
         }
-        
+
         private void CreateHHC()
         {
             var code = new StringBuilder();
@@ -244,7 +242,7 @@ namespace DBChmCreater.Chm.Common
             //https://www.cnblogs.com/alexis/archive/2010/09/29/1837909.html
 
             //准备hhp hhc hhk文件
-            Create(RootPath);
+            Create(RootPath,false);
             CreateHHC();
             CreateHHK();
             CreateHHP();
