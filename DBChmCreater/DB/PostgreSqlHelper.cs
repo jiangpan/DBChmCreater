@@ -58,9 +58,9 @@ namespace Synyi.DBChmCreater.DB
 
             using (conn = new NpgsqlConnection(this.connectionString))
             {
-                if (connection.State == ConnectionState.Closed || connection.State == ConnectionState.Broken)
+                if (conn.State == ConnectionState.Closed || conn.State == ConnectionState.Broken)
                 {
-                    connection.Open();
+                    conn.Open();
                 }
 
                 result = conn.Query<T>(query);
