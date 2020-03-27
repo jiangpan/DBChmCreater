@@ -14,8 +14,9 @@ namespace DBChmCreater.Core
     public class PostgresDAL : IDAL
     {
         private PostgreSqlHelper help;
-        private DataTable dtStruct;//表以及字段详情表
-        private DataTable dt;//表以及对应的描述信息
+        //private DataTable dtStruct;
+        //表以及字段详情表
+        //表以及对应的描述信息
 
 
         public PostgresDAL()
@@ -26,26 +27,26 @@ namespace DBChmCreater.Core
         public PostgresDAL(string conn)
         {
             help = new PostgreSqlHelper(conn);
-            var strSql = @" select format('%s.%s',cols.table_schema,quote_ident(cols.table_name))  表名
-,cols.ordinal_position 序号
-,cols.column_name  列名
-,col_description((cols.table_schema || '.' ||cols.table_name)::regclass::oid,cols.ordinal_position ) as 中文名
-,case when position('_' in cols.udt_name) > 0 then regexp_replace(cols.udt_name,'(_)(.*)','\2[]') else cols.udt_name end  数据类型
-,case cols.data_type when 'character varying' then cols.character_maximum_length when 'numeric' then cols.numeric_precision else null end 长度
-,cols.numeric_scale 小数位数
-, CASE WHEN position( 'extval(' in cols.column_default)  > 1 THEN '√' ELSE '' END  标识
-, case when EXISTS ( select a.table_schema,a.table_name,b.constraint_name,a.ordinal_position as position,a.column_name as key_column
-from information_schema.table_constraints b inner join information_schema.key_column_usage a on a.constraint_name = b.constraint_name 
-     and a.constraint_schema = b.constraint_schema  and a.constraint_name = b.constraint_name
-where b.constraint_type = 'PRIMARY KEY' and a.table_schema = cols.table_schema and a.table_name = cols.table_name and a.column_name = cols.column_name) then '√' ELSE '' END 主键
-,case when cols.is_nullable = 'YES' THEN '√' ELSE '' END   允许空
-,cols.column_default 默认值
-,'' as 列说明
-from 
-information_schema.columns cols inner join information_schema.tables tbs  on cols.TABLE_NAME = tbs.TABLE_NAME
-where tbs.table_type = 'BASE TABLE'
-              ORDER BY 1, 2 ";
-            dtStruct = help.DirectQuery(strSql);
+//            var strSql = @" select format('%s.%s',cols.table_schema,quote_ident(cols.table_name))  表名
+//,cols.ordinal_position 序号
+//,cols.column_name  列名
+//,col_description((cols.table_schema || '.' ||cols.table_name)::regclass::oid,cols.ordinal_position ) as 中文名
+//,case when position('_' in cols.udt_name) > 0 then regexp_replace(cols.udt_name,'(_)(.*)','\2[]') else cols.udt_name end  数据类型
+//,case cols.data_type when 'character varying' then cols.character_maximum_length when 'numeric' then cols.numeric_precision else null end 长度
+//,cols.numeric_scale 小数位数
+//, CASE WHEN position( 'extval(' in cols.column_default)  > 1 THEN '√' ELSE '' END  标识
+//, case when EXISTS ( select a.table_schema,a.table_name,b.constraint_name,a.ordinal_position as position,a.column_name as key_column
+//from information_schema.table_constraints b inner join information_schema.key_column_usage a on a.constraint_name = b.constraint_name 
+//     and a.constraint_schema = b.constraint_schema  and a.constraint_name = b.constraint_name
+//where b.constraint_type = 'PRIMARY KEY' and a.table_schema = cols.table_schema and a.table_name = cols.table_name and a.column_name = cols.column_name) then '√' ELSE '' END 主键
+//,case when cols.is_nullable = 'YES' THEN '√' ELSE '' END   允许空
+//,cols.column_default 默认值
+//,'' as 列说明
+//from 
+//information_schema.columns cols inner join information_schema.tables tbs  on cols.TABLE_NAME = tbs.TABLE_NAME
+//where tbs.table_type = 'BASE TABLE'
+//              ORDER BY 1, 2 ";
+//            dtStruct = help.DirectQuery(strSql);
 
            
             //            if (type == 2012)
@@ -69,7 +70,6 @@ where tbs.table_type = 'BASE TABLE'
         }
         public IList<DataTableColumnDefCollection> GetTableStruct(List<string> tables)
         {
-
             var strSql = @"  select cols.table_schema tableschema
  ,quote_ident(cols.table_name)  tablename
 ,cols.ordinal_position ordinal
