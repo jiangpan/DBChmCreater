@@ -304,6 +304,9 @@ namespace DBChmCreater
 
             Directory.CreateDirectory(".//tmp");
 
+            Directory.CreateDirectory(".//tmp//resources");
+
+
             //定义目录DataTable 结构
             Synyi.DBChmCreater.Entity.DataTableCollection dataTableStructures = new Synyi.DBChmCreater.Entity.DataTableCollection("<b>数据库表目录</b>");
 
