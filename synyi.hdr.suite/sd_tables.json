@@ -1,0 +1,368 @@
+[
+  {
+    "table_no": "1",
+    "table_name": "patient_patient_base_info",
+    "table_desc": "（病人基本信息）"
+  },
+  {
+    "table_no": "2",
+    "table_name": "visit_outpatient_record",
+    "table_desc": "（门诊就诊记录）"
+  },
+  {
+    "table_no": "3",
+    "table_name": "visit_inpat_record",
+    "table_desc": "（住院就诊记录）"
+  },
+  {
+    "table_no": "4",
+    "table_name": "visit_inpat_baby_info",
+    "table_desc": "（住院婴儿信息）"
+  },
+  {
+    "table_no": "5",
+    "table_name": "visit_inpat_shift_dept",
+    "table_desc": "（住院转科记录）"
+  },
+  {
+    "table_no": "6",
+    "table_name": "orders_outpat_recipe",
+    "table_desc": "（门诊处方）"
+  },
+  {
+    "table_no": "7",
+    "table_name": "orders_outpat_recipe_detail",
+    "table_desc": "（门诊处方明细）"
+  },
+  {
+    "table_no": "8",
+    "table_name": "orders_inpat_drug_order",
+    "table_desc": "（住院用药医嘱）"
+  },
+  {
+    "table_no": "9",
+    "table_name": "orders_inpat_undrug_order",
+    "table_desc": "（住院非药品医嘱）"
+  },
+  {
+    "table_no": "10",
+    "table_name": "fee_outpat_fee",
+    "table_desc": "（门诊费用汇总表）"
+  },
+  {
+    "table_no": "11",
+    "table_name": "fee_outpat_fee_detail",
+    "table_desc": "（门诊费用明细表）"
+  },
+  {
+    "table_no": "12",
+    "table_name": "fee_inpat_balance",
+    "table_desc": "（住院结算表）"
+  },
+  {
+    "table_no": "13",
+    "table_name": "fee_inpat_fee_detail",
+    "table_desc": "（住院费用明细表）"
+  },
+  {
+    "table_no": "14",
+    "table_name": "diag_patient_diagnose",
+    "table_desc": "（病人诊断记录）"
+  },
+  {
+    "table_no": "15",
+    "table_name": "allergy_patient_allergy",
+    "table_desc": "（病人过敏记录）"
+  },
+  {
+    "table_no": "16",
+    "table_name": "emr_inpat_medical_record",
+    "table_desc": "（住院病历）"
+  },
+  {
+    "table_no": "17",
+    "table_name": "emr_nurse_record",
+    "table_desc": "（护理病历）"
+  },
+  {
+    "table_no": "18",
+    "table_name": "emr_outpat_medical_record",
+    "table_desc": "（门诊病历）"
+  },
+  {
+    "table_no": "19",
+    "table_name": "nurse_vital_sign",
+    "table_desc": "（体征记录）"
+  },
+  {
+    "table_no": "20",
+    "table_name": "nurse_nurse_record_sheet",
+    "table_desc": "（护理记录单）(未审核版本暂不使用)"
+  },
+  {
+    "table_no": "21",
+    "table_name": "nurse_nurse_data_record",
+    "table_desc": "（护理数据记录）"
+  },
+  {
+    "table_no": "22",
+    "table_name": "nurse_nurse_catheters",
+    "table_desc": "（护理导管记录）"
+  },
+  {
+    "table_no": "23",
+    "table_name": "nurse_nurse_plan",
+    "table_desc": "（患者照护计划）"
+  },
+  {
+    "table_no": "24",
+    "table_name": "cases_case_base",
+    "table_desc": "（病案首页）"
+  },
+  {
+    "table_no": "25",
+    "table_name": "cases_case_diagnose",
+    "table_desc": "（病案诊断明细）"
+  },
+  {
+    "table_no": "26",
+    "table_name": "cases_case_operation",
+    "table_desc": "（病案手术表）"
+  },
+  {
+    "table_no": "27",
+    "table_name": "cases_case_baby",
+    "table_desc": "（病案婴儿表）"
+  },
+  {
+    "table_no": "28",
+    "table_name": "lab_lab_report",
+    "table_desc": "（检验报告）"
+  },
+  {
+    "table_no": "29",
+    "table_name": "lab_lab_report_result",
+    "table_desc": "（检验报告结果）"
+  },
+  {
+    "table_no": "30",
+    "table_name": "lab_bacteria_result",
+    "table_desc": "（细菌结果）"
+  },
+  {
+    "table_no": "31",
+    "table_name": "lab_antibiotic_result",
+    "table_desc": "（药敏结果）"
+  },
+  {
+    "table_no": "32",
+    "table_name": "lab_microbe_report",
+    "table_desc": "（微生物报告）"
+  },
+  {
+    "table_no": "33",
+    "table_name": "checks_radiology_report",
+    "table_desc": "（放射学报告）"
+  },
+  {
+    "table_no": "34",
+    "table_name": "checks_radiology_report_item",
+    "table_desc": "（放射学报告检查项目）"
+  },
+  {
+    "table_no": "35",
+    "table_name": "checks_ecg_report",
+    "table_desc": "（心电报告）"
+  },
+  {
+    "table_no": "36",
+    "table_name": "checks_ecg_result_detail",
+    "table_desc": "（心电报告结果明细）"
+  },
+  {
+    "table_no": "37",
+    "table_name": "checks_ecg_report_item",
+    "table_desc": "（心电报告检查项目）"
+  },
+  {
+    "table_no": "38",
+    "table_name": "checks_endoscopy_report",
+    "table_desc": "（内窥镜报告）"
+  },
+  {
+    "table_no": "39",
+    "table_name": "checks_endoscopy_report_item",
+    "table_desc": "（内窥镜报告检查项目）"
+  },
+  {
+    "table_no": "40",
+    "table_name": "checks_endoscopy_result_detail",
+    "table_desc": "（内窥镜报告结果明细）"
+  },
+  {
+    "table_no": "41",
+    "table_name": "checks_ultrasound_report",
+    "table_desc": "（超声报告）"
+  },
+  {
+    "table_no": "42",
+    "table_name": "checks_ultrasound_report_item",
+    "table_desc": "（超声报告检查项目）"
+  },
+  {
+    "table_no": "43",
+    "table_name": "checks_ultrasound_result_detail",
+    "table_desc": "（超声报告结果明细）"
+  },
+  {
+    "table_no": "44",
+    "table_name": "checks_pathology_report",
+    "table_desc": "（病理报告）"
+  },
+  {
+    "table_no": "45",
+    "table_name": "checks_pathology_report_item",
+    "table_desc": "（病理报告检查项目）"
+  },
+  {
+    "table_no": "46",
+    "table_name": "checks_other_report",
+    "table_desc": "（其他检查报告）"
+  },
+  {
+    "table_no": "47",
+    "table_name": "checks_other_report_item",
+    "table_desc": "（其他检查报告检查项目）"
+  },
+  {
+    "table_no": "48",
+    "table_name": "operation_preoperative_visit_record",
+    "table_desc": "（术前访视记录）"
+  },
+  {
+    "table_no": "49",
+    "table_name": "operation_operation_record",
+    "table_desc": "（手术记录）"
+  },
+  {
+    "table_no": "50",
+    "table_name": "operation_operation_employee",
+    "table_desc": "（手术人员）"
+  },
+  {
+    "table_no": "51",
+    "table_name": "operation_operation_detail",
+    "table_desc": "（手术明细）"
+  },
+  {
+    "table_no": "52",
+    "table_name": "operation_operation_diagnose",
+    "table_desc": "（手术诊断明细）"
+  },
+  {
+    "table_no": "53",
+    "table_name": "operation_operation_document",
+    "table_desc": "（手麻文书）"
+  },
+  {
+    "table_no": "54",
+    "table_name": "operation_operation_document_detail",
+    "table_desc": "（手术文书数据明细）"
+  },
+  {
+    "table_no": "55",
+    "table_name": "operation_anesthesia_record",
+    "table_desc": "（麻醉记录）"
+  },
+  {
+    "table_no": "56",
+    "table_name": "operation_operation_vital_sign",
+    "table_desc": "（手术体征记录）"
+  },
+  {
+    "table_no": "57",
+    "table_name": "operation_operation_event",
+    "table_desc": "（手术事件）"
+  },
+  {
+    "table_no": "58",
+    "table_name": "tumour_chemotherapy_record",
+    "table_desc": "（化疗记录）"
+  },
+  {
+    "table_no": "59",
+    "table_name": "tumour_chemotherapy_drug_detail",
+    "table_desc": "（化疗用药明细）"
+  },
+  {
+    "table_no": "60",
+    "table_name": "tumour_radiotherapy_record",
+    "table_desc": "（放疗记录）"
+  },
+  {
+    "table_no": "61",
+    "table_name": "tumour_radiotherapy_detail",
+    "table_desc": "（放疗明细）"
+  },
+  {
+    "table_no": "62",
+    "table_name": "tumour_untoward_effect_record",
+    "table_desc": "（不良反应记录）"
+  },
+  {
+    "table_no": "63",
+    "table_name": "biobank_patient_sample",
+    "table_desc": "（患者样本信息）"
+  },
+  {
+    "table_no": "64",
+    "table_name": "biobank_patient_simple_location",
+    "table_desc": "（患者样本存放位置）"
+  },
+  {
+    "table_no": "65",
+    "table_name": "biobank_sample_class",
+    "table_desc": "（样本类别字典）"
+  },
+  {
+    "table_no": "66",
+    "table_name": "biobank_simple_location",
+    "table_desc": "（样本存放位置字典）"
+  },
+  {
+    "table_no": "67",
+    "table_name": "other_infection_record",
+    "table_desc": "（感染记录）"
+  },
+  {
+    "table_no": "68",
+    "table_name": "other_blood_transfusion_record",
+    "table_desc": "（输血记录）"
+  },
+  {
+    "table_no": "69",
+    "table_name": "reportcard_badness_incident_report",
+    "table_desc": "（不良事件报告）"
+  },
+  {
+    "table_no": "70",
+    "table_name": "phyexam_physical_examination_record",
+    "table_desc": "（体检记录）"
+  },
+  {
+    "table_no": "71",
+    "table_name": "phyexam_physical_examination_assess",
+    "table_desc": "（总检评估）"
+  },
+  {
+    "table_no": "72",
+    "table_name": "phyexam_dept_summary",
+    "table_desc": "（科室小结）"
+  },
+  {
+    "table_no": "73",
+    "table_name": "phyexam_item_result",
+    "table_desc": "（项目结果）"
+  }
+
+]
