@@ -8,7 +8,7 @@ using synyi.hdr.suite.Entity;
 
 namespace synyi.hdr.suite
 {
-    public class HDRExcelHelper
+    public class ExcelHelper
     {
 
         public void ExportVithStyle(IList<HdrTablesCollection> schemas, List<ColumnEntity> tableColumns, Workbook workbook, int columnsOffset = 0, bool generateDiffColumn = false)

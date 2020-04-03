@@ -739,7 +739,7 @@ namespace synyi.hdr.suite
                 wb = new Workbook(fs);
             }
 
-            HDRExcelHelper hDRExcelHelper = new HDRExcelHelper();
+            ExcelHelper hDRExcelHelper = new ExcelHelper();
 
             hDRExcelHelper.ExportVithStyle(result, tableColumns1, wb, 9,true);
             
@@ -849,7 +849,7 @@ namespace synyi.hdr.suite
                 wb = new Workbook(fs);
             }
 
-            HDRExcelHelper hDRExcelHelper = new HDRExcelHelper();
+            ExcelHelper hDRExcelHelper = new ExcelHelper();
 
             hDRExcelHelper.ExportVithStyle(result1, tableColumns1, wb, 9, true);
 

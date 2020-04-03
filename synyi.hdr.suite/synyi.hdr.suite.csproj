@@ -87,7 +87,6 @@
     <Compile Include="Entity\ExcelDesc.cs" />
     <Compile Include="Entity\ColumnEntity.cs" />
     <Compile Include="DatatableHelper.cs" />
-    <Compile Include="PostgresConnHelper.cs" />
     <Compile Include="PostgresHelper.cs" />
     <Compile Include="Entity\HdrTablesCollection.cs" />
     <Compile Include="Entity\JsonEntity.cs" />
@@ -100,7 +99,7 @@
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="HDRExcelHelper.cs" />
+    <Compile Include="ExcelHelper.cs" />
     <Compile Include="HdrExcelProcesser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
