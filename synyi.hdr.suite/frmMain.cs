@@ -17,6 +17,7 @@ using Aspose.Cells.Drawing;
 using synyi.hdr.suite.Entity;
 using Dapper.Contrib.Extensions;
 using System.Diagnostics;
+using System.Configuration;
 
 namespace synyi.hdr.suite
 {
@@ -24,6 +25,7 @@ namespace synyi.hdr.suite
     {
         private string basePath = AppDomain.CurrentDomain.BaseDirectory;
 
+        private string  dbConnectionString = ConfigurationManager.ConnectionStrings["hdr"].ConnectionString;
 
         public frmMain()
         {
@@ -42,7 +44,7 @@ namespace synyi.hdr.suite
         {
             List<string> aa = null;
 
-            using (var conn = DatabaseHelper.CreateConnection(DatabaseHelper.HdrCda))
+            using (var conn =  new PostgresHelper(dbConnectionString))
             {
                 aa = conn.Query<string>(@"select table_name  from information_schema.tables where table_schema = 'public' and table_name like @tbname ", new { tbname = baseName.ToLower() + "%" }).ToList<string>();
             }
@@ -84,7 +86,7 @@ namespace synyi.hdr.suite
             List<ColumnEntity> result = null;
 
             #region 查询数据库 获取 Columns 信息
-            using (var conn = DatabaseHelper.CreateConnection(DatabaseHelper.HdrV106))
+            using (var conn = new PostgresHelper(dbConnectionString))
             {
                 BizHelper bizHelper = new BizHelper();
                 var sql = bizHelper.BuildQueryTableColumnsSQL(schema);
@@ -319,7 +321,7 @@ namespace synyi.hdr.suite
             IList<schemata> schemataList = null;
             IList<Table> tableList = null;
             string owneer = "dba";
-            using (var conn = DatabaseHelper.CreateConnection())
+            using (var conn = new PostgresHelper(dbConnectionString))
             {
                 schemataList = conn.Query<schemata>($@"select * from information_schema.schemata where schema_owner = '{owneer}'").ToList<schemata>();
                 string schemas = schemataList.Select(p => "'" + p.schema_name + "'").Aggregate((a, b) => a + " , " + b);
@@ -631,7 +633,7 @@ namespace synyi.hdr.suite
             DateTime dt_utc = DateTime.UtcNow;
             DateTime dt_bj = DateTime.Now;
             TimeZone localZone = TimeZone.CurrentTimeZone;
-            using (var conn = DatabaseHelper.CreateConnection(DatabaseHelper.Exampledb))
+            using (var conn = new PostgresHelper(dbConnectionString))
             {
                 var result1 = conn.Query<time_zone_test>("select * from time_zone_test");
                 Debug.WriteLine($"当前时区:{localZone.StandardName}");
@@ -642,7 +644,7 @@ namespace synyi.hdr.suite
 
             }
 
-            using (var conn = DatabaseHelper.CreateConnection("hdr_new"))
+            using (var conn = new PostgresHelper(dbConnectionString))
             {
                 var result1 = conn.Query<time_zone_test>("select * from time_zone_test");
                 Debug.WriteLine($"当前时区:{localZone.StandardName}");
@@ -681,7 +683,7 @@ namespace synyi.hdr.suite
             #region 读取数据
             List<ColumnEntity> tableColumns = null;
             var schema = result.Select(p => p.Schema).Distinct().ToList();
-            using (var conn = DatabaseHelper.CreateConnection(DatabaseHelper.HdrV109))
+            using (var conn = new PostgresHelper(dbConnectionString))
             {
                 BizHelper bizHelper = new BizHelper();
                 var sql = bizHelper.BuildQueryTableColumnsSQL(schema);
@@ -801,7 +803,7 @@ namespace synyi.hdr.suite
             List<ColumnEntity> tableColumns = null;
             var schema = result.Select(p => p.Schema).Distinct().ToList();
             var schme = new List<string> { "sd" };
-            using (var conn = DatabaseHelper.CreateConnection(DatabaseHelper.HdrV109))
+            using (var conn = new PostgresHelper(dbConnectionString))
             {
                 BizHelper bizHelper = new BizHelper();
                 var sql = bizHelper.BuildQueryTableColumnsSQL(schme);
