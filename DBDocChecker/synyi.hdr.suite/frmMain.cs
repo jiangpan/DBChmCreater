@@ -659,7 +659,8 @@ namespace synyi.hdr.suite
             return;
         }
 
-        private void btnLoadHdr_v106_Click(object sender, EventArgs e)
+        #region 读取最新的HDR
+        private void btnLoadHdr_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(this.txtHDRExcelPath.Text))
             {
@@ -731,7 +732,7 @@ namespace synyi.hdr.suite
             var schemaTables = JsonConvert.SerializeObject(result);
 
 
-            string outfilePath = Path.Combine(basePath, $"hdr_v106_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
+            string outfilePath = Path.Combine(basePath, $"hdr_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
 
             Workbook wb;
             using (FileStream fs = new FileStream(filePathWithName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -741,8 +742,8 @@ namespace synyi.hdr.suite
 
             AsposeHelper hDRExcelHelper = new AsposeHelper();
 
-            hDRExcelHelper.ExportVithStyle(result, tableColumns1, wb, 9,true);
-            
+            hDRExcelHelper.ExportVithStyle(result, tableColumns1, wb, 9, true);
+
 
             wb.Save(outfilePath, SaveFormat.Xlsx);
 
@@ -750,6 +751,102 @@ namespace synyi.hdr.suite
 
 
         }
+
+        #endregion
+
+        #region 读取最新的SD
+        private void btnLoadHDR_SD_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(this.txtHDRExcelPath.Text))
+            {
+                return;
+            }
+            if (!File.Exists(this.txtHDRExcelPath.Text))
+            {
+                return;
+            }
+            string filePathWithName = this.txtHDRExcelPath.Text;
+
+            Workbook workbook = null;
+            using (FileStream fs = new FileStream(filePathWithName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                workbook = new Workbook(fs);
+            }
+            var worksheets = workbook.Worksheets;
+
+            var result = AsposeHelper.AutoFitMergedCells_SD(workbook, "sd域表集合", 2, 0);
+
+            #region 读取数据
+            List<ColumnEntity> tableColumns = null;
+            var schema = new List<string> {"sd" };
+            using (var conn = new PostgresHelper(dbConnectionString))
+            {
+                BizHelper bizHelper = new BizHelper();
+                var sql = bizHelper.BuildQueryTableColumnsSQL(schema);
+                tableColumns = conn.Query<ColumnEntity>(sql).ToList<ColumnEntity>();
+            }
+
+            var tableColumns1 = tableColumns.Select(p =>
+            {
+                if (p.data_typ == "int2")
+                {
+                    p.data_typ = "smallint";
+                }
+                if (p.data_typ == "int4")
+                {
+                    p.data_typ = "int";
+                }
+                if (p.data_typ == "int8")
+                {
+                    p.data_typ = "bigint";
+                }
+                if (p.data_typ == "timestamp(6)")
+                {
+                    p.data_typ = "timestamp";
+                }
+                if (p.data_typ == "timestamp(3)")
+                {
+                    p.data_typ = "timestamp";
+                }
+                if (p.data_typ.Length == 6 && p.data_typ.Contains("[]") && p.data_typ.Contains("int"))
+                {
+                    p.data_typ = "int[]";
+                }
+                return p;
+            }).ToList();
+            #endregion
+
+
+            var schemaAndTablas = result.GroupBy(p => p.Schema).ToList();
+
+
+
+            //var schemas = result.Select(p => p.Schema).Distinct();
+
+
+            var schemaTables = JsonConvert.SerializeObject(result);
+
+
+            string outfilePath = Path.Combine(basePath, $"hdr_sd_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
+
+            Workbook wb;
+            using (FileStream fs = new FileStream(filePathWithName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                wb = new Workbook(fs);
+            }
+
+            AsposeHelper hDRExcelHelper = new AsposeHelper();
+
+            hDRExcelHelper.ExportVithStyle(result, tableColumns1, wb, 9, true);
+
+
+            wb.Save(outfilePath, SaveFormat.Xlsx);
+
+            Process.Start("Explorer", "/select," + outfilePath);
+
+
+        }
+        #endregion
 
         #region 文件对话框
         private void btnLocationHDRExcel_Click(object sender, EventArgs e)
@@ -841,7 +938,7 @@ namespace synyi.hdr.suite
             #endregion
 
 
-            string outfilePath = Path.Combine(basePath, $"hdr_v106_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
+            string outfilePath = Path.Combine(basePath, $"hdr_sd_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
 
             Workbook wb;
             using (FileStream fs = new FileStream(filePathWithName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))

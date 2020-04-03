@@ -41,7 +41,10 @@
             this.btnLocationHDRExcel = new System.Windows.Forms.Button();
             this.grid = new System.Windows.Forms.DataGridView();
             this.btnLoad_SD = new System.Windows.Forms.Button();
+            this.btnLoadHDR_SD = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnExportHDRExcel
@@ -124,13 +127,13 @@
             // 
             // btnLoadHdr_v106
             // 
-            this.btnLoadHdr_v106.Location = new System.Drawing.Point(703, 320);
+            this.btnLoadHdr_v106.Location = new System.Drawing.Point(18, 21);
             this.btnLoadHdr_v106.Name = "btnLoadHdr_v106";
             this.btnLoadHdr_v106.Size = new System.Drawing.Size(85, 34);
             this.btnLoadHdr_v106.TabIndex = 10;
             this.btnLoadHdr_v106.Text = "读取最新HDR";
             this.btnLoadHdr_v106.UseVisualStyleBackColor = true;
-            this.btnLoadHdr_v106.Click += new System.EventHandler(this.btnLoadHdr_v106_Click);
+            this.btnLoadHdr_v106.Click += new System.EventHandler(this.btnLoadHdr_Click);
             // 
             // txtHDRExcelPath
             // 
@@ -160,7 +163,7 @@
             // 
             // btnLoad_SD
             // 
-            this.btnLoad_SD.Location = new System.Drawing.Point(694, 422);
+            this.btnLoad_SD.Location = new System.Drawing.Point(703, 333);
             this.btnLoad_SD.Name = "btnLoad_SD";
             this.btnLoad_SD.Size = new System.Drawing.Size(85, 34);
             this.btnLoad_SD.TabIndex = 14;
@@ -168,16 +171,37 @@
             this.btnLoad_SD.UseVisualStyleBackColor = true;
             this.btnLoad_SD.Click += new System.EventHandler(this.btnLoad_SD_Click);
             // 
+            // btnLoadHDR_SD
+            // 
+            this.btnLoadHDR_SD.Location = new System.Drawing.Point(18, 61);
+            this.btnLoadHDR_SD.Name = "btnLoadHDR_SD";
+            this.btnLoadHDR_SD.Size = new System.Drawing.Size(85, 34);
+            this.btnLoadHDR_SD.TabIndex = 15;
+            this.btnLoadHDR_SD.Text = "读取最新SD";
+            this.btnLoadHDR_SD.UseVisualStyleBackColor = true;
+            this.btnLoadHDR_SD.Click += new System.EventHandler(this.btnLoadHDR_SD_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.btnLoadHDR_SD);
+            this.groupBox1.Controls.Add(this.btnLoadHdr_v106);
+            this.groupBox1.Location = new System.Drawing.Point(703, 390);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(126, 121);
+            this.groupBox1.TabIndex = 16;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "文档校对";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 561);
+            this.ClientSize = new System.Drawing.Size(843, 606);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnLoad_SD);
             this.Controls.Add(this.grid);
             this.Controls.Add(this.btnLocationHDRExcel);
             this.Controls.Add(this.txtHDRExcelPath);
-            this.Controls.Add(this.btnLoadHdr_v106);
             this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnLoadJson);
             this.Controls.Add(this.btnLoadHdr_v105);
@@ -190,6 +214,7 @@
             this.Text = "Form1";
             this.Shown += new System.EventHandler(this.frmMain_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -210,6 +235,8 @@
         private System.Windows.Forms.Button btnLocationHDRExcel;
         private System.Windows.Forms.DataGridView grid;
         private System.Windows.Forms.Button btnLoad_SD;
+        private System.Windows.Forms.Button btnLoadHDR_SD;
+        private System.Windows.Forms.GroupBox groupBox1;
     }
 }
 

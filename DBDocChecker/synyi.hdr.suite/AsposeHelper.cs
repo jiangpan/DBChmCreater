@@ -249,17 +249,111 @@ namespace synyi.hdr.suite
         }
 
 
+        /// <summary>
+        /// 展开excel合并的单元格
+        /// </summary>
+        /// <param name="head"></param>
+        /// <param name="workbook"></param>
+        /// <param name="startSkipRows"></param>
+        /// <param name="tailIgnoreRows"></param>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
+        public static List<HdrTablesCollection> AutoFitMergedCells_SD(Workbook workbook, string sheetName, int startSkipRows, int tailIgnoreRows)
+        {
+            try
+            {
+                List<HdrTablesCollection> lists = new List<HdrTablesCollection>();
+
+                Worksheet sheet = workbook.Worksheets.FirstOrDefault(p => p.Name == sheetName);
+                Cells cells = sheet.Cells;
+                int totalColumns = cells.MaxColumn;
+                int totalRows = cells.LastCell.Row;
+                int startrow = cells.FirstCell.Row;
+                RowCollection rows = cells.Rows;
+
+                Row headerRow = rows[0];
+                //int cellCount = headerRow.l;
+                //Type type = typeof(T);  
+
+                HdrTablesCollection t = default(HdrTablesCollection);
+                for (int i = startrow + startSkipRows; i <= totalRows - tailIgnoreRows; i++)
+                {
+                    if (i > 70)
+                    {
+
+                    }
+
+                    t = Activator.CreateInstance<HdrTablesCollection>();
+                    Row row = rows[i];
+                    Cell schema = row[0];
+
+                    if (string.IsNullOrEmpty(schema.StringValue))
+                    {
+                        if (schema.IsMerged)//合并单元格
+                        {
+                            Range rge = schema.GetMergedRange();
+                            var result1 = ((object[,])(rge.Value))[0, 0].ToString();
+                            t.Domain = result1;
+                        }
+                        else
+                        {
+                            t.Domain = string.Empty;
+                        }
+                    }
+                    else
+                    {
+                        t.Domain = schema.StringValue;
+                    }
+
+                    Cell table = row[1];
+                    Cell tabledesc = row[2];
+
+
+                    t.TableName = table.StringValue;
+                    t.TableDesc = tabledesc.StringValue;
+
+                    if (!string.IsNullOrEmpty(t.Domain))
+                    {
+                        var spltDomain = t.Domain.Split('（', '）', '(', ')');
+                        t.Schema = spltDomain[0];
+                        t.SchemaDesc = spltDomain[1];
+                    }
+
+                   
+                    
+                    t.Schema = "sd";
+                    t.SchemaDesc = "sd层";
+
+                     
+
+                    lists.Add(t);
+                }
+                return lists;
+            }
+            catch (Exception ee)
+            {
+                string see = ee.Message;
+                return null;
+            }
+        }
+
+
+
+
         public void ExportVithStyle(IList<HdrTablesCollection> schemas, List<ColumnEntity> tableColumns, Workbook workbook, int columnsOffset = 0, bool generateDiffColumn = false)
         {
-            var schemaAndTablas = schemas.GroupBy(p => p.Schema).ToList();
+
+            var schemaAndTablas = schemas.Select(p => p.Schema).Distinct().ToList();
+
+            
             AsposeHelper heper = new AsposeHelper();
             IList<Style> styles = heper.CheckTest(workbook);
             for (int ischema = 0; ischema < schemaAndTablas.Count; ischema++)
             {
                 //一个schema
                 var item = schemaAndTablas[ischema];
-                string schemaname = item.Key;
-                var itemlst = schemaAndTablas[ischema].ToList();//所有的表
+                string schemaname = item;
+                var itemlst =  schemas.Where(p=>p.Schema == schemaname).ToList() ;//所有的表
 
 
 
