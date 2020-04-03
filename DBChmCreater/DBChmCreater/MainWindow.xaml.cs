@@ -352,7 +352,7 @@ namespace DBChmCreater
                         desp = drs.TableDescription;
                     }
                     //创建表字段信息的html
-                    HtmlHelp.CreateHtml(dt, true, System.IO.Path.Combine(pathTables, dt[0].tableschema, $"{dt.TableName}.html"), true, desp);
+                    HtmlHelp.CreateHtml(dt, true, System.IO.Path.Combine(pathTables, dt[0].tableschema, $"{dt.TableName}.html"), true, desp,true);
                     //构建表目录
                     dataTableStructures.Add(new DataTableItem { TableNo = tableIndex++, Domain = drs.Domain, TableName = $"<a href=\"{tableStructureDirName}\\{drs.Domain}\\{ dt.TableName}.html\">{ dt.TableName.Split('.').GetValue(1)}</a>", TableDescription = desp });
                     //改变进度
@@ -360,7 +360,7 @@ namespace DBChmCreater
 
                 }
                 //导出表目录
-                HtmlHelp.CreateHtml(dataTableStructures, false, "./tmp/" + defaultHtml, false); //默认页面
+                HtmlHelp.CreateHtml(dataTableStructures, false, "./tmp/" + defaultHtml, false,string.Empty,false); //默认页面
                 Dispatcher.Invoke(new Action(() => { tpbExport.Value++; }));
             }
             #endregion
@@ -391,7 +391,7 @@ namespace DBChmCreater
 
                 foreach (var dt in lstDt)
                 {
-                    HtmlHelp.CreateHtml2(dt, true, System.IO.Path.Combine(System.IO.Path.Combine(pathTables, dt.TableName.Split('.')[0]), dt.TableName + ".html"));
+                    HtmlHelp.CreateHtml2(dt, true, System.IO.Path.Combine(System.IO.Path.Combine(pathTables, dt.TableName.Split('.')[0]), dt.TableName + ".html"),true);
                     Dispatcher.Invoke(new Action(() => { tpbExport.Value++; }));
                 }
             }

@@ -39,7 +39,8 @@ namespace DBChmCreater.DB
         /// <param name="Path">保存路径</param>
         /// <param name="hasReturn">携带返回目录链接</param>
         /// <param name="tableDesc">携带返回目录链接</param>
-        public static void CreateHtml(DataTableColumnDefCollection dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "")
+        /// <param name="alternateColor">是否隔行变色</param>
+        public static void CreateHtml(DataTableColumnDefCollection dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "",bool alternateColor = true)
         {
             var code = new StringBuilder();
             code.AppendLine("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
@@ -74,6 +75,12 @@ namespace DBChmCreater.DB
             code.AppendLine("        {");
             code.AppendLine("            color: #E33E06;");
             code.AppendLine("        }");
+            if (alternateColor)
+            {
+                code.AppendLine("		tr:nth-child(even) {bgcolor: #CCC}");
+                code.AppendLine("		tr:nth-child(odd) {bgcolor: #FFF}");
+
+            }
             code.AppendLine("    </style>");
             code.AppendLine("</head>");
             code.AppendLine("<body>");
@@ -156,7 +163,8 @@ namespace DBChmCreater.DB
         /// <param name="Path">保存路径</param>
         /// <param name="hasReturn">携带返回目录链接</param>
         /// <param name="tableDesc">携带返回目录链接</param>
-        public static void CreateHtml(Synyi.DBChmCreater.Entity.DataTableCollection dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "")
+        /// <param name="alternateColor">是否隔行变色</param>
+        public static void CreateHtml(Synyi.DBChmCreater.Entity.DataTableCollection dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "",bool alternateColor = false)
         {
             var code = new StringBuilder();
             code.AppendLine("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
@@ -191,6 +199,12 @@ namespace DBChmCreater.DB
             code.AppendLine("        {");
             code.AppendLine("            color: #E33E06;");
             code.AppendLine("        }");
+            if (alternateColor)
+            {
+                code.AppendLine("		tr:nth-child(even) {bgcolor: #CCC}");
+                code.AppendLine("		tr:nth-child(odd) {bgcolor: #FFF}");
+
+            }
             code.AppendLine("    </style>");
             code.AppendLine("</head>");
             code.AppendLine("<body>");
@@ -321,7 +335,8 @@ namespace DBChmCreater.DB
         /// <param name="dt">DataTable，需要给TableName赋值</param>
         /// <param name="KeepNull">保持Null为Null值，否则为空</param>
         /// <param name="Path">保存路径</param>
-        public static void CreateHtml2(DataTable dt, bool KeepNull, string Path)
+        /// <param name="alternateColor">是否隔行变色</param>
+        public static void CreateHtml2(DataTable dt, bool KeepNull, string Path,bool alternateColor =  true)
         {
             var code = new StringBuilder();
             code.AppendLine("<html>");
@@ -379,6 +394,12 @@ namespace DBChmCreater.DB
             code.AppendLine("        {");
             code.AppendLine("            color: #E33E06;");
             code.AppendLine("        }");
+            if (alternateColor)
+            {
+                code.AppendLine("		tr:nth-child(even) {bgcolor: #CCC}");
+                code.AppendLine("		tr:nth-child(odd) {bgcolor: #FFF}");
+
+            }
             code.AppendLine("    </style>");
             code.AppendLine("    <script type=\"text/javascript\">");
             code.AppendLine("        window.apex_search = {};");
