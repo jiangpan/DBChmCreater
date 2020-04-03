@@ -60,8 +60,9 @@ from information_schema.columns " ;
                 sb.Append($" and  data_type in ({typestring}) ");
             }
 
+            //sb.Append(" order by table_schema asc, table_name asc,ordinal_position asc ");
 
-            return sql;
+            return sb.ToString();
 
 
         }

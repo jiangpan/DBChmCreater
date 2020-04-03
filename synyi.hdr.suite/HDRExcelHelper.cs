@@ -68,7 +68,7 @@ namespace synyi.hdr.suite
 
                     #region 处理列级别 表对应的列
                     //写入具体的表列
-                    var tabItemCols = tableColumns.Where(p => p.table_schema == schemaname).Where(p => p.table_name == tableName).ToList();
+                    var tabItemCols = tableColumns.Where(p => p.table_schema == schemaname).Where(p => p.table_name == tableName).OrderBy(p=>p.ordinal_position).ToList();
                     for (int icolumn = 0; icolumn < tabItemCols.Count; icolumn++)
                     {
                         var colItem = tabItemCols[icolumn];
@@ -138,5 +138,6 @@ namespace synyi.hdr.suite
 
         }
 
+                     
     }
 }

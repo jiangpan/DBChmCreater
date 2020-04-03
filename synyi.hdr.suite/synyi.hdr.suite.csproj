@@ -90,6 +90,7 @@
     <Compile Include="DatabaseHelper.cs" />
     <Compile Include="Entity\HdrTablesCollection.cs" />
     <Compile Include="Entity\JsonEntity.cs" />
+    <Compile Include="Entity\sd_tables.cs" />
     <Compile Include="Entity\TestPerson.cs" />
     <Compile Include="Entity\time_zone_test.cs" />
     <Compile Include="frmMain.cs">
@@ -118,6 +119,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="sd_tables.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

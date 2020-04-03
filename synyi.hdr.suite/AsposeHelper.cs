@@ -148,7 +148,9 @@ namespace synyi.hdr.suite
 
             Style styleAngka = workbook.CreateStyle();
             styles.Add(styleAngka);
-            styleAngka.HorizontalAlignment = TextAlignmentType.Center;
+            styleAngka.HorizontalAlignment = TextAlignmentType.Left;
+            styleAngka.VerticalAlignment = TextAlignmentType.Center;
+
             styleAngka.Borders[BorderType.LeftBorder].LineStyle = CellBorderType.Thin;
             styleAngka.Borders[BorderType.TopBorder].LineStyle = CellBorderType.Thin;
             styleAngka.Borders[BorderType.RightBorder].LineStyle = CellBorderType.Thin;

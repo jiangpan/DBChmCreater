@@ -40,6 +40,7 @@
             this.txtHDRExcelPath = new System.Windows.Forms.TextBox();
             this.btnLocationHDRExcel = new System.Windows.Forms.Button();
             this.grid = new System.Windows.Forms.DataGridView();
+            this.btnLoad_SD = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -127,7 +128,7 @@
             this.btnLoadHdr_v106.Name = "btnLoadHdr_v106";
             this.btnLoadHdr_v106.Size = new System.Drawing.Size(85, 34);
             this.btnLoadHdr_v106.TabIndex = 10;
-            this.btnLoadHdr_v106.Text = "读取HDR106";
+            this.btnLoadHdr_v106.Text = "读取最新HDR";
             this.btnLoadHdr_v106.UseVisualStyleBackColor = true;
             this.btnLoadHdr_v106.Click += new System.EventHandler(this.btnLoadHdr_v106_Click);
             // 
@@ -157,11 +158,22 @@
             this.grid.Size = new System.Drawing.Size(683, 387);
             this.grid.TabIndex = 13;
             // 
+            // btnLoad_SD
+            // 
+            this.btnLoad_SD.Location = new System.Drawing.Point(694, 422);
+            this.btnLoad_SD.Name = "btnLoad_SD";
+            this.btnLoad_SD.Size = new System.Drawing.Size(85, 34);
+            this.btnLoad_SD.TabIndex = 14;
+            this.btnLoad_SD.Text = "读取最新SD";
+            this.btnLoad_SD.UseVisualStyleBackColor = true;
+            this.btnLoad_SD.Click += new System.EventHandler(this.btnLoad_SD_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 561);
+            this.Controls.Add(this.btnLoad_SD);
             this.Controls.Add(this.grid);
             this.Controls.Add(this.btnLocationHDRExcel);
             this.Controls.Add(this.txtHDRExcelPath);
@@ -197,6 +209,7 @@
         private System.Windows.Forms.TextBox txtHDRExcelPath;
         private System.Windows.Forms.Button btnLocationHDRExcel;
         private System.Windows.Forms.DataGridView grid;
+        private System.Windows.Forms.Button btnLoad_SD;
     }
 }
 

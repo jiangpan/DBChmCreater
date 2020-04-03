@@ -11,7 +11,7 @@ namespace synyi.hdr.suite
         public string table_catalog { get; set; }
         public string table_schema { get; set; }
         public string table_name { get; set; }
-        public string ordinal_position { get; set; }
+        public int ordinal_position { get; set; }
         public string column_name { get; set; }
         public string chinese_name { get; set; }
         public string data_typ { get; set; }

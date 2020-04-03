@@ -33,6 +33,10 @@ namespace synyi.hdr.suite
         public static string HdrV108 { get; set; }
 
 
+
+        public static string HdrV109 { get; set; }
+
+
         public static Dictionary<string, string> sdf = null;
 
         static DatabaseHelper()
@@ -57,6 +61,8 @@ namespace synyi.hdr.suite
             HdrV106 = "hdr_v106";
 
             HdrV108 = "hdr_v108";
+
+            HdrV109 = "hdr_v109";
             //设置当前连接串
             dbConnectionString = ConfigurationManager.ConnectionStrings[HdrNewLocal].ConnectionString;
             dbProviderName = ConfigurationManager.ConnectionStrings[HdrNewLocal].ProviderName; //默认连接
