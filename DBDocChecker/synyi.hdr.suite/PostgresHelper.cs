@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 using Dapper;
 using Npgsql;
 using NpgsqlTypes;
+using Dapper.Contrib;
+using Dapper.Contrib.Extensions;
+
+
 
 namespace synyi.hdr.suite
 {
@@ -420,6 +424,46 @@ namespace synyi.hdr.suite
                 }
 
                 result = conn.Query<T>(sql, param);
+
+            }
+            return result;
+
+        }
+
+
+        public int Execute(string sql, object param = null)
+        {
+            NpgsqlConnection conn = null;
+            int result;
+
+            using (conn = new NpgsqlConnection(this.connectionString))
+            {
+                if (conn.State == ConnectionState.Closed || conn.State == ConnectionState.Broken)
+                {
+                    conn.Open();
+                }
+
+                result = conn.Execute(sql, param);
+
+            }
+            return result;
+        }
+
+
+        public long Insert<T>(T entityToInsert) where  T :class
+        {
+
+            NpgsqlConnection conn = null;
+            long result;
+
+            using (conn = new NpgsqlConnection(this.connectionString))
+            {
+                if (conn.State == ConnectionState.Closed || conn.State == ConnectionState.Broken)
+                {
+                    conn.Open();
+                }
+
+                result = conn.Insert<T>(entityToInsert);
 
             }
             return result;

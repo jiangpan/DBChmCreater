@@ -81,6 +81,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ScriptHandler.cs" />
     <Compile Include="AsposeHelper.cs" />
     <Compile Include="BizHelper.cs" />
     <Compile Include="Entity\ExcelColumn.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Entity\SchemaAndTablesEntity.cs" />
     <Compile Include="Entity\schemata.cs" />
     <Compile Include="Entity\Table.cs" />
+    <Compile Include="StringHelper.cs" />
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>

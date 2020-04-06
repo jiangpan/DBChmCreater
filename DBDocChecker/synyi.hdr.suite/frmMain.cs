@@ -18,6 +18,10 @@ using synyi.hdr.suite.Entity;
 using Dapper.Contrib.Extensions;
 using System.Diagnostics;
 using System.Configuration;
+using Dapper.Contrib;
+using Dapper;
+using Dapper.Contrib.Extensions;
+
 
 namespace synyi.hdr.suite
 {
@@ -25,7 +29,9 @@ namespace synyi.hdr.suite
     {
         private string basePath = AppDomain.CurrentDomain.BaseDirectory;
 
-        private string  dbConnectionString = ConfigurationManager.ConnectionStrings["hdr"].ConnectionString;
+        private string dbConnectionString = ConfigurationManager.ConnectionStrings["hdr"].ConnectionString;
+
+        private string testdbConnectionString = ConfigurationManager.ConnectionStrings["exampledb"].ConnectionString;
 
         public frmMain()
         {
@@ -44,7 +50,7 @@ namespace synyi.hdr.suite
         {
             List<string> aa = null;
 
-            using (var conn =  new PostgresHelper(dbConnectionString))
+            using (var conn = new PostgresHelper(dbConnectionString))
             {
                 aa = conn.Query<string>(@"select table_name  from information_schema.tables where table_schema = 'public' and table_name like @tbname ", new { tbname = baseName.ToLower() + "%" }).ToList<string>();
             }
@@ -778,7 +784,7 @@ namespace synyi.hdr.suite
 
             #region 读取数据
             List<ColumnEntity> tableColumns = null;
-            var schema = new List<string> {"sd" };
+            var schema = new List<string> { "sd" };
             using (var conn = new PostgresHelper(dbConnectionString))
             {
                 BizHelper bizHelper = new BizHelper();
@@ -960,6 +966,108 @@ namespace synyi.hdr.suite
 
         #endregion
 
+        #region 切分脚本
+        private void btnSplitScripts_Click(object sender, EventArgs e)
+        {
+            Dictionary<string, IList<string>> hdrscripts = new Dictionary<string, IList<string>>();
+
+            List<string> hdrbackups = new List<string> { "d:\\schema_dmp\\hdr_public_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_visit_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_tumour_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_sd_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_reportcard_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_phyexam_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_patient_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_other_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_orders_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_operation_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_nurse_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_nlp_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_mdm_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_lab_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_fee_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_eventflow_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_etl_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_emr_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_diag_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_checks_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_cases_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_biobank_20200404.sql",
+                                                        "d:\\schema_dmp\\hdr_allergy_20200404.sql" };
+            var st = Stopwatch.StartNew();
+            foreach (var item in hdrbackups)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(item);
+                var schemaName = fileName.Split('_')[1];
+                var result = StringHelper.Split(item);
+                hdrscripts.Add(schemaName, result);
+                //aaaa(result, "");
+            }
+
+            var scripthand = new ScriptHandler();
+            string basePath = Path.Combine(".", $"hdr{DateTime.Now.ToString("yyyyMMddHHmmss")}");
+            if (!Directory.Exists(basePath))
+            {
+                Directory.CreateDirectory(basePath);
+            }
+
+            #region 生成实体对象
+            Dictionary<string, IList<ScriptSnippet>> dicsnippets = new Dictionary<string, IList<ScriptSnippet>>();
+
+            foreach (var item in hdrscripts)
+            {
+                var result1 = scripthand.HandBackupScript($"d:\\schema_dmp\\hdr_{item.Key}_20200404.sql", item.Key, item.Value);
+
+                dicsnippets.Add(item.Key, result1);
+            }
+
+            #endregion
+
+
+            #region 持久化到数据库保存
+            var conn1 = new NpgsqlConnection(testdbConnectionString);
+
+
+            //conn.Execute("truncate table hdr_script_snippets");
+            conn1.Execute("drop table IF EXISTS hdr_script_snippets");
+            conn1.Execute(@"create table hdr_script_snippets(
+                                    id serial primary key,
+                                    startline int,
+                                    endline  int ,
+                                    filename varchar(200),
+                                    schemaname varchar(50),
+                                    snippets text[],
+                                    tyype  varchar(100),
+                                    name   text,
+                                    ctime TIMESTAMP default now()
+                                   )");
+            foreach (var item in dicsnippets)
+            {
+                foreach (var snippetitem in item.Value)
+                {
+                    conn1.Insert<ScriptSnippet>(snippetitem);
+                }
+            }
+
+            conn1.Dispose();
+            #endregion
+
+
+            #region 保存到对应的文件目录
+
+            foreach (var item in dicsnippets)
+            {
+                scripthand.ScriptSnippetToFile(basePath,item.Key,item.Value);
+            }
+
+
+            #endregion
+
+            st.Stop();
+            this.richTextBox1.AppendText($"Finish! Used {st.Elapsed.TotalMilliseconds}ms");
+
+        }
+        #endregion
     }
 
 

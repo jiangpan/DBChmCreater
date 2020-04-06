@@ -43,8 +43,11 @@
             this.btnLoad_SD = new System.Windows.Forms.Button();
             this.btnLoadHDR_SD = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btnSplitScripts = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.groupBox1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnExportHDRExcel
@@ -192,11 +195,32 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "文档校对";
             // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.btnSplitScripts);
+            this.groupBox2.Location = new System.Drawing.Point(703, 518);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(128, 81);
+            this.groupBox2.TabIndex = 17;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "脚本切割";
+            // 
+            // btnSplitScripts
+            // 
+            this.btnSplitScripts.Location = new System.Drawing.Point(18, 31);
+            this.btnSplitScripts.Name = "btnSplitScripts";
+            this.btnSplitScripts.Size = new System.Drawing.Size(85, 33);
+            this.btnSplitScripts.TabIndex = 0;
+            this.btnSplitScripts.Text = "切割HDR脚本";
+            this.btnSplitScripts.UseVisualStyleBackColor = true;
+            this.btnSplitScripts.Click += new System.EventHandler(this.btnSplitScripts_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 606);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnLoad_SD);
             this.Controls.Add(this.grid);
@@ -215,6 +239,7 @@
             this.Shown += new System.EventHandler(this.frmMain_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -237,6 +262,8 @@
         private System.Windows.Forms.Button btnLoad_SD;
         private System.Windows.Forms.Button btnLoadHDR_SD;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button btnSplitScripts;
     }
 }
 
