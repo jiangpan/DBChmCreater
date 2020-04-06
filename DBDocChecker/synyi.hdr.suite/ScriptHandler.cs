@@ -133,9 +133,29 @@ namespace synyi.hdr.suite
             #region 按照类sing来处理
             var groupsnippets = snippets.Select(p => p.tyype).Distinct();
 
-            foreach (string item in groupsnippets)
-            {
+            #region 自定义顺序
+            var groupsnippets1 = new List<string> {
+                " SCHEMA",
+                " TABLE",
+                " FUNCTION",
+                " CONSTRAINT",
+                //" SEQUENCE",
+                //" SEQUENCE OWNED BY",
+                " INDEX",
+                " COMMENT",
+                " DEFAULT",
+                "UN",
+                " FK CONSTRAINT",
+                " VIEW",
+                " TRIGGER",
+                " TYPE",
+                " AGGREGATE"
+            };
+            #endregion
 
+
+            foreach (string item in groupsnippets1)
+            {
                 var snippetsbyKind = snippets.Where(p => p.tyype == item).ToList();
                 if (snippetsbyKind.Count <= 0)
                 {
@@ -143,12 +163,14 @@ namespace synyi.hdr.suite
                 }
                 switch (item)
                 {
-                    case " SEQUENCE":
-                        ProcessSequence(schemaPath, schema, snippetsbyKind);
-                        break;
+                    //case " SEQUENCE":
+                    //    ProcessSequence(schemaPath, schema, snippetsbyKind);
+                    //    break;
 
                     case " DEFAULT":
-                        ProcessDefault(schemaPath, schema, snippetsbyKind);
+                        var snippetsbyseq = snippets.Where(p => p.tyype == " SEQUENCE").ToList();
+                        var snippetsbyseqownby = snippets.Where(p => p.tyype == " SEQUENCE OWNED BY").ToList();
+                        ProcessDefault(schemaPath, schema, snippetsbyKind, snippets, snippetsbyseqownby);
                         break;
 
                     case " FUNCTION":
@@ -195,9 +217,9 @@ namespace synyi.hdr.suite
                         ProcessTrigger(schemaPath, schema, snippetsbyKind);
                         break;
 
-                    case " SEQUENCE OWNED BY":
-                        ProcessSequenceOwnedBy(schemaPath, schema, snippetsbyKind);
-                        break;
+                    //case " SEQUENCE OWNED BY":
+                    //    ProcessSequenceOwnedBy(schemaPath, schema, snippetsbyKind);
+                    //    break;
 
                     case "UN":
                         ProcessUn(schemaPath, schema, snippetsbyKind);
@@ -210,12 +232,9 @@ namespace synyi.hdr.suite
             }
 
             #endregion
-
-
-
         }
 
-        #region Sequenc
+        #region Sequence
         public void ProcessSequence(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
             string filePath = Path.Combine(basepath, "sequence");
@@ -247,9 +266,14 @@ namespace synyi.hdr.suite
         #endregion
 
         #region Default
-        public void ProcessDefault(string basepath, string schema, IList<ScriptSnippet> snippets)
+        public void ProcessDefault(string basepath, string schema, IList<ScriptSnippet> snippets, IList<ScriptSnippet> snippetseq, IList<ScriptSnippet> snippetseqown)
         {
-            string filePath = Path.Combine(basepath, "default");
+            if (!(snippets.Count == snippetseq.Count && snippets.Count == snippetseqown.Count && snippetseq.Count == snippetseqown.Count))
+            {
+                File.WriteAllText(Path.Combine(AppContext.BaseDirectory, $"log_{DateTime.Now.ToString("yyyyMMddHHmmss")}.log"), $"{schema} 序列数不一致{snippets.Count};{snippetseq.Count};{snippetseqown.Count}");
+            }
+
+            string filePath = Path.Combine(basepath, "table");
             if (!Directory.Exists(filePath))
             {
                 Directory.CreateDirectory(filePath);
@@ -258,10 +282,39 @@ namespace synyi.hdr.suite
             {
                 foreach (var snippet in snippets)
                 {
-                    string filename = snippet.name;
-                    using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{filename}.sql"), false, Encoding.UTF8))
+                    var seqnamesplit = snippet.name.Trim().Split(' ');
+                    string filename = seqnamesplit[0]; //表名
+                    string clumnaname = seqnamesplit[1]; //列名
+
+                    var alterstatement = snippet.snippets.FirstOrDefault(p => p.StartsWith("ALTER") || p.StartsWith("CREATE"));
+
+                    var alterstatementsplt = alterstatement.Split(' ', '\'', '.');   // 11  12
+                    var schemaseq = alterstatementsplt[11];
+                    var seqname = alterstatementsplt[12];
+
+                    var seqownby = snippetseqown.FirstOrDefault(p => p.name.Trim() == seqname);
+                    var seqcreate = snippetseq.FirstOrDefault(p => p.name.Trim() == seqname);
+
+                    if (seqownby == null || seqcreate == null)
                     {
-                        foreach (var item in snippet.snippets)
+                        File.WriteAllText(Path.Combine(AppContext.BaseDirectory, $"log_{DateTime.Now.ToString("yyyyMMddHHmmss")}.log"), $"{schema} 序列找不到对应的cteate、own by :{filename} {clumnaname}");
+
+                    }
+
+                    using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{filename}.sql"), true, Encoding.UTF8))
+                    {
+
+                        foreach (var item in seqcreate?.snippets)
+                        {
+                            sw.WriteLine(item);
+                        }
+
+                        foreach (var item in seqownby?.snippets)
+                        {
+                            sw.WriteLine(item);
+                        }
+
+                        foreach (var item in snippet?.snippets)
                         {
                             sw.WriteLine(item);
                         }
@@ -443,7 +496,7 @@ namespace synyi.hdr.suite
         #region Constraint
         public void ProcessConstraint(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
-            string filePath = Path.Combine(basepath, "constraint");
+            string filePath = Path.Combine(basepath, "table"); //合并至表中
             if (!Directory.Exists(filePath))
             {
                 Directory.CreateDirectory(filePath);
@@ -452,9 +505,10 @@ namespace synyi.hdr.suite
             {
                 foreach (var snippet in snippets)
                 {
-                    string filename = snippet.name;
-                    using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{filename}.sql"), false, Encoding.UTF8))
+                    string filename = snippet.name.Trim().Split(' ')[0]; //表名
+                    using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{filename}.sql"), true, Encoding.UTF8))
                     {
+                        sw.WriteLine();
                         foreach (var item in snippet.snippets)
                         {
                             sw.WriteLine(item);
@@ -483,7 +537,7 @@ namespace synyi.hdr.suite
             {
                 foreach (var snippet in snippets)
                 {
-                    string filename = snippet.name;
+                    string filename = snippet.name.Trim();
                     using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{filename}.sql"), false, Encoding.UTF8))
                     {
                         foreach (var item in snippet.snippets)
