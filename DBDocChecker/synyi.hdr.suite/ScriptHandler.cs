@@ -137,6 +137,10 @@ namespace synyi.hdr.suite
             {
 
                 var snippetsbyKind = snippets.Where(p => p.tyype == item).ToList();
+                if (snippetsbyKind.Count <= 0)
+                {
+                    continue;
+                }
                 switch (item)
                 {
                     case " SEQUENCE":
@@ -211,6 +215,7 @@ namespace synyi.hdr.suite
 
         }
 
+        #region Sequenc
         public void ProcessSequence(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
             string filePath = Path.Combine(basepath, "sequence");
@@ -239,13 +244,12 @@ namespace synyi.hdr.suite
             }
         }
 
+        #endregion
+
+        #region Default
         public void ProcessDefault(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
-        }
-
-        public void ProcessFunction(string basepath, string schema, IList<ScriptSnippet> snippets)
-        {
-            string filePath = Path.Combine(basepath, "function");
+            string filePath = Path.Combine(basepath, "default");
             if (!Directory.Exists(filePath))
             {
                 Directory.CreateDirectory(filePath);
@@ -254,7 +258,7 @@ namespace synyi.hdr.suite
             {
                 foreach (var snippet in snippets)
                 {
-                    string filename = snippet.name.Split('(',',')[0];
+                    string filename = snippet.name;
                     using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{filename}.sql"), false, Encoding.UTF8))
                     {
                         foreach (var item in snippet.snippets)
@@ -271,7 +275,40 @@ namespace synyi.hdr.suite
             }
         }
 
+        #endregion
 
+        #region Function
+        public void ProcessFunction(string basepath, string schema, IList<ScriptSnippet> snippets)
+        {
+            string filePath = Path.Combine(basepath, "function");
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+            try
+            {
+                foreach (var snippet in snippets)
+                {
+                    string filename = snippet.name.Split('(', ',')[0];
+                    using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{filename}.sql"), false, Encoding.UTF8))
+                    {
+                        foreach (var item in snippet.snippets)
+                        {
+                            sw.WriteLine(item);
+                        }
+                        sw.Flush();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                File.WriteAllText(Path.Combine(AppContext.BaseDirectory, $"log_{DateTime.Now.ToString("yyyyMMddHHmmss")}.log"), ex.Message);
+            }
+        }
+
+        #endregion
+
+        #region Schema
         public void ProcessSchema(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
             System.IO.StreamWriter outfile = null;
@@ -308,22 +345,133 @@ namespace synyi.hdr.suite
             }
         }
 
+        #endregion
+
+        #region FkConstraint
         public void ProcessFkConstraint(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
+            string filePath = Path.Combine(basepath, "fkconstraint");
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+            try
+            {
+                foreach (var snippet in snippets)
+                {
+                    string filename = snippet.name;
+                    using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{filename}.sql"), false, Encoding.UTF8))
+                    {
+                        foreach (var item in snippet.snippets)
+                        {
+                            sw.WriteLine(item);
+                        }
+                        sw.Flush();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                File.WriteAllText(Path.Combine(AppContext.BaseDirectory, $"log_{DateTime.Now.ToString("yyyyMMddHHmmss")}.log"), ex.Message);
+            }
         }
 
+        #endregion
+
+        #region Aggregate
         public void ProcessAggregate(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
+            string filePath = Path.Combine(basepath, "aggregate");
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+            try
+            {
+                foreach (var snippet in snippets)
+                {
+                    string filename = snippet.name;
+                    using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{filename}.sql"), false, Encoding.UTF8))
+                    {
+                        foreach (var item in snippet.snippets)
+                        {
+                            sw.WriteLine(item);
+                        }
+                        sw.Flush();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                File.WriteAllText(Path.Combine(AppContext.BaseDirectory, $"log_{DateTime.Now.ToString("yyyyMMddHHmmss")}.log"), ex.Message);
+            }
         }
 
+        #endregion
+
+        #region Type
         public void ProcessType(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
+            string filePath = Path.Combine(basepath, "type");
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+            try
+            {
+                foreach (var snippet in snippets)
+                {
+                    string filename = snippet.name;
+                    using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{filename}.sql"), false, Encoding.UTF8))
+                    {
+                        foreach (var item in snippet.snippets)
+                        {
+                            sw.WriteLine(item);
+                        }
+                        sw.Flush();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                File.WriteAllText(Path.Combine(AppContext.BaseDirectory, $"log_{DateTime.Now.ToString("yyyyMMddHHmmss")}.log"), ex.Message);
+            }
         }
 
+        #endregion
+
+        #region Constraint
         public void ProcessConstraint(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
+            string filePath = Path.Combine(basepath, "constraint");
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+            try
+            {
+                foreach (var snippet in snippets)
+                {
+                    string filename = snippet.name;
+                    using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{filename}.sql"), false, Encoding.UTF8))
+                    {
+                        foreach (var item in snippet.snippets)
+                        {
+                            sw.WriteLine(item);
+                        }
+                        sw.Flush();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                File.WriteAllText(Path.Combine(AppContext.BaseDirectory, $"log_{DateTime.Now.ToString("yyyyMMddHHmmss")}.log"), ex.Message);
+            }
         }
 
+        #endregion
+
+        #region table
         public void ProcessTable(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
             string filePath = Path.Combine(basepath, "table");
@@ -353,6 +501,9 @@ namespace synyi.hdr.suite
 
         }
 
+        #endregion
+
+        #region view
         public void ProcessView(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
             string filePath = Path.Combine(basepath, "view");
@@ -381,10 +532,109 @@ namespace synyi.hdr.suite
             }
         }
 
+        #endregion
+
+        #region comment
         public void ProcessComment(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
+            string filePath = Path.Combine(basepath, "comment");
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+            IList<CommentSnippet> commentSnippets = new List<CommentSnippet>();
+            foreach (var item in snippets)
+            {
+                CommentSnippet cs = new CommentSnippet { Snippet = item };
+                var sdf = item.name.Trim().Split(' ', '.');
+                cs.CommentType = sdf[0];
+                cs.FirstName = sdf[1];
+                if (cs.CommentType == "COLUMN")
+                {
+                    cs.SecondName = sdf[2];
+                }
+                else if (cs.CommentType == "TABLE")
+                {
+
+                }
+                else if (cs.CommentType == "VIEW")
+                {
+
+                }
+                else if (cs.CommentType == "SCHEMA")
+                {
+
+                }
+                else
+                {
+
+                }
+                commentSnippets.Add(cs);
+            }
+            #region SCHEMA
+            var shcema = commentSnippets.Where(p => p.CommentType == "SCHEMA");
+            foreach (var snippet in shcema)
+            {
+                string filename = snippet.FirstName;
+                using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{snippet.CommentType}_{filename}.sql"), false, Encoding.UTF8))
+                {
+                    foreach (var item in snippet.Snippet.snippets)
+                    {
+                        sw.WriteLine(item);
+                    }
+                    sw.Flush();
+                }
+            }
+            #endregion
+
+
+
+            #region VIEW
+            var views = commentSnippets.Where(p => p.CommentType == "VIEW");
+            foreach (var snippet in views)
+            {
+                string filename = snippet.FirstName;
+                using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{snippet.CommentType}_{filename}.sql"), false, Encoding.UTF8))
+                {
+                    foreach (var item in snippet.Snippet.snippets)
+                    {
+                        sw.WriteLine(item);
+                    }
+                    sw.Flush();
+                }
+            }
+            #endregion
+
+            #region TABLE & COLUMN
+            var tables = commentSnippets.Where(p => p.CommentType == "TABLE");
+
+            foreach (var snippet in tables)
+            {
+                string filename = snippet.FirstName;
+                var columns = commentSnippets.Where(p => p.CommentType == "COLUMN").Where(p => p.FirstName == snippet.FirstName);
+                using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{snippet.CommentType}_{filename}.sql"), false, Encoding.UTF8))
+                {
+                    foreach (var item in snippet.Snippet.snippets)
+                    {
+                        sw.WriteLine(item);
+                    }
+                    foreach (var colsnippet in columns)
+                    {
+                        foreach (var item in colsnippet.Snippet.snippets)
+                        {
+                            sw.WriteLine(item);
+                        }
+                    }
+                    sw.Flush();
+                }
+            }
+
+            #endregion
         }
 
+        #endregion
+
+        #region index
         public void ProcessIndex(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
             string filePath = Path.Combine(basepath, "index");
@@ -413,10 +663,40 @@ namespace synyi.hdr.suite
             }
         }
 
+        #endregion
+
+        #region trigger
         public void ProcessTrigger(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
+            string filePath = Path.Combine(basepath, "trigger");
+            if (!Directory.Exists(filePath))
+            {
+                Directory.CreateDirectory(filePath);
+            }
+            try
+            {
+                foreach (var snippet in snippets)
+                {
+                    string filename = snippet.name;
+                    using (StreamWriter sw = new StreamWriter(Path.Combine(filePath, $"{filename}.sql"), false, Encoding.UTF8))
+                    {
+                        foreach (var item in snippet.snippets)
+                        {
+                            sw.WriteLine(item);
+                        }
+                        sw.Flush();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                File.WriteAllText(Path.Combine(AppContext.BaseDirectory, $"log_{DateTime.Now.ToString("yyyyMMddHHmmss")}.log"), ex.Message);
+            }
         }
 
+        #endregion
+
+        #region SequenceOwnedBy 
         public void ProcessSequenceOwnedBy(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
             string filePath = Path.Combine(basepath, "sequenceownby");
@@ -445,13 +725,14 @@ namespace synyi.hdr.suite
             }
         }
 
+        #endregion
+
+        #region UN 未实现
         public void ProcessUn(string basepath, string schema, IList<ScriptSnippet> snippets)
         {
         }
 
-
-
-
+        #endregion
     }
 
 
@@ -476,6 +757,20 @@ namespace synyi.hdr.suite
         public string tyype { get; set; }
 
         public string name { get; set; }
+    }
+
+
+    public class CommentSnippet
+    {
+
+        public ScriptSnippet Snippet { get; set; }
+
+        public string CommentType { get; set; }
+
+
+        public string FirstName { get; set; }
+
+        public string SecondName { get; set; }
     }
 
 }
