@@ -320,5 +320,16 @@ namespace synyi.hdr.suite
             return result;
 
         }
+
+        public IList<ExcelColumn> ProcessSchemaPublic(WorksheetCollection worksheets)
+        {
+            var sheet = worksheets.Where(p => p.Name == "public").FirstOrDefault();
+            var cells = sheet.Cells;
+
+            var result = Process(cells);
+
+            return result;
+
+        }
     }
 }

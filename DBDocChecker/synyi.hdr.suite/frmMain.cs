@@ -376,14 +376,26 @@ namespace synyi.hdr.suite
 
         }
 
-        private void btnLoadHdr_v105_Click(object sender, EventArgs e)
+        private void btnLoadHdr_To_hdr_columns_Click(object sender, EventArgs e)
         {
-            string filePath = Path.Combine(basePath, @"..\HDR库表集合_V1.0.5-201908.xlsx");
-            if (!File.Exists(filePath))
+            if (string.IsNullOrEmpty( this.txtHDRExcelPath.Text))
             {
-                MessageBox.Show("文件不存在！");
+                MessageBox.Show("请选择hdr模型描述excel文件");
                 return;
             }
+            if (!File.Exists(this.txtHDRExcelPath.Text))
+            {
+                MessageBox.Show("hdr模型描述excel文件不存在");
+                return;
+            }
+
+            //string filePath = Path.Combine(basePath, @"..\HDR库表集合_V1.0.5-201908.xlsx");
+            string filePath = this.txtHDRExcelPath.Text;
+
+            var inputfilename = Path.GetFileNameWithoutExtension(this.txtHDRExcelPath.Text);
+            
+
+           
             Workbook workbook = null;
             using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -480,8 +492,10 @@ namespace synyi.hdr.suite
             var result20 = hdrExcelProcesser.ProcessSchemaEtl(worksheets);
             cols.AddRange(result20);
 
+            var result21 = hdrExcelProcesser.ProcessSchemaPublic(worksheets);
+            cols.AddRange(result21);
 
-            string outfilePath = Path.Combine(basePath, $"hdr_v105_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
+            string outfilePath = Path.Combine(basePath, $"{inputfilename}_hdrcolumns_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
 
             Workbook wb = new Workbook();
 
@@ -493,6 +507,7 @@ namespace synyi.hdr.suite
 
             wb.Save(outfilePath, SaveFormat.Xlsx);
 
+            Process.Start("Explorer", "/select," + outfilePath);
         }
 
         private void btnLoadJson_Click(object sender, EventArgs e)

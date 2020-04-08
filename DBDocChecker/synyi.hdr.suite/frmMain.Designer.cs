@@ -100,17 +100,17 @@
             // 
             // btnLoadHdr_v105
             // 
-            this.btnLoadHdr_v105.Location = new System.Drawing.Point(703, 188);
-            this.btnLoadHdr_v105.Name = "btnLoadHdr_v105";
-            this.btnLoadHdr_v105.Size = new System.Drawing.Size(85, 34);
+            this.btnLoadHdr_v105.Location = new System.Drawing.Point(703, 318);
+            this.btnLoadHdr_v105.Name = "btnLoadHdr_hdrcolumns";
+            this.btnLoadHdr_v105.Size = new System.Drawing.Size(128, 34);
             this.btnLoadHdr_v105.TabIndex = 7;
-            this.btnLoadHdr_v105.Text = "读取HDR105";
+            this.btnLoadHdr_v105.Text = "读取HDR转换成hdr_columns";
             this.btnLoadHdr_v105.UseVisualStyleBackColor = true;
-            this.btnLoadHdr_v105.Click += new System.EventHandler(this.btnLoadHdr_v105_Click);
+            this.btnLoadHdr_v105.Click += new System.EventHandler(this.btnLoadHdr_To_hdr_columns_Click);
             // 
             // btnLoadJson
             // 
-            this.btnLoadJson.Location = new System.Drawing.Point(703, 232);
+            this.btnLoadJson.Location = new System.Drawing.Point(703, 184);
             this.btnLoadJson.Name = "btnLoadJson";
             this.btnLoadJson.Size = new System.Drawing.Size(85, 34);
             this.btnLoadJson.TabIndex = 8;
@@ -120,7 +120,7 @@
             // 
             // btnTest
             // 
-            this.btnTest.Location = new System.Drawing.Point(703, 276);
+            this.btnTest.Location = new System.Drawing.Point(703, 224);
             this.btnTest.Name = "btnTest";
             this.btnTest.Size = new System.Drawing.Size(85, 34);
             this.btnTest.TabIndex = 9;
@@ -166,7 +166,7 @@
             // 
             // btnLoad_SD
             // 
-            this.btnLoad_SD.Location = new System.Drawing.Point(703, 333);
+            this.btnLoad_SD.Location = new System.Drawing.Point(703, 264);
             this.btnLoad_SD.Name = "btnLoad_SD";
             this.btnLoad_SD.Size = new System.Drawing.Size(85, 34);
             this.btnLoad_SD.TabIndex = 14;
