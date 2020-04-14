@@ -101,7 +101,7 @@
             // btnLoadHdr_v105
             // 
             this.btnLoadHdr_v105.Location = new System.Drawing.Point(703, 318);
-            this.btnLoadHdr_v105.Name = "btnLoadHdr_hdrcolumns";
+            this.btnLoadHdr_v105.Name = "btnLoadHdr_v105";
             this.btnLoadHdr_v105.Size = new System.Drawing.Size(128, 34);
             this.btnLoadHdr_v105.TabIndex = 7;
             this.btnLoadHdr_v105.Text = "读取HDR转换成hdr_columns";
@@ -235,7 +235,7 @@
             this.Controls.Add(this.btnLoadSchemaAndTables);
             this.Controls.Add(this.btnExportHDRExcel);
             this.Name = "frmMain";
-            this.Text = "Form1";
+            this.Text = "HDR模型文档工具";
             this.Shown += new System.EventHandler(this.frmMain_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
             this.groupBox1.ResumeLayout(false);

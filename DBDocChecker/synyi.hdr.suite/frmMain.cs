@@ -19,9 +19,6 @@ using Dapper.Contrib.Extensions;
 using System.Diagnostics;
 using System.Configuration;
 using Dapper.Contrib;
-using Dapper;
-using Dapper.Contrib.Extensions;
-
 
 namespace synyi.hdr.suite
 {
