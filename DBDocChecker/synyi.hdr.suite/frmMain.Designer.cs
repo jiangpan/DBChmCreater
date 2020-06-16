@@ -31,11 +31,8 @@
             this.btnExportHDRExcel = new System.Windows.Forms.Button();
             this.btnLoadSchemaAndTables = new System.Windows.Forms.Button();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
-            this.btnReadExcel = new System.Windows.Forms.Button();
-            this.btnNewExcel = new System.Windows.Forms.Button();
             this.btnLoadHdr_v105 = new System.Windows.Forms.Button();
             this.btnLoadJson = new System.Windows.Forms.Button();
-            this.btnTest = new System.Windows.Forms.Button();
             this.btnLoadHdr_v106 = new System.Windows.Forms.Button();
             this.txtHDRExcelPath = new System.Windows.Forms.TextBox();
             this.btnLocationHDRExcel = new System.Windows.Forms.Button();
@@ -78,31 +75,11 @@
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
             // 
-            // btnReadExcel
-            // 
-            this.btnReadExcel.Location = new System.Drawing.Point(703, 100);
-            this.btnReadExcel.Name = "btnReadExcel";
-            this.btnReadExcel.Size = new System.Drawing.Size(85, 34);
-            this.btnReadExcel.TabIndex = 5;
-            this.btnReadExcel.Text = "读取Excel";
-            this.btnReadExcel.UseVisualStyleBackColor = true;
-            this.btnReadExcel.Click += new System.EventHandler(this.btnReadExcel_Click);
-            // 
-            // btnNewExcel
-            // 
-            this.btnNewExcel.Location = new System.Drawing.Point(703, 144);
-            this.btnNewExcel.Name = "btnNewExcel";
-            this.btnNewExcel.Size = new System.Drawing.Size(85, 34);
-            this.btnNewExcel.TabIndex = 6;
-            this.btnNewExcel.Text = "创建Excel";
-            this.btnNewExcel.UseVisualStyleBackColor = true;
-            this.btnNewExcel.Click += new System.EventHandler(this.btnNewExcel_Click);
-            // 
             // btnLoadHdr_v105
             // 
-            this.btnLoadHdr_v105.Location = new System.Drawing.Point(703, 318);
+            this.btnLoadHdr_v105.Location = new System.Drawing.Point(703, 224);
             this.btnLoadHdr_v105.Name = "btnLoadHdr_v105";
-            this.btnLoadHdr_v105.Size = new System.Drawing.Size(128, 34);
+            this.btnLoadHdr_v105.Size = new System.Drawing.Size(103, 49);
             this.btnLoadHdr_v105.TabIndex = 7;
             this.btnLoadHdr_v105.Text = "读取HDR转换成hdr_columns";
             this.btnLoadHdr_v105.UseVisualStyleBackColor = true;
@@ -110,23 +87,13 @@
             // 
             // btnLoadJson
             // 
-            this.btnLoadJson.Location = new System.Drawing.Point(703, 184);
+            this.btnLoadJson.Location = new System.Drawing.Point(703, 124);
             this.btnLoadJson.Name = "btnLoadJson";
             this.btnLoadJson.Size = new System.Drawing.Size(85, 34);
             this.btnLoadJson.TabIndex = 8;
             this.btnLoadJson.Text = "加载JSON";
             this.btnLoadJson.UseVisualStyleBackColor = true;
             this.btnLoadJson.Click += new System.EventHandler(this.btnLoadJson_Click);
-            // 
-            // btnTest
-            // 
-            this.btnTest.Location = new System.Drawing.Point(703, 224);
-            this.btnTest.Name = "btnTest";
-            this.btnTest.Size = new System.Drawing.Size(85, 34);
-            this.btnTest.TabIndex = 9;
-            this.btnTest.Text = "测试";
-            this.btnTest.UseVisualStyleBackColor = true;
-            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
             // 
             // btnLoadHdr_v106
             // 
@@ -166,7 +133,7 @@
             // 
             // btnLoad_SD
             // 
-            this.btnLoad_SD.Location = new System.Drawing.Point(703, 264);
+            this.btnLoad_SD.Location = new System.Drawing.Point(703, 184);
             this.btnLoad_SD.Name = "btnLoad_SD";
             this.btnLoad_SD.Size = new System.Drawing.Size(85, 34);
             this.btnLoad_SD.TabIndex = 14;
@@ -188,7 +155,7 @@
             // 
             this.groupBox1.Controls.Add(this.btnLoadHDR_SD);
             this.groupBox1.Controls.Add(this.btnLoadHdr_v106);
-            this.groupBox1.Location = new System.Drawing.Point(703, 390);
+            this.groupBox1.Location = new System.Drawing.Point(703, 301);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(126, 121);
             this.groupBox1.TabIndex = 16;
@@ -198,7 +165,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.btnSplitScripts);
-            this.groupBox2.Location = new System.Drawing.Point(703, 518);
+            this.groupBox2.Location = new System.Drawing.Point(703, 430);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(128, 81);
             this.groupBox2.TabIndex = 17;
@@ -226,11 +193,8 @@
             this.Controls.Add(this.grid);
             this.Controls.Add(this.btnLocationHDRExcel);
             this.Controls.Add(this.txtHDRExcelPath);
-            this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnLoadJson);
             this.Controls.Add(this.btnLoadHdr_v105);
-            this.Controls.Add(this.btnNewExcel);
-            this.Controls.Add(this.btnReadExcel);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.btnLoadSchemaAndTables);
             this.Controls.Add(this.btnExportHDRExcel);
@@ -250,11 +214,8 @@
         private System.Windows.Forms.Button btnExportHDRExcel;
         private System.Windows.Forms.Button btnLoadSchemaAndTables;
         private System.Windows.Forms.RichTextBox richTextBox1;
-        private System.Windows.Forms.Button btnReadExcel;
-        private System.Windows.Forms.Button btnNewExcel;
         private System.Windows.Forms.Button btnLoadHdr_v105;
         private System.Windows.Forms.Button btnLoadJson;
-        private System.Windows.Forms.Button btnTest;
         private System.Windows.Forms.Button btnLoadHdr_v106;
         private System.Windows.Forms.TextBox txtHDRExcelPath;
         private System.Windows.Forms.Button btnLocationHDRExcel;

@@ -205,9 +205,7 @@ namespace synyi.hdr.suite
                 workSheet.AutoFitRows();
 
             }
-
             //workbook.Settings.Password = "synyi";
-
 
             string fileName = $"HDR_Model_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
             workbook.Save(Path.Combine(basePath, fileName), SaveFormat.Xlsx);
@@ -254,124 +252,7 @@ namespace synyi.hdr.suite
 
         }
 
-        private void btnReadExcel_Click(object sender, EventArgs e)
-        {
-            string fileName = "HDR库表集合_V1.0.5-201908.xlsx";//"hdr表集合-base-20190711.xlsx";
 
-            string filePathWithName = Path.Combine(basePath, fileName);
-
-            Workbook workbook = null;
-
-            using (FileStream fs = new FileStream(filePathWithName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                workbook = new Workbook(fs);
-            }
-
-            foreach (Worksheet sheet in workbook.Worksheets)
-            {
-                var mgdcells = sheet.Cells.MergedCells;
-
-                if (sheet.Shapes != null && sheet.Shapes.Count > 0)
-                {
-                    var shape = sheet.Shapes[0];
-                }
-
-                foreach (var mgcell in mgdcells)
-                {
-                    CellArea cell = (CellArea)mgcell;
-
-                    this.richTextBox1.AppendText($"{cell}\r\n");
-                }
-            }
-
-        }
-
-        private void btnNewExcel_Click(object sender, EventArgs e)
-        {
-            Workbook workbook = new Workbook();
-            workbook.Worksheets.Clear();
-
-            Worksheet sheet = workbook.Worksheets.Add("Test");
-            sheet.IsGridlinesVisible = false;
-
-            Shape recshape = sheet.Shapes.AddAutoShape(AutoShapeType.RoundSingleCornerRectangle, 0, 0, 2, 1, 20, 60);
-            recshape.Bottom = 3;
-            recshape.Height = 38;
-            recshape.Left = 2;
-            recshape.LeftToCorner = 46;
-            recshape.Placement = PlacementType.MoveAndSize;
-            recshape.Right = 127;
-            recshape.TextHorizontalAlignment = TextAlignmentType.Center;
-            recshape.TextHorizontalOverflow = TextOverflowType.Clip;
-            recshape.TextOptions.Color = Color.FromArgb(255, 255, 192, 0);
-            //recshape.TextOptions.Name = "微软雅黑";
-            recshape.TextVerticalAlignment = TextAlignmentType.Center;
-            recshape.TextVerticalOverflow = TextOverflowType.Clip;
-            recshape.Top = 1;
-            recshape.TopToCorner = 1;
-
-            recshape.Width = 125;
-            //recshape.X = 46;
-
-            recshape.Font.Size = 11;
-            recshape.Font.Name = "微软雅黑";
-            recshape.Fill.FillType = FillType.Solid;
-            recshape.Text = "返回";
-            Hyperlink link = recshape.AddHyperlink("http://www.baidu.com");
-
-
-            #region 生成目录表
-            IList<schemata> schemataList = null;
-            IList<Table> tableList = null;
-            string owneer = "dba";
-            using (var conn = new PostgresHelper(dbConnectionString))
-            {
-                schemataList = conn.Query<schemata>($@"select * from information_schema.schemata where schema_owner = '{owneer}'").ToList<schemata>();
-                string schemas = schemataList.Select(p => "'" + p.schema_name + "'").Aggregate((a, b) => a + " , " + b);
-
-                tableList = conn.Query<Table>($"select * from information_schema.tables where table_schema in ({schemas})").ToList<Table>();
-            }
-
-
-            Worksheet tableSheet = workbook.Worksheets.Add("表集合");
-
-            int impResult = tableSheet.Cells.ImportCustomObjects(tableList.ToList(), 0, 0, new ImportTableOptions { });
-
-            tableSheet.IsGridlinesVisible = false;
-
-            int totalcols = tableSheet.Cells.MaxDataColumn + 1;
-            int totalrows = tableSheet.Cells.MaxDataRow + 1;
-
-            Range rge = tableSheet.Cells.CreateRange(0, 0, totalrows, totalcols);
-            //rge.SetOutlineBorder(BorderType.TopBorder, CellBorderType.Thick, Color.Blue);
-            //rge.SetOutlineBorder(BorderType.BottomBorder, CellBorderType.Thick, Color.Blue);
-            //rge.SetOutlineBorder(BorderType.LeftBorder, CellBorderType.Thick, Color.Blue);
-            //rge.SetOutlineBorder(BorderType.RightBorder, CellBorderType.Thick, Color.Blue);
-
-
-
-            //rge.SetOutlineBorder(BorderType.DiagonalUp, CellBorderType.Thick, Color.Blue);
-
-            //rge.SetOutlineBorder(BorderType.Horizontal, CellBorderType.Thick, Color.Blue);
-            //rge.SetOutlineBorder(BorderType.Vertical, CellBorderType.Thick, Color.Blue);
-
-
-            rge.SetOutlineBorders(new CellBorderType[] { CellBorderType.Thick, CellBorderType.Thin, CellBorderType.Thick, CellBorderType.Thin }, new Color[] { Color.Black, Color.Red, Color.Black, Color.Red });
-
-
-            int startColumn = CellsHelper.ColumnNameToIndex("M") + 1;
-            int columnCount = CellsHelper.ColumnNameToIndex("XFD") - startColumn + 1;
-
-
-            tableSheet.Cells.HideColumns(startColumn, columnCount);
-
-            #endregion
-
-            string fileName = $"NewExcel_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
-            workbook.Save(Path.Combine(basePath, fileName), SaveFormat.Xlsx);
-            this.Close();
-
-        }
 
         private void btnLoadHdr_To_hdr_columns_Click(object sender, EventArgs e)
         {
@@ -523,159 +404,9 @@ namespace synyi.hdr.suite
                 JsonSerializer serializer = new JsonSerializer();
                 movie2 = (JsonEntity)serializer.Deserialize(file, typeof(JsonEntity));
             }
-
-            Workbook workbook = new Workbook();
-
-            workbook.Worksheets.Clear();
-            int sheetIdx = workbook.Worksheets.Add(SheetType.Worksheet);
-            Worksheet sheet = workbook.Worksheets[sheetIdx];
-            Cells cells = sheet.Cells;
-            var list = movie2.RECORDS;
-
-            var listgrp = list.GroupBy(p => p.format).ToList();
-
-            int rows = -1;
-            var style = cells.GetCellStyle(0, 0);
-            style.SetBorder(BorderType.LeftBorder, CellBorderType.Thin, Color.Black);
-            style.SetBorder(BorderType.RightBorder, CellBorderType.Thin, Color.Black);
-            style.SetBorder(BorderType.TopBorder, CellBorderType.Thin, Color.Black);
-            style.SetBorder(BorderType.BottomBorder, CellBorderType.Thin, Color.Black);
-            for (int i = 0; i < listgrp.Count; i++)
-            {
-                rows++;
-                var table_name = listgrp[i].Key;
-                var table_ent = listgrp[i].FirstOrDefault();
-
-
-
-                cells[rows, CellsHelper.ColumnNameToIndex("A")].PutValue($"{table_ent.schema}.{table_ent.table}（{table_ent.tablecomment}）");
-                cells.Merge(rows, CellsHelper.ColumnNameToIndex("A"), 1, 10);
-                cells[rows, CellsHelper.ColumnNameToIndex("A")].GetMergedRange().SetStyle(style);
-
-                //表名 表说明
-
-                //表头行
-                rows++;
-                cells[rows, CellsHelper.ColumnNameToIndex("A")].PutValue("序号");
-                cells[rows, CellsHelper.ColumnNameToIndex("A")].SetStyle(style);
-                cells[rows, CellsHelper.ColumnNameToIndex("B")].PutValue("列名");
-                cells[rows, CellsHelper.ColumnNameToIndex("B")].SetStyle(style);
-                cells[rows, CellsHelper.ColumnNameToIndex("C")].PutValue("中文名");
-                cells[rows, CellsHelper.ColumnNameToIndex("C")].SetStyle(style);
-                cells[rows, CellsHelper.ColumnNameToIndex("D")].PutValue("字段类型");
-                cells[rows, CellsHelper.ColumnNameToIndex("D")].SetStyle(style);
-                cells[rows, CellsHelper.ColumnNameToIndex("E")].PutValue("允许空");
-                cells[rows, CellsHelper.ColumnNameToIndex("E")].SetStyle(style);
-                cells[rows, CellsHelper.ColumnNameToIndex("F")].PutValue("外键（关联字段）");
-                cells[rows, CellsHelper.ColumnNameToIndex("F")].SetStyle(style);
-                cells[rows, CellsHelper.ColumnNameToIndex("G")].PutValue("字典系统（值域）");
-                cells[rows, CellsHelper.ColumnNameToIndex("G")].SetStyle(style);
-                cells[rows, CellsHelper.ColumnNameToIndex("H")].PutValue("字典标准化");
-                cells[rows, CellsHelper.ColumnNameToIndex("H")].SetStyle(style);
-                cells[rows, CellsHelper.ColumnNameToIndex("I")].PutValue("说明");
-                cells[rows, CellsHelper.ColumnNameToIndex("I")].SetStyle(style);
-                cells[rows, CellsHelper.ColumnNameToIndex("J")].PutValue("产品层面必须");
-                cells[rows, CellsHelper.ColumnNameToIndex("J")].SetStyle(style);
-                foreach (var cols in listgrp[i])
-                {
-                    rows++;
-                    //列说明
-                    cells[rows, CellsHelper.ColumnNameToIndex("A")].PutValue(cols.serialnumber);
-                    cells[rows, CellsHelper.ColumnNameToIndex("A")].SetStyle(style);
-                    cells[rows, CellsHelper.ColumnNameToIndex("B")].PutValue(cols.columnname);
-                    cells[rows, CellsHelper.ColumnNameToIndex("B")].SetStyle(style);
-                    cells[rows, CellsHelper.ColumnNameToIndex("C")].PutValue(cols.columncomment);
-                    cells[rows, CellsHelper.ColumnNameToIndex("C")].SetStyle(style);
-                    cells[rows, CellsHelper.ColumnNameToIndex("D")].PutValue(cols.datatype);
-                    cells[rows, CellsHelper.ColumnNameToIndex("D")].SetStyle(style);
-                    cells[rows, CellsHelper.ColumnNameToIndex("E")].PutValue(cols.isnull);
-                    cells[rows, CellsHelper.ColumnNameToIndex("E")].SetStyle(style);
-                    cells[rows, CellsHelper.ColumnNameToIndex("F")].PutValue(cols.foreignkey);
-                    cells[rows, CellsHelper.ColumnNameToIndex("F")].SetStyle(style);
-                    cells[rows, CellsHelper.ColumnNameToIndex("G")].PutValue(cols.codesystem);
-                    cells[rows, CellsHelper.ColumnNameToIndex("G")].SetStyle(style);
-                    cells[rows, CellsHelper.ColumnNameToIndex("H")].PutValue(cols.isstandard);
-                    cells[rows, CellsHelper.ColumnNameToIndex("H")].SetStyle(style);
-                    cells[rows, CellsHelper.ColumnNameToIndex("I")].PutValue(cols.description);
-                    cells[rows, CellsHelper.ColumnNameToIndex("I")].SetStyle(style);
-                    cells[rows, CellsHelper.ColumnNameToIndex("J")].PutValue("√");
-                    cells[rows, CellsHelper.ColumnNameToIndex("J")].SetStyle(style);
-
-
-
-                }
-                rows++;
-
-            }
-
-            cells.SetColumnWidth(CellsHelper.ColumnNameToIndex("A"), 4);
-            cells.SetColumnWidth(CellsHelper.ColumnNameToIndex("B"), 15);
-            cells.SetColumnWidth(CellsHelper.ColumnNameToIndex("C"), 14);
-            cells.SetColumnWidth(CellsHelper.ColumnNameToIndex("D"), 11);
-            cells.SetColumnWidth(CellsHelper.ColumnNameToIndex("E"), 7);
-            cells.SetColumnWidth(CellsHelper.ColumnNameToIndex("F"), 10);
-            cells.SetColumnWidth(CellsHelper.ColumnNameToIndex("G"), 14);
-            cells.SetColumnWidth(CellsHelper.ColumnNameToIndex("H"), 10);
-            cells.SetColumnWidth(CellsHelper.ColumnNameToIndex("I"), 8);
-            cells.SetColumnWidth(CellsHelper.ColumnNameToIndex("J"), 13);
-
-            string outfilePath = Path.Combine(basePath, $"vte_columns_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
-
-
-            workbook.Save(outfilePath, SaveFormat.Xlsx);
-
-
-
-
+            VTEJsonToExcel.execute(movie2, basePath);
         }
 
-        private void btnTest_Click(object sender, EventArgs e)
-        {
-            DateTimeOffset dtos = new DateTimeOffset(DateTime.UtcNow);
-
-            TimeZoneInfo sdfdse = TimeZoneInfo.Local;
-
-
-            var sdfere = TimeZoneInfo.GetSystemTimeZones();
-            foreach (var item in sdfere)
-            {
-                Debug.WriteLine($"{item.DaylightName}  {item.Id}");
-            }
-
-            var tsts = TimeZoneInfo.ConvertTime(dtos, TimeZoneInfo.Local);
-
-            var tt = dtos.ToString("yyy-MM-dd HH:mm:ss.fff zzz");
-
-            DateTime tes = DateTime.UtcNow;
-
-            DateTime dt_utc = DateTime.UtcNow;
-            DateTime dt_bj = DateTime.Now;
-            TimeZone localZone = TimeZone.CurrentTimeZone;
-            using (var conn = new PostgresHelper(dbConnectionString))
-            {
-                var result1 = conn.Query<time_zone_test>("select * from time_zone_test");
-                Debug.WriteLine($"当前时区:{localZone.StandardName}");
-                foreach (var item in result1)
-                {
-                    Debug.WriteLine($"{item.id} | {item.time_with_tz.ToString("yyyy-MM-dd HH:mm:ss.fff zzz") } | { item.time_without_tz.ToString("yyyy-MM-dd HH:mm:ss.fff zzz")}");
-                }
-
-            }
-
-            using (var conn = new PostgresHelper(dbConnectionString))
-            {
-                var result1 = conn.Query<time_zone_test>("select * from time_zone_test");
-                Debug.WriteLine($"当前时区:{localZone.StandardName}");
-                foreach (var item in result1)
-                {
-                    Debug.WriteLine($"{item.id} | {item.time_with_tz.ToString("yyyy-MM-dd HH:mm:ss.fff zzz") } | { item.time_without_tz.ToString("yyyy-MM-dd HH:mm:ss.fff zzz")}");
-                }
-            }
-
-            //this.Close();
-
-            return;
-        }
 
         #region 读取最新的HDR
         private void btnLoadHdr_Click(object sender, EventArgs e)
@@ -886,7 +617,7 @@ namespace synyi.hdr.suite
         }
         #endregion
 
-        #region 生成SD的数据
+        #region 生成SD的数据  对比数据
 
         private void btnLoad_SD_Click(object sender, EventArgs e)
         {
