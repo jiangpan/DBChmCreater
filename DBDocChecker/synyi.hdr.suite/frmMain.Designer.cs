@@ -133,11 +133,11 @@
             // 
             // btnLoad_SD
             // 
-            this.btnLoad_SD.Location = new System.Drawing.Point(703, 184);
+            this.btnLoad_SD.Location = new System.Drawing.Point(703, 174);
             this.btnLoad_SD.Name = "btnLoad_SD";
             this.btnLoad_SD.Size = new System.Drawing.Size(85, 34);
             this.btnLoad_SD.TabIndex = 14;
-            this.btnLoad_SD.Text = "读取最新SD";
+            this.btnLoad_SD.Text = "读取最新SD生成对比Excel";
             this.btnLoad_SD.UseVisualStyleBackColor = true;
             this.btnLoad_SD.Click += new System.EventHandler(this.btnLoad_SD_Click);
             // 

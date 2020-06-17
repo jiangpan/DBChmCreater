@@ -70,7 +70,7 @@ namespace synyi.hdr.suite
                     ec.ColumnName = current_row[CellsHelper.ColumnNameToIndex("B")].GetStringValue(CellValueFormatStrategy.None);//列名	
                     ec.ColumnComment = current_row[CellsHelper.ColumnNameToIndex("C")].GetStringValue(CellValueFormatStrategy.None);//中文名	
                     ec.DataType = current_row[CellsHelper.ColumnNameToIndex("D")].GetStringValue(CellValueFormatStrategy.None);//字段类型	
-                    ec.IsNull = current_row[CellsHelper.ColumnNameToIndex("E")].GetStringValue(CellValueFormatStrategy.None);//允许空	
+                    ec.IsNulled = current_row[CellsHelper.ColumnNameToIndex("E")].GetStringValue(CellValueFormatStrategy.None);//允许空	
                     ec.ForeignKey = current_row[CellsHelper.ColumnNameToIndex("F")].GetStringValue(CellValueFormatStrategy.None);//外键（关联字段）	
                     ec.CodeSystem = current_row[CellsHelper.ColumnNameToIndex("G")].GetStringValue(CellValueFormatStrategy.None);//字典系统（值域）	
                     ec.IsStandard = current_row[CellsHelper.ColumnNameToIndex("H")].GetStringValue(CellValueFormatStrategy.None);//字典表标准化	

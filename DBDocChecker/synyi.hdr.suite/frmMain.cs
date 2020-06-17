@@ -254,9 +254,10 @@ namespace synyi.hdr.suite
 
 
 
+        #region 转换hdr的excel说明为hdr_columns结构，并保存至public hdr_columns
         private void btnLoadHdr_To_hdr_columns_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty( this.txtHDRExcelPath.Text))
+            if (string.IsNullOrEmpty(this.txtHDRExcelPath.Text))
             {
                 MessageBox.Show("请选择hdr模型描述excel文件");
                 return;
@@ -271,9 +272,9 @@ namespace synyi.hdr.suite
             string filePath = this.txtHDRExcelPath.Text;
 
             var inputfilename = Path.GetFileNameWithoutExtension(this.txtHDRExcelPath.Text);
-            
 
-           
+
+
             Workbook workbook = null;
             using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -385,9 +386,20 @@ namespace synyi.hdr.suite
 
             wb.Save(outfilePath, SaveFormat.Xlsx);
 
+
+
+            using (var conn = new PostgresHelper(dbConnectionString))
+            {
+                var bulkinserthelper = conn.BulkinsertHdrColumns(cols);
+
+            }
+
             Process.Start("Explorer", "/select," + outfilePath);
         }
 
+        #endregion
+        
+        
         private void btnLoadJson_Click(object sender, EventArgs e)
         {
             string filePath = Path.Combine(basePath, @"..\VTE_Columns.json");
@@ -567,14 +579,9 @@ namespace synyi.hdr.suite
 
 
             var schemaAndTablas = result.GroupBy(p => p.Schema).ToList();
-
-
-
             //var schemas = result.Select(p => p.Schema).Distinct();
 
-
             var schemaTables = JsonConvert.SerializeObject(result);
-
 
             string outfilePath = Path.Combine(basePath, $"hdr_sd_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
 
@@ -588,12 +595,9 @@ namespace synyi.hdr.suite
 
             hDRExcelHelper.ExportVithStyle(result, tableColumns1, wb, 9, true);
 
-
             wb.Save(outfilePath, SaveFormat.Xlsx);
 
             Process.Start("Explorer", "/select," + outfilePath);
-
-
         }
         #endregion
 

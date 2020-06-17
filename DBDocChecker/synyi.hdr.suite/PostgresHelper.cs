@@ -11,8 +11,8 @@ using Npgsql;
 using NpgsqlTypes;
 using Dapper.Contrib;
 using Dapper.Contrib.Extensions;
-
-
+using synyi.hdr.suite.Entity;
+using PostgreSQLCopyHelper;
 
 namespace synyi.hdr.suite
 {
@@ -450,7 +450,7 @@ namespace synyi.hdr.suite
         }
 
 
-        public long Insert<T>(T entityToInsert) where  T :class
+        public long Insert<T>(T entityToInsert) where T : class
         {
 
             NpgsqlConnection conn = null;
@@ -498,5 +498,51 @@ namespace synyi.hdr.suite
         //    dbconn.ConnectionString = ConfigurationManager.ConnectionStrings[connectionString].ConnectionString; ;
         //    return dbconn;
         //}
+
+
+
+        public ulong BulkinsertHdrColumns(IEnumerable<ExcelColumn> result)
+        {
+            NpgsqlConnection conn = null;
+            var copyHelper = new PostgreSQLCopyHelper<ExcelColumn>("public", "hdr_columns")
+                                                .MapText("tablename", x => x.TableName)
+                                                .MapText("tablenamech", x => x.TableNameCh)
+                                                .MapText("schema", x => x.Schema)
+                                                .MapText("schemach", x => x.SchemaCh)
+                                                .MapText("tablecomment", x => x.TableComment)
+                                                .MapText("serialnumber", x => x.SerialNumber)
+                                                .MapText("columnname", x => x.ColumnName)
+                                                .MapText("columncomment", x => x.ColumnComment)
+                                                .MapText("datatype", x => x.DataType)
+                                                .MapText("isnulled", x => x.IsNulled)
+                                                .MapText("foreignkey", x => x.ForeignKey)
+                                                .MapText("codesystem", x => x.CodeSystem)
+                                                .MapText("isstandard", x => x.IsStandard)
+                                                .MapText("description", x => x.Description);
+            ulong rows = 0;
+            using (conn = new NpgsqlConnection(this.connectionString))
+            {
+                if (conn.State == ConnectionState.Closed || conn.State == ConnectionState.Broken)
+                {
+                    conn.Open();
+                }
+
+                conn.Execute("truncate table public.hdr_columns");
+                try
+                {
+                    rows = copyHelper.SaveAll(conn, result);
+
+                }
+                catch (PostgresException ex1)
+                {
+
+                }
+                catch (Exception ex)
+                {
+                }
+            }
+            return rows;
+
+        }
     }
 }
