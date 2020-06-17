@@ -19,29 +19,39 @@ using Dapper.Contrib.Extensions;
 using System.Diagnostics;
 using System.Configuration;
 using Dapper.Contrib;
+using synyi.hdr.suite.mdm;
 
 namespace synyi.hdr.suite
 {
     public partial class frmMain : Form
     {
+        #region 属性
         private string basePath = AppDomain.CurrentDomain.BaseDirectory;
 
         private string dbConnectionString = ConfigurationManager.ConnectionStrings["hdr"].ConnectionString;
 
         private string testdbConnectionString = ConfigurationManager.ConnectionStrings["exampledb"].ConnectionString;
 
+        #endregion
+
+        #region 构造函数
         public frmMain()
         {
             InitializeComponent();
         }
 
+        #endregion
+
+        #region 事件
         private void frmMain_Shown(object sender, EventArgs e)
         {
             //this.btnLoadHdr_v105.PerformClick();
             //this.btnLoadJson.PerformClick();
             //this.btnTest.PerformClick();
             //this.btnLoadHdr_v106.PerformClick();
-        }
+        } 
+        #endregion
+
 
         private string[] GetTableName(string baseName)
         {
@@ -75,6 +85,7 @@ namespace synyi.hdr.suite
 
             return arrTname1;
         }
+
 
         private void btnExportHDRExcel_Click(object sender, EventArgs e)
         {
@@ -214,6 +225,7 @@ namespace synyi.hdr.suite
 
         }
 
+
         private void btnLoadSchemaAndTables_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(this.txtHDRExcelPath.Text))
@@ -252,6 +264,25 @@ namespace synyi.hdr.suite
 
         }
 
+
+        private void btnLoadJson_Click(object sender, EventArgs e)
+        {
+            string filePath = Path.Combine(basePath, @"..\VTE_Columns.json");
+            if (!File.Exists(filePath))
+            {
+                MessageBox.Show("文件不存在！");
+                return;
+            }
+
+            JsonEntity movie2 = null;
+            // deserialize JSON directly from a file
+            using (StreamReader file = File.OpenText(filePath))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                movie2 = (JsonEntity)serializer.Deserialize(file, typeof(JsonEntity));
+            }
+            VTEJsonToExcel.execute(movie2, basePath);
+        }
 
 
         #region 转换hdr的excel说明为hdr_columns结构，并保存至public hdr_columns
@@ -390,7 +421,7 @@ namespace synyi.hdr.suite
 
             using (var conn = new PostgresHelper(dbConnectionString))
             {
-                var bulkinserthelper = conn.BulkinsertHdrColumns(cols);
+                var bulkinserthelper = conn.BulkinsertHdrColumns(cols,false);
 
             }
 
@@ -399,28 +430,8 @@ namespace synyi.hdr.suite
 
         #endregion
         
-        
-        private void btnLoadJson_Click(object sender, EventArgs e)
-        {
-            string filePath = Path.Combine(basePath, @"..\VTE_Columns.json");
-            if (!File.Exists(filePath))
-            {
-                MessageBox.Show("文件不存在！");
-                return;
-            }
+        #region 读取最新的HDR 生成对比Excel
 
-            JsonEntity movie2 = null;
-            // deserialize JSON directly from a file
-            using (StreamReader file = File.OpenText(filePath))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                movie2 = (JsonEntity)serializer.Deserialize(file, typeof(JsonEntity));
-            }
-            VTEJsonToExcel.execute(movie2, basePath);
-        }
-
-
-        #region 读取最新的HDR
         private void btnLoadHdr_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(this.txtHDRExcelPath.Text))
@@ -515,7 +526,7 @@ namespace synyi.hdr.suite
 
         #endregion
 
-        #region 读取最新的SD
+        #region 读取最新的SD 生成对比Excel
         private void btnLoadHDR_SD_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(this.txtHDRExcelPath.Text))
@@ -625,89 +636,56 @@ namespace synyi.hdr.suite
 
         private void btnLoad_SD_Click(object sender, EventArgs e)
         {
+
+
             if (string.IsNullOrEmpty(this.txtHDRExcelPath.Text))
             {
+                MessageBox.Show("请选择hdr sd模型描述excel文件");
                 return;
             }
             if (!File.Exists(this.txtHDRExcelPath.Text))
             {
+                MessageBox.Show("hdr sd模型描述excel文件不存在");
                 return;
             }
-            string filePathWithName = this.txtHDRExcelPath.Text;
+
+            //string filePath = Path.Combine(basePath, @"..\HDR库表集合_V1.0.5-201908.xlsx");
+            string filePath = this.txtHDRExcelPath.Text;
+
+            var inputfilename = Path.GetFileNameWithoutExtension(this.txtHDRExcelPath.Text);
+
+
 
             Workbook workbook = null;
-            using (FileStream fs = new FileStream(filePathWithName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 workbook = new Workbook(fs);
             }
             var worksheets = workbook.Worksheets;
-
-            var result = AsposeHelper.AutoFitMergedCells(workbook, "sd域表集合", 2, 0);
-            var sdstrings = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "sd_tables.json"), Encoding.Default);
-
-            IList<sd_tables> sd_tables = JsonConvert.DeserializeObject<IList<sd_tables>>(sdstrings);
-
-            var result1 = sd_tables.Select(p => new HdrTablesCollection { Domain = "sd", Schema = "sd", SchemaDesc = "sd", TableName = p.table_name, TableDesc = p.table_desc }).ToList();
-
-            #region 读取数据
-            List<ColumnEntity> tableColumns = null;
-            var schema = result.Select(p => p.Schema).Distinct().ToList();
-            var schme = new List<string> { "sd" };
-            using (var conn = new PostgresHelper(dbConnectionString))
-            {
-                BizHelper bizHelper = new BizHelper();
-                var sql = bizHelper.BuildQueryTableColumnsSQL(schme);
-                tableColumns = conn.Query<ColumnEntity>(sql).ToList<ColumnEntity>();
-            }
-
-            var tableColumns1 = tableColumns.Select(p =>
-            {
-                if (p.data_typ == "int2")
-                {
-                    p.data_typ = "smallint";
-                }
-                if (p.data_typ == "int4")
-                {
-                    p.data_typ = "int";
-                }
-                if (p.data_typ == "int8")
-                {
-                    p.data_typ = "bigint";
-                }
-                if (p.data_typ == "timestamp(6)")
-                {
-                    p.data_typ = "timestamp";
-                }
-                if (p.data_typ == "timestamp(3)")
-                {
-                    p.data_typ = "timestamp";
-                }
-                if (p.data_typ.Length == 6 && p.data_typ.Contains("[]") && p.data_typ.Contains("int"))
-                {
-                    p.data_typ = "int[]";
-                }
-                return p;
-            }).ToList();
-            #endregion
+            HdrExcelProcesser hdrExcelProcesser = new HdrExcelProcesser();
+            List<ExcelColumn> cols = new List<ExcelColumn>();
 
 
-            string outfilePath = Path.Combine(basePath, $"hdr_sd_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
+            var result = hdrExcelProcesser.ProcessSchemaSd(worksheets);
+            cols.AddRange(result);
 
-            Workbook wb;
-            using (FileStream fs = new FileStream(filePathWithName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                wb = new Workbook(fs);
-            }
+            string outfilePath = Path.Combine(basePath, $"{inputfilename}_hdrcolumns_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
 
-            AsposeHelper hDRExcelHelper = new AsposeHelper();
+            Workbook wb = new Workbook();
 
-            hDRExcelHelper.ExportVithStyle(result1, tableColumns1, wb, 9, true);
+            wb.Worksheets.Clear();
 
+            Worksheet sheet1 = wb.Worksheets.Add("hdr_columns");
+
+            sheet1.Cells.ImportCustomObjects(cols as ICollection, 0, 0, new ImportTableOptions { });
 
             wb.Save(outfilePath, SaveFormat.Xlsx);
 
+            using (var conn = new PostgresHelper(dbConnectionString))
+            {
+                var bulkinserthelper = conn.BulkinsertHdrColumns(cols,false);
+            }
             Process.Start("Explorer", "/select," + outfilePath);
-
         }
 
 
@@ -815,6 +793,25 @@ namespace synyi.hdr.suite
 
         }
         #endregion
+
+        private void btnBuildMdmCodeSystem_Click(object sender, EventArgs e)
+        {
+
+            if (string.IsNullOrEmpty(this.txtHDRExcelPath.Text))
+            {
+                return;
+            }
+            if (!File.Exists(this.txtHDRExcelPath.Text))
+            {
+                return;
+            }
+            string filePathWithName = this.txtHDRExcelPath.Text;
+
+            MdmBizHelper helper = new MdmBizHelper();
+
+
+            helper.BuildMdmCodeSystem(filePathWithName,"");
+        }
     }
 
 

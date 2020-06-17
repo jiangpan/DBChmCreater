@@ -42,9 +42,13 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnSplitScripts = new System.Windows.Forms.Button();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnBuildMdmCodeSystem = new System.Windows.Forms.Button();
+            this.btnBuildCodeSet = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnExportHDRExcel
@@ -77,7 +81,7 @@
             // 
             // btnLoadHdr_v105
             // 
-            this.btnLoadHdr_v105.Location = new System.Drawing.Point(703, 224);
+            this.btnLoadHdr_v105.Location = new System.Drawing.Point(703, 191);
             this.btnLoadHdr_v105.Name = "btnLoadHdr_v105";
             this.btnLoadHdr_v105.Size = new System.Drawing.Size(103, 49);
             this.btnLoadHdr_v105.TabIndex = 7;
@@ -87,7 +91,7 @@
             // 
             // btnLoadJson
             // 
-            this.btnLoadJson.Location = new System.Drawing.Point(703, 124);
+            this.btnLoadJson.Location = new System.Drawing.Point(703, 96);
             this.btnLoadJson.Name = "btnLoadJson";
             this.btnLoadJson.Size = new System.Drawing.Size(85, 34);
             this.btnLoadJson.TabIndex = 8;
@@ -133,11 +137,11 @@
             // 
             // btnLoad_SD
             // 
-            this.btnLoad_SD.Location = new System.Drawing.Point(703, 174);
+            this.btnLoad_SD.Location = new System.Drawing.Point(703, 136);
             this.btnLoad_SD.Name = "btnLoad_SD";
-            this.btnLoad_SD.Size = new System.Drawing.Size(85, 34);
+            this.btnLoad_SD.Size = new System.Drawing.Size(103, 49);
             this.btnLoad_SD.TabIndex = 14;
-            this.btnLoad_SD.Text = "读取最新SD生成对比Excel";
+            this.btnLoad_SD.Text = "读取最新SD生成hdr_columns";
             this.btnLoad_SD.UseVisualStyleBackColor = true;
             this.btnLoad_SD.Click += new System.EventHandler(this.btnLoad_SD_Click);
             // 
@@ -155,7 +159,7 @@
             // 
             this.groupBox1.Controls.Add(this.btnLoadHDR_SD);
             this.groupBox1.Controls.Add(this.btnLoadHdr_v106);
-            this.groupBox1.Location = new System.Drawing.Point(703, 301);
+            this.groupBox1.Location = new System.Drawing.Point(703, 246);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(126, 121);
             this.groupBox1.TabIndex = 16;
@@ -165,7 +169,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.btnSplitScripts);
-            this.groupBox2.Location = new System.Drawing.Point(703, 430);
+            this.groupBox2.Location = new System.Drawing.Point(703, 373);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(128, 81);
             this.groupBox2.TabIndex = 17;
@@ -182,11 +186,42 @@
             this.btnSplitScripts.UseVisualStyleBackColor = true;
             this.btnSplitScripts.Click += new System.EventHandler(this.btnSplitScripts_Click);
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.btnBuildCodeSet);
+            this.groupBox3.Controls.Add(this.btnBuildMdmCodeSystem);
+            this.groupBox3.Location = new System.Drawing.Point(703, 479);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(126, 100);
+            this.groupBox3.TabIndex = 18;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "groupBox3";
+            // 
+            // btnBuildMdmCodeSystem
+            // 
+            this.btnBuildMdmCodeSystem.Location = new System.Drawing.Point(28, 31);
+            this.btnBuildMdmCodeSystem.Name = "btnBuildMdmCodeSystem";
+            this.btnBuildMdmCodeSystem.Size = new System.Drawing.Size(75, 23);
+            this.btnBuildMdmCodeSystem.TabIndex = 0;
+            this.btnBuildMdmCodeSystem.Text = "构建代码系统";
+            this.btnBuildMdmCodeSystem.UseVisualStyleBackColor = true;
+            this.btnBuildMdmCodeSystem.Click += new System.EventHandler(this.btnBuildMdmCodeSystem_Click);
+            // 
+            // btnBuildCodeSet
+            // 
+            this.btnBuildCodeSet.Location = new System.Drawing.Point(28, 71);
+            this.btnBuildCodeSet.Name = "btnBuildCodeSet";
+            this.btnBuildCodeSet.Size = new System.Drawing.Size(75, 23);
+            this.btnBuildCodeSet.TabIndex = 1;
+            this.btnBuildCodeSet.Text = "构建代码集合";
+            this.btnBuildCodeSet.UseVisualStyleBackColor = true;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(843, 606);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnLoad_SD);
@@ -204,6 +239,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
+            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -225,6 +261,9 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button btnSplitScripts;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Button btnBuildMdmCodeSystem;
+        private System.Windows.Forms.Button btnBuildCodeSet;
     }
 }
 

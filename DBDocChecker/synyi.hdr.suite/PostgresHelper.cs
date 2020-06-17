@@ -501,7 +501,7 @@ namespace synyi.hdr.suite
 
 
 
-        public ulong BulkinsertHdrColumns(IEnumerable<ExcelColumn> result)
+        public ulong BulkinsertHdrColumns(IEnumerable<ExcelColumn> result, bool isClearExistData)
         {
             NpgsqlConnection conn = null;
             var copyHelper = new PostgreSQLCopyHelper<ExcelColumn>("public", "hdr_columns")
@@ -526,8 +526,10 @@ namespace synyi.hdr.suite
                 {
                     conn.Open();
                 }
-
-                conn.Execute("truncate table public.hdr_columns");
+                if (isClearExistData)
+                {
+                    conn.Execute("truncate table public.hdr_columns");
+                }
                 try
                 {
                     rows = copyHelper.SaveAll(conn, result);

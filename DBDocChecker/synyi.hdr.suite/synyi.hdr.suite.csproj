@@ -97,6 +97,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="mdm\code_domain_entity.cs" />
+    <Compile Include="mdm\code_set_entity.cs" />
+    <Compile Include="mdm\code_system_entity.cs" />
+    <Compile Include="mdm\MdmBizHelper.cs" />
+    <Compile Include="mdm\mdmExcelRawEntity.cs" />
     <Compile Include="ScriptHandler.cs" />
     <Compile Include="AsposeHelper.cs" />
     <Compile Include="BizHelper.cs" />
