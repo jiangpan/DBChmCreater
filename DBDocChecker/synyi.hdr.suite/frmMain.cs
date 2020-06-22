@@ -810,7 +810,44 @@ namespace synyi.hdr.suite
             MdmBizHelper helper = new MdmBizHelper();
 
 
-            helper.BuildMdmCodeSystem(filePathWithName,"");
+            helper.BuildMdmCodeSystem(filePathWithName,"","");
+        }
+
+        private void btnExportMdmCodesysCodeSet_Click(object sender, EventArgs e)
+        {
+            MdmBizHelper helper = new MdmBizHelper();
+
+
+            helper.ExportCodeSysCodeSet("", "", "");
+            MessageBox.Show("完成");
+        }
+
+        private void btnBuildCodeSet_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(this.txtHDRExcelPath.Text))
+            {
+                return;
+            }
+            if (!File.Exists(this.txtHDRExcelPath.Text))
+            {
+                return;
+            }
+            string filePathWithName = this.txtHDRExcelPath.Text;
+
+            MdmBizHelper helper = new MdmBizHelper();
+
+            Action<string, string, string> act = helper.InsertCodeSet;
+
+
+           
+            AsyncCallback callback = new AsyncCallback((x) =>
+            {
+            });
+
+            var res = act.BeginInvoke(filePathWithName, "", "",callback, "object vlaue");
+
+            act.EndInvoke(res);
+            MessageBox.Show("完成");
         }
     }
 

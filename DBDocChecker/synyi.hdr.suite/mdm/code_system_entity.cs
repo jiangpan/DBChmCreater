@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dapper.Contrib.Extensions;
 
 namespace synyi.hdr.suite.mdm
 {
+    [Table("mdm.code_system")]
     public class code_system_entity
     {
+        [Key]
         public int code_sys_id { get; set; } // integer; NO
         public string code_sys_code { get; set; } // character varying; NO
         public string code_sys_name { get; set; } // character varying; NO

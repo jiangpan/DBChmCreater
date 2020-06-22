@@ -43,8 +43,9 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnSplitScripts = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.btnBuildMdmCodeSystem = new System.Windows.Forms.Button();
+            this.btnExportMdmCodesysCodeSet = new System.Windows.Forms.Button();
             this.btnBuildCodeSet = new System.Windows.Forms.Button();
+            this.btnBuildMdmCodeSystem = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -161,7 +162,7 @@
             this.groupBox1.Controls.Add(this.btnLoadHdr_v106);
             this.groupBox1.Location = new System.Drawing.Point(703, 246);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(126, 121);
+            this.groupBox1.Size = new System.Drawing.Size(126, 103);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "文档校对";
@@ -169,16 +170,16 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.btnSplitScripts);
-            this.groupBox2.Location = new System.Drawing.Point(703, 373);
+            this.groupBox2.Location = new System.Drawing.Point(703, 355);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(128, 81);
+            this.groupBox2.Size = new System.Drawing.Size(128, 67);
             this.groupBox2.TabIndex = 17;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "脚本切割";
             // 
             // btnSplitScripts
             // 
-            this.btnSplitScripts.Location = new System.Drawing.Point(18, 31);
+            this.btnSplitScripts.Location = new System.Drawing.Point(18, 20);
             this.btnSplitScripts.Name = "btnSplitScripts";
             this.btnSplitScripts.Size = new System.Drawing.Size(85, 33);
             this.btnSplitScripts.TabIndex = 0;
@@ -188,33 +189,45 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.btnExportMdmCodesysCodeSet);
             this.groupBox3.Controls.Add(this.btnBuildCodeSet);
             this.groupBox3.Controls.Add(this.btnBuildMdmCodeSystem);
-            this.groupBox3.Location = new System.Drawing.Point(703, 479);
+            this.groupBox3.Location = new System.Drawing.Point(703, 428);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(126, 100);
+            this.groupBox3.Size = new System.Drawing.Size(126, 166);
             this.groupBox3.TabIndex = 18;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "groupBox3";
             // 
-            // btnBuildMdmCodeSystem
+            // btnExportMdmCodesysCodeSet
             // 
-            this.btnBuildMdmCodeSystem.Location = new System.Drawing.Point(28, 31);
-            this.btnBuildMdmCodeSystem.Name = "btnBuildMdmCodeSystem";
-            this.btnBuildMdmCodeSystem.Size = new System.Drawing.Size(75, 23);
-            this.btnBuildMdmCodeSystem.TabIndex = 0;
-            this.btnBuildMdmCodeSystem.Text = "构建代码系统";
-            this.btnBuildMdmCodeSystem.UseVisualStyleBackColor = true;
-            this.btnBuildMdmCodeSystem.Click += new System.EventHandler(this.btnBuildMdmCodeSystem_Click);
+            this.btnExportMdmCodesysCodeSet.Location = new System.Drawing.Point(28, 113);
+            this.btnExportMdmCodesysCodeSet.Name = "btnExportMdmCodesysCodeSet";
+            this.btnExportMdmCodesysCodeSet.Size = new System.Drawing.Size(75, 34);
+            this.btnExportMdmCodesysCodeSet.TabIndex = 2;
+            this.btnExportMdmCodesysCodeSet.Text = "导出代码系统及值集";
+            this.btnExportMdmCodesysCodeSet.UseVisualStyleBackColor = true;
+            this.btnExportMdmCodesysCodeSet.Click += new System.EventHandler(this.btnExportMdmCodesysCodeSet_Click);
             // 
             // btnBuildCodeSet
             // 
             this.btnBuildCodeSet.Location = new System.Drawing.Point(28, 71);
             this.btnBuildCodeSet.Name = "btnBuildCodeSet";
-            this.btnBuildCodeSet.Size = new System.Drawing.Size(75, 23);
+            this.btnBuildCodeSet.Size = new System.Drawing.Size(75, 36);
             this.btnBuildCodeSet.TabIndex = 1;
             this.btnBuildCodeSet.Text = "构建代码集合";
             this.btnBuildCodeSet.UseVisualStyleBackColor = true;
+            this.btnBuildCodeSet.Click += new System.EventHandler(this.btnBuildCodeSet_Click);
+            // 
+            // btnBuildMdmCodeSystem
+            // 
+            this.btnBuildMdmCodeSystem.Location = new System.Drawing.Point(28, 31);
+            this.btnBuildMdmCodeSystem.Name = "btnBuildMdmCodeSystem";
+            this.btnBuildMdmCodeSystem.Size = new System.Drawing.Size(75, 34);
+            this.btnBuildMdmCodeSystem.TabIndex = 0;
+            this.btnBuildMdmCodeSystem.Text = "构建代码系统";
+            this.btnBuildMdmCodeSystem.UseVisualStyleBackColor = true;
+            this.btnBuildMdmCodeSystem.Click += new System.EventHandler(this.btnBuildMdmCodeSystem_Click);
             // 
             // frmMain
             // 
@@ -264,6 +277,7 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Button btnBuildMdmCodeSystem;
         private System.Windows.Forms.Button btnBuildCodeSet;
+        private System.Windows.Forms.Button btnExportMdmCodesysCodeSet;
     }
 }
 

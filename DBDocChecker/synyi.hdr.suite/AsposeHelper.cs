@@ -148,6 +148,7 @@ namespace synyi.hdr.suite
 
             Style styleAngka = workbook.CreateStyle();
             styles.Add(styleAngka);
+            styleHeader.Font.Name = "微软雅黑";
             styleAngka.HorizontalAlignment = TextAlignmentType.Left;
             styleAngka.VerticalAlignment = TextAlignmentType.Center;
 
