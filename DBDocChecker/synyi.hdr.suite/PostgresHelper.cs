@@ -9,6 +9,10 @@ using System.Threading.Tasks;
 using Dapper;
 using Npgsql;
 using NpgsqlTypes;
+using Dapper.Contrib;
+using Dapper.Contrib.Extensions;
+using synyi.hdr.suite.Entity;
+using PostgreSQLCopyHelper;
 
 namespace synyi.hdr.suite
 {
@@ -426,6 +430,46 @@ namespace synyi.hdr.suite
 
         }
 
+
+        public int Execute(string sql, object param = null)
+        {
+            NpgsqlConnection conn = null;
+            int result;
+
+            using (conn = new NpgsqlConnection(this.connectionString))
+            {
+                if (conn.State == ConnectionState.Closed || conn.State == ConnectionState.Broken)
+                {
+                    conn.Open();
+                }
+
+                result = conn.Execute(sql, param);
+
+            }
+            return result;
+        }
+
+
+        public long Insert<T>(T entityToInsert) where T : class
+        {
+
+            NpgsqlConnection conn = null;
+            long result;
+
+            using (conn = new NpgsqlConnection(this.connectionString))
+            {
+                if (conn.State == ConnectionState.Closed || conn.State == ConnectionState.Broken)
+                {
+                    conn.Open();
+                }
+
+                result = conn.Insert<T>(entityToInsert);
+
+            }
+            return result;
+
+        }
+
         //设置当前连接串
         //dbConnectionString = ConfigurationManager.ConnectionStrings[HdrNewLocal].ConnectionString;
         //dbProviderName = ConfigurationManager.ConnectionStrings[HdrNewLocal].ProviderName; //默认连接
@@ -454,5 +498,54 @@ namespace synyi.hdr.suite
         //    dbconn.ConnectionString = ConfigurationManager.ConnectionStrings[connectionString].ConnectionString; ;
         //    return dbconn;
         //}
+
+
+
+        public ulong BulkinsertHdrColumns(IEnumerable<ExcelColumn> result, bool isClearExistData)
+        {
+            NpgsqlConnection conn = null;
+            var copyHelper = new PostgreSQLCopyHelper<ExcelColumn>("public", "hdr_columns")
+                                                .MapText("tablename", x => x.TableName)
+                                                .MapText("tablenamech", x => x.TableNameCh)
+                                                .MapText("schema", x => x.Schema)
+                                                .MapText("schemach", x => x.SchemaCh)
+                                                .MapText("tablecomment", x => x.TableComment)
+                                                .MapText("serialnumber", x => x.SerialNumber)
+                                                .MapText("columnname", x => x.ColumnName)
+                                                .MapText("columncomment", x => x.ColumnComment)
+                                                .MapText("datatype", x => x.DataType)
+                                                .MapText("isnulled", x => x.IsNulled)
+                                                .MapText("foreignkey", x => x.ForeignKey)
+                                                .MapText("codesystem", x => x.CodeSystem)
+                                                .MapText("isstandard", x => x.IsStandard)
+                                                .MapText("description", x => x.Description);
+            ulong rows = 0;
+            using (conn = new NpgsqlConnection(this.connectionString))
+            {
+                if (conn.State == ConnectionState.Closed || conn.State == ConnectionState.Broken)
+                {
+                    conn.Open();
+                }
+                if (isClearExistData)
+                {
+                    conn.Execute("truncate table public.hdr_columns");
+                }
+                try
+                {
+                    rows = copyHelper.SaveAll(conn, result);
+
+                }
+                catch (PostgresException ex1)
+                {
+                    Serilog.Log.Error(ex1, "批量插入 public.hdr_columns表异常！");
+                }
+                catch (Exception ex)
+                {
+                    Serilog.Log.Error(ex, "批量插入 public.hdr_columns表异常！");
+                }
+            }
+            return rows;
+
+        }
     }
 }

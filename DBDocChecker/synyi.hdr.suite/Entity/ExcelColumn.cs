@@ -22,7 +22,7 @@ namespace synyi.hdr.suite.Entity
         public string ColumnName { get; set; } //列名	
         public string ColumnComment { get; set; } //中文名	
         public string DataType { get; set; } //字段类型	
-        public string IsNull { get; set; } //允许空	
+        public string IsNulled { get; set; } //允许空	
         public string ForeignKey { get; set; } //外键（关联字段）	
         public string CodeSystem { get; set; } //字典系统（值域）	
         public string IsStandard { get; set; } //字典表标准化	

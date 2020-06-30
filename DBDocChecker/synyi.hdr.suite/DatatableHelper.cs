@@ -14,7 +14,7 @@ namespace synyi.hdr.suite
         public static string DataTableToJSONWithJSONNet(DataTable table)
         {
             string JSONString = string.Empty;
-            JSONString = JsonConvert.SerializeObject(table);
+            JSONString = JsonConvert.SerializeObject(table, Formatting.Indented);
             return JSONString;
         }
     }
