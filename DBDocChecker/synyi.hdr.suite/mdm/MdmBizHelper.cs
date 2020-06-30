@@ -695,7 +695,11 @@ select * from b");
                 {
                     continue;
                 }
-                else if (row.GetCellOrNull(0).StringValue.Contains("代码"))
+                else if (row.GetCellOrNull(CellsHelper.ColumnNameToIndex("A")) == null)
+                {
+                    continue;
+                }
+                else if (row.GetCellOrNull(CellsHelper.ColumnNameToIndex("A")).StringValue.Contains("代码"))
                 {
                     continue;
                 }
