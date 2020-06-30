@@ -127,7 +127,7 @@ namespace synyi.hdr.suite
 
             Style styleHeader = workbook.CreateStyle();
             styles.Add(styleHeader);
-            styleHeader.Font.Name = "Arial";
+            styleHeader.Font.Name = "微软雅黑";
             styleHeader.Font.Size = 10;
             styleHeader.Font.IsBold = true;
             styleHeader.Pattern = BackgroundType.Solid;

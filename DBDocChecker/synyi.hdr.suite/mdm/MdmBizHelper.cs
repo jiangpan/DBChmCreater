@@ -86,7 +86,7 @@ order by domain_id desc
             for (int i = 0; i <= cells.MaxDataRow; i++)
             {
                 var row = cells.CheckRow(i);
-                if (row == null || row.FirstDataCell == null)
+                if (row == null || row.FirstCell == null)
                 {
                     continue;
                 }
@@ -364,7 +364,7 @@ order by domain_id desc
             {
 
                 var row = cells.CheckRow(i);
-                if (row == null || row.FirstDataCell == null)
+                if (row == null || row.FirstCell == null)
                 {
                     continue;
                 }
@@ -459,7 +459,7 @@ select * from b
             {
                 dbConnName = "hdr";
             }
-            var connstr = System.Configuration.ConfigurationManager.ConnectionStrings[dbConnName].ConnectionString;           
+            var connstr = System.Configuration.ConfigurationManager.ConnectionStrings[dbConnName].ConnectionString;
             if (string.IsNullOrEmpty(sheetName))
             {
                 sheetName = "代码系统";
@@ -472,7 +472,7 @@ select * from b
 ,b as (select b1.*,a.codeset from mdm.code_system b1 inner join a on a.code_sys_id = b1.code_sys_id  where b1.etl_time > current_TIMESTAMP - interval '1 days')
 select * from b");
 
-                ExportCodeSysCodeSetToExcel(excelPath,sheetName, result);
+                ExportCodeSysCodeSetToExcel(excelPath, sheetName, result);
 
             }
 
@@ -491,11 +491,9 @@ select * from b");
                 workbook = new Workbook(fs);
             }
 
-            FileInfo fileInfo = new FileInfo(excelPath);
+            string exportPath = Path.Combine(AppContext.BaseDirectory, $"{Path.GetFileNameWithoutExtension(excelPath)}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
 
-            string exportPath = Path.Combine(AppContext.BaseDirectory, $"{fileInfo.Name}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
-            
-            IList<Style> styles = helper.CheckTest(workbook);            
+            IList<Style> styles = helper.CheckTest(workbook);
 
             Worksheet wshet = workbook.Worksheets[sheetName];
             var cellscodesys = wshet.Cells;
@@ -505,7 +503,7 @@ select * from b");
             for (int k = 0; k < cellscodesys.MaxDataRow; k++)
             {
                 var row = cellscodesys.CheckRow(k);
-                if (row == null || row.FirstDataCell == null)
+                if (row == null || row.FirstCell == null)
                 {
                     continue;
                 }
@@ -529,8 +527,8 @@ select * from b");
 
                         ++j;
 
-                        string sheetname = item.code_sys_code.Remove(0,4);  //去除mdm_ 及 hdr_ 等前缀
-                        if (item.code_sys_code.Length > 31)
+                        string sheetname = item.code_sys_code.Remove(0, 4);  //去除mdm_ 及 hdr_ 等前缀
+                        if (sheetname.Length > 31)
                         {
                             sheetname = sheetname.Substring(0, 31);
                         }
@@ -541,21 +539,44 @@ select * from b");
 
 
                         #region 代码集合 表头
-                        var cel = cells[CellsHelper.CellIndexToName(0, CellsHelper.ColumnNameToIndex("A"))];
+                        //第一行
+                        int rowheader = 0;
+                        var cel = cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("A"))];
                         cel.Value = "返回";
 
-                        cells.Merge(1, CellsHelper.ColumnNameToIndex("A"), 1, 2);
-                        cells[CellsHelper.CellIndexToName(1, CellsHelper.ColumnNameToIndex("A"))].Value = item.code_sys_name;
-                        cells[CellsHelper.CellIndexToName(1, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[2]);
 
-                        cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("A"))].Value = "代码";
-                        cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[2]);
+                        //第二行
+                        ++rowheader;
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("A"))].Value = "代码系统代码";
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[0]);
 
-                        cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("B"))].Value = "名称";
-                        cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("B"))].SetStyle(styles[2]);
+                        cells.Merge(rowheader, CellsHelper.ColumnNameToIndex("B"), 1, 2);
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("B"))].Value = item.code_sys_code;
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("B"))].GetMergedRange().SetStyle(styles[2]);
 
-                        cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("c"))].Value = "显示名";
-                        cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("c"))].SetStyle(styles[2]); 
+
+
+                        //第三行
+                        ++rowheader;
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("A"))].Value = "代码系统名称";
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[0]);
+
+                        cells.Merge(rowheader, CellsHelper.ColumnNameToIndex("B"), 1, 2);
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("B"))].Value = item.code_sys_name;
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("B"))].GetMergedRange().SetStyle(styles[2]);
+
+
+                        //第四行
+                        ++rowheader;
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("A"))].Value = "代码";
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[0]);
+
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("B"))].Value = "名称";
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("B"))].SetStyle(styles[0]);
+
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("c"))].Value = "显示名";
+                        cells[CellsHelper.CellIndexToName(rowheader, CellsHelper.ColumnNameToIndex("c"))].SetStyle(styles[0]);
+
                         #endregion
 
                         #region 创建链接
@@ -571,7 +592,7 @@ select * from b");
                         #endregion
 
                         #region 填充代码集合 codeset
-                        int offset = 3;
+                        int offset = ++rowheader;
                         for (int i = 0; i < codesets.Count; i++)
                         {
                             var code = codesets[i].code;
@@ -589,7 +610,16 @@ select * from b");
 
                         }
                         sheet.IsGridlinesVisible = false;
-                        sheet.AutoFitColumns(); 
+
+
+                        #region 设置宽度
+                        cells.SetColumnWidth(0, 16);
+                        cells.SetColumnWidth(1, 30);
+                        cells.SetColumnWidth(2, 35);
+                        //sheet.AutoFitColumns();
+                        #endregion
+
+
                         #endregion
                     }
 
@@ -597,7 +627,7 @@ select * from b");
                 }
             }
 
-           
+
             //sheetlist.IsGridlinesVisible = false;
             //sheetlist.AutoFitColumns();
             workbook.Save(exportPath, SaveFormat.Xlsx);
@@ -608,7 +638,7 @@ select * from b");
 
 
         #region 导入代码系统
-        public void ImportCodeSysCodeSetToExcel(string codesysPath, string valuesetPath, string dbConnName, bool isclearandresetseq, string version)
+        public void ImportCodeSysCodeSetToExcel(string codesysPath, string dbConnName, bool isclearandresetseq, string version)
         {
 
             if (string.IsNullOrEmpty(dbConnName))
@@ -622,24 +652,18 @@ select * from b");
                 ClearandResetMdmCodeSysCodeset(connstr);
 
             }
-
-
-
             //插入代码系统 
-            BuildMdmCodeSystem(codesysPath, "", dbConnName,version);
+            BuildMdmCodeSystem(codesysPath, "", dbConnName, version);
 
             //插入值集
-            BuildMdmCodeSet(valuesetPath, "", dbConnName);
-
-
-
-
+            BuildMdmCodeSet(codesysPath, "", dbConnName);
         }
 
         #endregion
 
 
         #region 构建代码集合
+
         public void BuildMdmCodeSet(string excelPath, string sheetName, string dbConnName)
         {
 
@@ -658,43 +682,47 @@ select * from b");
 
             if (string.IsNullOrEmpty(sheetName))
             {
-                sheetName = "代码系统清单";
+                sheetName = "代码系统";
             }
             Worksheet sheet = workbook.Worksheets[sheetName];
             var cells = sheet.Cells;
+
+            #region 加载代码系统，包含代码集的代码系统
             for (int i = 1; i <= cells.MaxDataRow; i++)
             {
                 var row = cells.CheckRow(i);
-                if (row == null || row.FirstDataCell == null)
+                if (row == null || row.FirstCell == null)
                 {
                     continue;
                 }
-
-                if (row.GetCellOrNull(0).StringValue == "代码系统代码")
+                else if (row.GetCellOrNull(0).StringValue.Contains("代码"))
                 {
                     continue;
                 }
                 else
                 {
+                    var hasCodeSet = row.GetCellOrNull(CellsHelper.ColumnNameToIndex("P")).StringValue;
+                    if (string.IsNullOrWhiteSpace(hasCodeSet))
+                    {
+                        continue;
+                    }
 
                     var aaa = new code_set_excel_entity();
-                    aaa.code_sys_code = row.GetCellOrNull(0).StringValue;
-                    aaa.code_sys_name = row.GetCellOrNull(1).StringValue;
+                    aaa.code_sys_code = row.GetCellOrNull(CellsHelper.ColumnNameToIndex("G")).StringValue;
+                    aaa.code_sys_name = row.GetCellOrNull(CellsHelper.ColumnNameToIndex("H")).StringValue;
 
-                    var ser = row.GetCellOrNull(2);
+                    var ser = row.GetCellOrNull(CellsHelper.ColumnNameToIndex("P"));
                     aaa.memo = sheet.Hyperlinks.FirstOrDefault(p => (p.Area.StartRow == ser.Row && p.Area.StartColumn == ser.Column)).Address;
                     if (!string.IsNullOrWhiteSpace(aaa.memo))
                     {
-                        aaa.show_name = aaa.memo.Split('!')[0];
+                        aaa.show_name = aaa.memo.Split('!')[0];//存放对应的sheet的名称
                     }
-                    //aaa.memo = row.GetCellOrNull(2).
-                    //aaa.code = row.GetCellOrNull(2).StringValue;
-                    //aaa.name = row.GetCellOrNull(3).StringValue;
-                    //aaa.memo = row.GetCellOrNull(4).StringValue;
                     codesystemCels.Add(aaa);
                 }
             }
+            #endregion
 
+            #region 循环处理所有的代码系统，并提取代码集
             foreach (var item in codesystemCels) //所有的代码系统
             {
                 string sheetNameCodeSet = item.code_sys_code;
@@ -702,16 +730,14 @@ select * from b");
                 Cells codeSetCells = workbook.Worksheets[item.show_name]?.Cells;
                 if (codeSetCells != null)
                 {//读取worksheet codeset
-                    for (int k = 2; k <= codeSetCells.MaxDataRow; k++) //单个codeset 从第二行开始
+                    for (int k = 3; k <= codeSetCells.MaxDataRow; k++) //单个codeset 从第二行开始
                     {
-
                         var row = codeSetCells.CheckRow(k);
-                        if (row == null || row.FirstDataCell == null)
+                        if (row == null || row.FirstCell == null)
                         {
                             continue;
                         }
-
-                        if (row.GetCellOrNull(0).StringValue.StartsWith("代码", StringComparison.OrdinalIgnoreCase))
+                        else if (row.GetCellOrNull(0).StringValue.StartsWith("代码", StringComparison.OrdinalIgnoreCase))
                         {
                             continue;
                         }
@@ -720,15 +746,16 @@ select * from b");
                             var aaa = new code_set_excel_entity();
                             aaa.code_sys_code = item.code_sys_code;
                             aaa.code_sys_name = item.code_sys_name;
-                            aaa.code = row.GetCellOrNull(0).StringValue;
-                            aaa.name = row.GetCellOrNull(1).StringValue;
-                            aaa.show_name = row.GetCellOrNull(2).StringValue;
+                            aaa.code = row.GetCellOrNull(CellsHelper.ColumnNameToIndex("A")).StringValue; //第一列
+                            aaa.name = row.GetCellOrNull(CellsHelper.ColumnNameToIndex("B")).StringValue;  //第二列
+                            aaa.show_name = row.GetCellOrNull(CellsHelper.ColumnNameToIndex("C")).StringValue; //第三列
                             codesetexcels1.Add(aaa);
                         }
                     }
                 }
             }//循环所有的代码系统
 
+            #endregion
 
             #region 插入数据
             var connstr = System.Configuration.ConfigurationManager.ConnectionStrings[dbConnName].ConnectionString;
@@ -740,7 +767,6 @@ select * from b");
                     int code_sys_id = -1;
                     if (code_sys_id_list == null || code_sys_id_list.Count == 0)
                     {
-
                         Serilog.Log.Warning($"{item.code_sys_code}{'\t'}{item.code_sys_name}");
                     }
                     else
@@ -782,24 +808,20 @@ select * from b");
                         };
                         conn.Insert<code_set_entity>(codeistm);
                     }
-
-
                 }
 
+                #region 拼音码、五笔码
                 //生成拼音、五笔码
                 conn.Execute("update mdm.code_set set spell_code = substring(get_pym_pg(name) from 0 for 20) ,wb_code = substring(get_wbm(name) from 0 for 20) ", commandTimeout: 300);
                 conn.Execute("update mdm.code_domain set spell_code = substring(get_pym_pg(domain_name) from 0 for 20) ,wb_code = substring(get_wbm(domain_name) from 0 for 20)", commandTimeout: 300);
                 conn.Execute("update mdm.code_system set spell_code = substring(get_pym_pg(code_sys_name) from 0 for 20),wb_code = substring(get_wbm(code_sys_name) from 0 for 20) ", commandTimeout: 300);
 
+                #endregion
             }
 
 
 
             #endregion
-
-
-
-
 
         }
 

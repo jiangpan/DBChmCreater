@@ -43,15 +43,12 @@ namespace synyi.hdr.suite
 
         private void btnBuildCodeSet_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(this.txtValueSetExcelPath.Text))
+            string filePathWithName = "";
+         
+            if (!File.Exists(filePathWithName))
             {
                 return;
             }
-            if (!File.Exists(this.txtValueSetExcelPath.Text))
-            {
-                return;
-            }
-            string filePathWithName = this.txtValueSetExcelPath.Text;
 
             MdmBizHelper helper = new MdmBizHelper();
 
@@ -93,26 +90,26 @@ namespace synyi.hdr.suite
         #region 导入excel至hdr的mdm中
         private void btnImportToHdr_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(this.txtCodeSysExcelPath.Text) || string.IsNullOrEmpty(this.txtValueSetExcelPath.Text))
+            if (string.IsNullOrEmpty(this.txtCodeSysExcelPath.Text) )
             {
                 return;
             }
-            if (!File.Exists(this.txtCodeSysExcelPath.Text) || !File.Exists(this.txtValueSetExcelPath.Text))
+            if (!File.Exists(this.txtCodeSysExcelPath.Text) )
             {
                 return;
             }
             string codesyspath = this.txtCodeSysExcelPath.Text;
-            string codesetPath = this.txtValueSetExcelPath.Text;
+            
 
             MdmBizHelper helper = new MdmBizHelper();
 
-            Action<string, string, string, bool, string> act = helper.ImportCodeSysCodeSetToExcel;
+            Action<string, string, bool, string> act = helper.ImportCodeSysCodeSetToExcel;
 
             AsyncCallback callback = new AsyncCallback((x) =>
             {
             });
 
-            var res = act.BeginInvoke(codesyspath, codesetPath, "", true, this.txtVersion.Text, callback, "object vlaue");
+            var res = act.BeginInvoke(codesyspath, "", true, this.txtVersion.Text, callback, "object vlaue");
 
             act.EndInvoke(res);
             MessageBox.Show("完成");
@@ -151,12 +148,7 @@ namespace synyi.hdr.suite
             }
 
         }
-
-        private void btnBrowseFileValueSet_Click(object sender, EventArgs e)
-        {
-            var ret = Browse_file();
-            this.txtValueSetExcelPath.Text = ret;
-        }
+        
         #endregion
     }
 }

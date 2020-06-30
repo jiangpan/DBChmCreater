@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.txtVersion = new System.Windows.Forms.TextBox();
             this.chkClearMdmDataAndResetSeq = new System.Windows.Forms.CheckBox();
             this.btnImportToHdr = new System.Windows.Forms.Button();
             this.btnExportMdmCodesysCodeSet = new System.Windows.Forms.Button();
@@ -40,9 +41,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtValueSetExcelPath = new System.Windows.Forms.TextBox();
-            this.btnBrowseFileValueSet = new System.Windows.Forms.Button();
-            this.txtVersion = new System.Windows.Forms.TextBox();
             this.groupBox3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -50,7 +48,6 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.txtVersion);
             this.groupBox3.Controls.Add(this.chkClearMdmDataAndResetSeq);
             this.groupBox3.Controls.Add(this.btnImportToHdr);
             this.groupBox3.Controls.Add(this.btnExportMdmCodesysCodeSet);
@@ -63,12 +60,20 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "groupBox3";
             // 
+            // txtVersion
+            // 
+            this.txtVersion.Location = new System.Drawing.Point(110, 23);
+            this.txtVersion.Name = "txtVersion";
+            this.txtVersion.Size = new System.Drawing.Size(507, 21);
+            this.txtVersion.TabIndex = 26;
+            this.txtVersion.Text = "1.0.9";
+            // 
             // chkClearMdmDataAndResetSeq
             // 
             this.chkClearMdmDataAndResetSeq.AutoSize = true;
             this.chkClearMdmDataAndResetSeq.Checked = true;
             this.chkClearMdmDataAndResetSeq.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkClearMdmDataAndResetSeq.Location = new System.Drawing.Point(148, 165);
+            this.chkClearMdmDataAndResetSeq.Location = new System.Drawing.Point(371, 107);
             this.chkClearMdmDataAndResetSeq.Name = "chkClearMdmDataAndResetSeq";
             this.chkClearMdmDataAndResetSeq.Size = new System.Drawing.Size(180, 16);
             this.chkClearMdmDataAndResetSeq.TabIndex = 4;
@@ -77,7 +82,7 @@
             // 
             // btnImportToHdr
             // 
-            this.btnImportToHdr.Location = new System.Drawing.Point(9, 154);
+            this.btnImportToHdr.Location = new System.Drawing.Point(210, 96);
             this.btnImportToHdr.Name = "btnImportToHdr";
             this.btnImportToHdr.Size = new System.Drawing.Size(126, 36);
             this.btnImportToHdr.TabIndex = 3;
@@ -87,7 +92,7 @@
             // 
             // btnExportMdmCodesysCodeSet
             // 
-            this.btnExportMdmCodesysCodeSet.Location = new System.Drawing.Point(9, 102);
+            this.btnExportMdmCodesysCodeSet.Location = new System.Drawing.Point(24, 96);
             this.btnExportMdmCodesysCodeSet.Name = "btnExportMdmCodesysCodeSet";
             this.btnExportMdmCodesysCodeSet.Size = new System.Drawing.Size(126, 36);
             this.btnExportMdmCodesysCodeSet.TabIndex = 2;
@@ -97,7 +102,7 @@
             // 
             // btnBuildCodeSet
             // 
-            this.btnBuildCodeSet.Location = new System.Drawing.Point(9, 60);
+            this.btnBuildCodeSet.Location = new System.Drawing.Point(340, 25);
             this.btnBuildCodeSet.Name = "btnBuildCodeSet";
             this.btnBuildCodeSet.Size = new System.Drawing.Size(126, 36);
             this.btnBuildCodeSet.TabIndex = 1;
@@ -107,7 +112,7 @@
             // 
             // btnBuildMdmCodeSystem
             // 
-            this.btnBuildMdmCodeSystem.Location = new System.Drawing.Point(9, 20);
+            this.btnBuildMdmCodeSystem.Location = new System.Drawing.Point(185, 26);
             this.btnBuildMdmCodeSystem.Name = "btnBuildMdmCodeSystem";
             this.btnBuildMdmCodeSystem.Size = new System.Drawing.Size(126, 34);
             this.btnBuildMdmCodeSystem.TabIndex = 0;
@@ -142,7 +147,7 @@
             this.groupBox1.Size = new System.Drawing.Size(760, 55);
             this.groupBox1.TabIndex = 24;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "groupBox1";
+            this.groupBox1.Text = "Excel文件";
             // 
             // label1
             // 
@@ -155,49 +160,23 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.txtVersion);
             this.groupBox2.Controls.Add(this.label2);
-            this.groupBox2.Controls.Add(this.txtValueSetExcelPath);
-            this.groupBox2.Controls.Add(this.btnBrowseFileValueSet);
             this.groupBox2.Location = new System.Drawing.Point(12, 73);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(760, 55);
             this.groupBox2.TabIndex = 25;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "groupBox2";
+            this.groupBox2.Text = "版本";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(6, 26);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(65, 12);
+            this.label2.Size = new System.Drawing.Size(77, 12);
             this.label2.TabIndex = 23;
-            this.label2.Text = "值集文件：";
-            // 
-            // txtValueSetExcelPath
-            // 
-            this.txtValueSetExcelPath.Location = new System.Drawing.Point(110, 22);
-            this.txtValueSetExcelPath.Name = "txtValueSetExcelPath";
-            this.txtValueSetExcelPath.Size = new System.Drawing.Size(507, 21);
-            this.txtValueSetExcelPath.TabIndex = 21;
-            // 
-            // btnBrowseFileValueSet
-            // 
-            this.btnBrowseFileValueSet.Location = new System.Drawing.Point(652, 21);
-            this.btnBrowseFileValueSet.Name = "btnBrowseFileValueSet";
-            this.btnBrowseFileValueSet.Size = new System.Drawing.Size(75, 23);
-            this.btnBrowseFileValueSet.TabIndex = 22;
-            this.btnBrowseFileValueSet.Text = "浏览";
-            this.btnBrowseFileValueSet.UseVisualStyleBackColor = true;
-            this.btnBrowseFileValueSet.Click += new System.EventHandler(this.btnBrowseFileValueSet_Click);
-            // 
-            // txtVersion
-            // 
-            this.txtVersion.Location = new System.Drawing.Point(338, 33);
-            this.txtVersion.Name = "txtVersion";
-            this.txtVersion.Size = new System.Drawing.Size(100, 21);
-            this.txtVersion.TabIndex = 26;
-            this.txtVersion.Text = "1.0.9";
+            this.label2.Text = "内容版本号：";
             // 
             // frmMdmMgr
             // 
@@ -233,8 +212,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtValueSetExcelPath;
-        private System.Windows.Forms.Button btnBrowseFileValueSet;
         private System.Windows.Forms.TextBox txtVersion;
     }
 }
