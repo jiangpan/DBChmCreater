@@ -607,7 +607,6 @@ select * from b");
 
                             cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("C"))].Value = showname;
                             cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("C"))].SetStyle(styles[2]);
-
                         }
                         sheet.IsGridlinesVisible = false;
 
