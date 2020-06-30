@@ -537,10 +537,11 @@ namespace synyi.hdr.suite
                 }
                 catch (PostgresException ex1)
                 {
-
+                    Serilog.Log.Error(ex1, "批量插入 public.hdr_columns表异常！");
                 }
                 catch (Exception ex)
                 {
+                    Serilog.Log.Error(ex, "批量插入 public.hdr_columns表异常！");
                 }
             }
             return rows;

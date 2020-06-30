@@ -9,7 +9,7 @@ using Npgsql;
 using Dapper;
 using Dapper.Contrib;
 using Dapper.Contrib.Extensions;
-using Pinyin4net;
+
 namespace synyi.hdr.suite.mdm
 {
     /*
@@ -29,7 +29,8 @@ order by domain_id desc
 
     public class MdmBizHelper
     {
-        public void BuildMdmCodeSystem(string excelPath, string sheetName, string dbConnName)
+        #region 构建代码系统集合
+        public void BuildMdmCodeSystem(string excelPath, string sheetName, string dbConnName, string version)
         {
             var codeSyslist = this.ParseExcelToEntity(excelPath, sheetName);
 
@@ -46,9 +47,12 @@ order by domain_id desc
 
             InsertCodeDomainLevel3(codeSyslist, connstr);
 
-            InsertCodeSystem(codeSyslist, connstr);
+            InsertCodeSystem(codeSyslist, connstr, version);
 
         }
+
+        #endregion
+
 
         #region 解析excel生成实体
         /// <summary>
@@ -78,7 +82,7 @@ order by domain_id desc
 
             IList<mdmExcelRawEntity> codsyslist = new List<mdmExcelRawEntity>();
 
-            #region excel接卸
+            #region excel解析
             for (int i = 0; i <= cells.MaxDataRow; i++)
             {
                 var row = cells.CheckRow(i);
@@ -147,8 +151,8 @@ order by domain_id desc
                         //domain_id = "168",
                         domain_code = item.levelcode,
                         domain_name = item.levelname,
-                        //spell_code = "yyfs",
-                        //wb_code = "yyfs",
+                        spell_code = " ",
+                        wb_code = " ",
                         parent_domain_id = 0,
                         note = "1",
                         oper_id = 2,
@@ -156,14 +160,7 @@ order by domain_id desc
                         etl_time = DateTime.Now,
                         tenant_id = 0
                     };
-                    List<string> aaa = new List<string>();
-                    for (int i = 0; i < item.levelname.Length; i++)
-                    {
-                        var pinyin = Pinyin4net.PinyinHelper.ToHanyuPinyinStringArray(item.levelname[i])?.FirstOrDefault();
-                        aaa.Add(pinyin);
-                    }
-                    codedomain.spell_code = string.Join("", aaa.Select(p => p?.ToUpper()?.Substring(0, 1)));
-                    codedomain.wb_code = codedomain.spell_code;
+
                     var result = conn.Insert<code_domain_entity>(codedomain, commandTimeout: 15);
 
                 }
@@ -186,8 +183,8 @@ order by domain_id desc
                         //domain_id = "168",
                         domain_code = item.levelcode,
                         domain_name = item.levelname,
-                        //spell_code = "yyfs",
-                        //wb_code = "yyfs",
+                        spell_code = " ",
+                        wb_code = " ",
                         parent_domain_id = 0,
                         note = "2",
                         oper_id = 2,
@@ -195,19 +192,12 @@ order by domain_id desc
                         etl_time = DateTime.Now,
                         tenant_id = 0
                     };
-                    List<string> aaa = new List<string>();
-                    for (int i = 0; i < item.levelname.Length; i++)
-                    {
-                        var pinyin = Pinyin4net.PinyinHelper.ToHanyuPinyinStringArray(item.levelname[i])?.FirstOrDefault();
-                        aaa.Add(pinyin);
-                    }
+
 
                     var parentdomid = conn.Query<int>($"select domain_id from mdm.code_domain where  note = '{"1"}' and domain_code = '{item.levl1code}'").FirstOrDefault();
 
                     codedomain.parent_domain_id = parentdomid;
 
-                    codedomain.spell_code = string.Join("", aaa.Select(p => p?.ToUpper()?.Substring(0, 1)));
-                    codedomain.wb_code = codedomain.spell_code;
                     var result = conn.Insert<code_domain_entity>(codedomain, commandTimeout: 15);
 
                 }
@@ -230,8 +220,8 @@ order by domain_id desc
                         //domain_id = "168",
                         domain_code = item.levelcode,
                         domain_name = item.levelname,
-                        //spell_code = "yyfs",
-                        //wb_code = "yyfs",
+                        spell_code = " ",
+                        wb_code = " ",
                         parent_domain_id = 0,
                         note = "3",
                         oper_id = 2,
@@ -239,14 +229,6 @@ order by domain_id desc
                         etl_time = DateTime.Now,
                         tenant_id = 0
                     };
-                    List<string> aaa = new List<string>();
-                    for (int i = 0; i < item.levelname.Length; i++)
-                    {
-                        var pinyin = Pinyin4net.PinyinHelper.ToHanyuPinyinStringArray(item.levelname[i])?.FirstOrDefault();
-                        aaa.Add(pinyin);
-                    }
-                    codedomain.spell_code = string.Join("", aaa.Select(p => p?.ToUpper()?.Substring(0, 1)));
-                    codedomain.wb_code = codedomain.spell_code;
 
                     var parentdomid = conn.Query<int>($"select domain_id from mdm.code_domain where  note = '{"2"}' and domain_code = '{item.levl2code}'").FirstOrDefault();
 
@@ -264,23 +246,24 @@ order by domain_id desc
 
         #region 生成代码系统
 
-        public void InsertCodeSystem(IList<mdmExcelRawEntity> codesyslist, string connstr)
+        public void InsertCodeSystem(IList<mdmExcelRawEntity> codesyslist, string connstr, string version)
         {
             var domains = codesyslist.Where(p => !string.IsNullOrEmpty(p.代码系统)).Distinct();
             using (NpgsqlConnection conn = new NpgsqlConnection(connstr))
             {
                 foreach (var item in domains)
                 {
+                    var levelcode = GetCodeSystemLevel(item.标准级别.Trim());
                     var codedomain = new code_system_entity
                     {
                         //code_sys_id = "779",
                         code_sys_code = item.代码系统,
                         code_sys_name = item.代码系统名称,
-                        //spell_code = "ZYBLWSLXYJML",
-                        //wb_code = "WBUDYNOG_GXHV",
-                        version = "1.0.9",
+                        spell_code = " ",
+                        wb_code = " ",
+                        version = version,
                         domain_id = 1,
-                        level_code = "5",
+                        level_code = levelcode.ToString(),
                         source_sys_id = 0,
                         source_note = item.标准来源,
                         is_value_set = true,
@@ -292,14 +275,7 @@ order by domain_id desc
                         etl_time = DateTime.Now,
                         tenant_id = 0
                     };
-                    List<string> aaa = new List<string>();
-                    for (int i = 0; i < item.代码系统名称.Length; i++)
-                    {
-                        var pinyin = Pinyin4net.PinyinHelper.ToHanyuPinyinStringArray(item.代码系统名称[i])?.FirstOrDefault();
-                        aaa.Add(pinyin);
-                    }
-                    codedomain.spell_code = string.Join("", aaa.Select(p => p?.ToUpper()?.Substring(0, 1)));
-                    codedomain.wb_code = codedomain.spell_code;
+
 
                     int domainid = 0;
                     if (!string.IsNullOrEmpty(item.三级域代码))
@@ -323,6 +299,44 @@ order by domain_id desc
             }
 
         }
+
+
+        public int GetCodeSystemLevel(string name)
+        {
+            if (name.Contains("国家标准"))
+            {
+                return 2;
+            }
+            else if (name.Contains("行业标准"))
+            {
+                return 3;
+            }
+            else if (name.Contains("地方标准"))
+            {
+                return 4;
+            }
+            else if (name.Contains("企业标准"))
+            {
+                return 5;
+            }
+            else if (name.Contains("院内字典"))
+            {
+                return 6;
+            }
+            else if (name.Contains("其他标准"))
+            {
+                return 7;
+            }
+            else if (name.Contains("国际标准"))
+            {
+                return 1;
+            }
+            else
+            {
+                return 2;
+            }
+        }
+
 
         #endregion
 
@@ -387,7 +401,8 @@ order by domain_id desc
                 foreach (var item in codesetexcels)
                 {
                     var code_sys_id = conn.Query<int>($"select code_sys_id from mdm.code_system where code_sys_code = '{item.code_sys_code}' and oper_time > current_TIMESTAMP - interval '1 days'").FirstOrDefault();
-                    var codeistm = new code_set_entity {
+                    var codeistm = new code_set_entity
+                    {
                         //code_id = "879 ",
                         code = item.code,
                         name = item.name,
@@ -414,14 +429,7 @@ order by domain_id desc
                         is_valid = true
                     };
 
-                    IList<string> aaa = new List<string>();
-                    for (int i = 0; i < item.name.Length; i++)
-                    {
-                        var pinyin = Pinyin4net.PinyinHelper.ToHanyuPinyinStringArray(item.name[i])?.FirstOrDefault();
-                        aaa.Add(pinyin);
-                    }
-                    codeistm.spell_code = string.Join("", aaa.Select(p => p?.ToUpper()?.Substring(0, 1)));
-                    codeistm.wb_code = codeistm.spell_code;
+
 
                     conn.Insert<code_set_entity>(codeistm);
                 }
@@ -433,11 +441,11 @@ order by domain_id desc
 
 
 
-            }
+        }
         #endregion
 
 
-        #region 导出code system code set为excel文件
+        #region 导出code system code set为excel文件  导出为文件 分类域  代码系统  代码集合
 
         /*
          with a as (select code_sys_id,jsonb_agg(jsonb_build_object('code_id',code_id , 'code',code , 'name',name , 'show_name',show_name , 'spell_code',spell_code , 'wb_code',wb_code , 'code_sys_id',code_sys_id , 'is_std',is_std , 'std_class_id',std_class_id , 'unit_id',unit_id , 'unit_name',unit_name , 'value_type',value_type , 'range',range , 'range_low',range_low , 'range_high',range_high , 'note',note , 'quote_code_id',quote_code_id , 'state',state , 'sort_no',sort_no , 'oper_id',oper_id , 'oper_time',oper_time , 'etl_time',etl_time , 'tenant_id',tenant_id , 'is_valid',is_valid ))  codeset from mdm.code_set group by code_sys_id )
@@ -451,7 +459,11 @@ select * from b
             {
                 dbConnName = "hdr";
             }
-            var connstr = System.Configuration.ConfigurationManager.ConnectionStrings[dbConnName].ConnectionString;
+            var connstr = System.Configuration.ConfigurationManager.ConnectionStrings[dbConnName].ConnectionString;           
+            if (string.IsNullOrEmpty(sheetName))
+            {
+                sheetName = "代码系统";
+            }
 
             using (NpgsqlConnection conn = new NpgsqlConnection(connstr))
             {
@@ -459,126 +471,365 @@ select * from b
                 var result = conn.Query<export_code_sys_code_set>(@"with a as (select code_sys_id,jsonb_agg(jsonb_build_object('code_id',code_id , 'code',code , 'name',name , 'show_name',show_name , 'spell_code',spell_code , 'wb_code',wb_code , 'code_sys_id',code_sys_id , 'is_std',is_std , 'std_class_id',std_class_id , 'unit_id',unit_id , 'unit_name',unit_name , 'value_type',value_type , 'range',range , 'range_low',range_low , 'range_high',range_high , 'note',note , 'quote_code_id',quote_code_id , 'state',state , 'sort_no',sort_no , 'oper_id',oper_id , 'oper_time',oper_time , 'etl_time',etl_time , 'tenant_id',tenant_id , 'is_valid',is_valid ))  codeset from mdm.code_set group by code_sys_id )
 ,b as (select b1.*,a.codeset from mdm.code_system b1 inner join a on a.code_sys_id = b1.code_sys_id  where b1.etl_time > current_TIMESTAMP - interval '1 days')
 select * from b");
-                ExportCodeSysCodeSetToExcel(result);
 
+                ExportCodeSysCodeSetToExcel(excelPath,sheetName, result);
 
             }
 
         }
         #endregion
 
+
         #region 导出为Excel文件
-        public void ExportCodeSysCodeSetToExcel(IEnumerable<export_code_sys_code_set> lst)
+        public void ExportCodeSysCodeSetToExcel(string excelPath, string sheetName, IEnumerable<export_code_sys_code_set> lst)
         {
             AsposeHelper helper = new AsposeHelper();
 
-
-            string exportPath = Path.Combine(AppContext.BaseDirectory, $"mdm_export_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
-            Workbook wb = new Workbook();
-            wb.Worksheets.Clear();
-            IList<Style> styles = helper.CheckTest(wb);
-
-            var sheetlist = wb.Worksheets.Add("代码系统清单");
-            var cellindex = sheetlist.Cells;
-            cellindex.Merge(0, CellsHelper.ColumnNameToIndex("A"), 1, 3);
-            cellindex[CellsHelper.CellIndexToName(0, CellsHelper.ColumnNameToIndex("A"))].Value = "代码系统索引";
-            cellindex[CellsHelper.CellIndexToName(0, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[2]);
-
-            cellindex[CellsHelper.CellIndexToName(1, CellsHelper.ColumnNameToIndex("A"))].Value = "代码系统代码";
-            cellindex[CellsHelper.CellIndexToName(1, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[2]);
-
-            cellindex[CellsHelper.CellIndexToName(1, CellsHelper.ColumnNameToIndex("B"))].Value = "代码系统名称";
-            cellindex[CellsHelper.CellIndexToName(1, CellsHelper.ColumnNameToIndex("B"))].SetStyle(styles[2]);
-
-
-            cellindex[CellsHelper.CellIndexToName(1, CellsHelper.ColumnNameToIndex("C"))].Value = "操作";
-            cellindex[CellsHelper.CellIndexToName(1, CellsHelper.ColumnNameToIndex("C"))].SetStyle(styles[2]);
-
-
-            int codesysoffset = 2;
-
-
-            for (int j = 0; j < lst.Count(); j++)
+            Workbook workbook;
+            using (FileStream fs = new FileStream(excelPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                var item = lst.ElementAt(j);
-
-
-                #region 生成目录
-                cellindex[CellsHelper.CellIndexToName(j + codesysoffset, CellsHelper.ColumnNameToIndex("A"))].Value = item.code_sys_code;
-                cellindex[CellsHelper.CellIndexToName(j + codesysoffset, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[2]);
-
-                cellindex[CellsHelper.CellIndexToName(j + codesysoffset, CellsHelper.ColumnNameToIndex("B"))].Value = item.code_sys_name;
-                cellindex[CellsHelper.CellIndexToName(j + codesysoffset, CellsHelper.ColumnNameToIndex("B"))].SetStyle(styles[2]);
-
-                cellindex[CellsHelper.CellIndexToName(j + codesysoffset, CellsHelper.ColumnNameToIndex("C"))].Value = "查看";
-                cellindex[CellsHelper.CellIndexToName(j + codesysoffset, CellsHelper.ColumnNameToIndex("C"))].SetStyle(styles[2]);
-
-
-                #endregion
-
-                string sheetname = item.code_sys_code;
-                if (item.code_sys_code.Length > 31)
-                {
-                    sheetname = sheetname.Substring(0, 31);
-                }
-                var sheet = wb.Worksheets.Add(sheetname);
-                var cells = sheet.Cells;
-
-
-
-                IList<code_set_entity> codesets = Newtonsoft.Json.JsonConvert.DeserializeObject<IList<code_set_entity>>(item.codeset);
-                var cel = cells[CellsHelper.CellIndexToName(0, CellsHelper.ColumnNameToIndex("A"))];
-                cel.Value = "返回";
-
-                cells.Merge(1, CellsHelper.ColumnNameToIndex("A"), 1, 2);
-                cells[CellsHelper.CellIndexToName(1, CellsHelper.ColumnNameToIndex("A"))].Value = item.code_sys_name;
-                cells[CellsHelper.CellIndexToName(1, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[2]);
-
-                cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("A"))].Value = "代码";
-                cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[2]);
-
-                cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("B"))].Value = "名称";
-                cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("B"))].SetStyle(styles[2]);
-
-                cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("c"))].Value = "显示名";
-                cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("c"))].SetStyle(styles[2]);
-
-
-                #region 创建链接
-                sheetlist.Hyperlinks.Add(CellsHelper.CellIndexToName(j + codesysoffset, CellsHelper.ColumnNameToIndex("C")), 1, 1, $"{sheet.Name}!{cel.Name}");
-                sheet.Hyperlinks.Add(cel.Name, 1, 1, $"{sheetlist.Name}!{ CellsHelper.CellIndexToName(j + codesysoffset, CellsHelper.ColumnNameToIndex("C")) }");
-                #endregion
-
-                int offset = 3;
-                for (int i = 0; i < codesets.Count; i++)
-                {
-                    var code = codesets[i].code;
-                    var name = codesets[i].name;
-                    var showname = codesets[i].show_name;
-
-                    cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("A"))].Value = code;
-                    cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[2]);
-
-                    cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("B"))].Value = name;
-                    cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("B"))].SetStyle(styles[2]);
-
-                    cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("C"))].Value = showname;
-                    cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("C"))].SetStyle(styles[2]);
-
-                }
-                sheet.IsGridlinesVisible = false;
-                sheet.AutoFitColumns();
+                workbook = new Workbook(fs);
             }
-            sheetlist.IsGridlinesVisible = false;
-            sheetlist.AutoFitColumns();
-            wb.Save(exportPath, SaveFormat.Xlsx);
+
+            FileInfo fileInfo = new FileInfo(excelPath);
+
+            string exportPath = Path.Combine(AppContext.BaseDirectory, $"{fileInfo.Name}_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
+            
+            IList<Style> styles = helper.CheckTest(workbook);            
+
+            Worksheet wshet = workbook.Worksheets[sheetName];
+            var cellscodesys = wshet.Cells;
+
+            int j = 0;
+
+            for (int k = 0; k < cellscodesys.MaxDataRow; k++)
+            {
+                var row = cellscodesys.CheckRow(k);
+                if (row == null || row.FirstDataCell == null)
+                {
+                    continue;
+                }
+
+                if (row.GetCellOrNull(0).StringValue == "代码系统代码")
+                {
+                    continue;
+                }
+                else
+                {
+                    var sdsf = row.GetCellOrNull(6).StringValue;
+
+                    if (!string.IsNullOrWhiteSpace(sdsf))
+                    {
+                        var item = lst.FirstOrDefault(p => p.code_sys_code.Trim() == sdsf.Trim());
+                        if (item == null)
+                        {
+                            Serilog.Log.Information("代码系统：{codesys} 未存在对应的代码集合！", sdsf);
+                            continue;
+                        }
+
+                        ++j;
+
+                        string sheetname = item.code_sys_code.Remove(0,4);  //去除mdm_ 及 hdr_ 等前缀
+                        if (item.code_sys_code.Length > 31)
+                        {
+                            sheetname = sheetname.Substring(0, 31);
+                        }
+                        var sheet = workbook.Worksheets.Add(sheetname);
+                        var cells = sheet.Cells;
+
+                        IList<code_set_entity> codesets = Newtonsoft.Json.JsonConvert.DeserializeObject<IList<code_set_entity>>(item.codeset);
+
+
+                        #region 代码集合 表头
+                        var cel = cells[CellsHelper.CellIndexToName(0, CellsHelper.ColumnNameToIndex("A"))];
+                        cel.Value = "返回";
+
+                        cells.Merge(1, CellsHelper.ColumnNameToIndex("A"), 1, 2);
+                        cells[CellsHelper.CellIndexToName(1, CellsHelper.ColumnNameToIndex("A"))].Value = item.code_sys_name;
+                        cells[CellsHelper.CellIndexToName(1, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[2]);
+
+                        cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("A"))].Value = "代码";
+                        cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[2]);
+
+                        cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("B"))].Value = "名称";
+                        cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("B"))].SetStyle(styles[2]);
+
+                        cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("c"))].Value = "显示名";
+                        cells[CellsHelper.CellIndexToName(2, CellsHelper.ColumnNameToIndex("c"))].SetStyle(styles[2]); 
+                        #endregion
+
+                        #region 创建链接
+                        //sheetlist.Hyperlinks.Add(CellsHelper.CellIndexToName(j + codesysoffset, CellsHelper.ColumnNameToIndex("C")), 1, 1, $"{sheet.Name}!{cel.Name}"); //查看链接
+                        //sheet.Hyperlinks.Add(cel.Name, 1, 1, $"{sheetlist.Name}!{ CellsHelper.CellIndexToName(j + codesysoffset, CellsHelper.ColumnNameToIndex("C")) }");//返回链接
+
+                        //P列 增减快捷链接
+                        var cellName = CellsHelper.CellIndexToName(k, CellsHelper.ColumnNameToIndex("P"));
+                        cellscodesys[cellName].Value = "查看";
+                        cellscodesys[cellName].Worksheet.Hyperlinks.Add(cellName, cellName, $"{sheet.Name}!{cel.Name}", "", "");
+                        //返回链接
+                        sheet.Hyperlinks.Add(cel.Name, 1, 1, $"{cellscodesys[cellName].Worksheet.Name}!{cellName}");//返回链接
+                        #endregion
+
+                        #region 填充代码集合 codeset
+                        int offset = 3;
+                        for (int i = 0; i < codesets.Count; i++)
+                        {
+                            var code = codesets[i].code;
+                            var name = codesets[i].name;
+                            var showname = codesets[i].show_name;
+
+                            cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("A"))].Value = code;
+                            cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("A"))].SetStyle(styles[2]);
+
+                            cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("B"))].Value = name;
+                            cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("B"))].SetStyle(styles[2]);
+
+                            cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("C"))].Value = showname;
+                            cells[CellsHelper.CellIndexToName(i + offset, CellsHelper.ColumnNameToIndex("C"))].SetStyle(styles[2]);
+
+                        }
+                        sheet.IsGridlinesVisible = false;
+                        sheet.AutoFitColumns(); 
+                        #endregion
+                    }
+
+
+                }
+            }
+
+           
+            //sheetlist.IsGridlinesVisible = false;
+            //sheetlist.AutoFitColumns();
+            workbook.Save(exportPath, SaveFormat.Xlsx);
 
         }
 
         #endregion
 
 
+        #region 导入代码系统
+        public void ImportCodeSysCodeSetToExcel(string codesysPath, string valuesetPath, string dbConnName, bool isclearandresetseq, string version)
+        {
 
+            if (string.IsNullOrEmpty(dbConnName))
+            {
+                dbConnName = "hdr";
+            }
+            string connstr = System.Configuration.ConfigurationManager.ConnectionStrings[dbConnName].ConnectionString;
+
+            if (isclearandresetseq)
+            {//清理
+                ClearandResetMdmCodeSysCodeset(connstr);
+
+            }
+
+
+
+            //插入代码系统 
+            BuildMdmCodeSystem(codesysPath, "", dbConnName,version);
+
+            //插入值集
+            BuildMdmCodeSet(valuesetPath, "", dbConnName);
+
+
+
+
+        }
+
+        #endregion
+
+
+        #region 构建代码集合
+        public void BuildMdmCodeSet(string excelPath, string sheetName, string dbConnName)
+        {
+
+            Workbook workbook = null;
+
+            IList<code_set_excel_entity> codesystemCels = new List<code_set_excel_entity>();
+
+            IList<code_set_excel_entity> codesetexcels1 = new List<code_set_excel_entity>();
+
+            using (FileStream fs = new FileStream(excelPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                workbook = new Workbook(fs);
+            }
+
+            //新版MDMExcel 的说明
+
+            if (string.IsNullOrEmpty(sheetName))
+            {
+                sheetName = "代码系统清单";
+            }
+            Worksheet sheet = workbook.Worksheets[sheetName];
+            var cells = sheet.Cells;
+            for (int i = 1; i <= cells.MaxDataRow; i++)
+            {
+                var row = cells.CheckRow(i);
+                if (row == null || row.FirstDataCell == null)
+                {
+                    continue;
+                }
+
+                if (row.GetCellOrNull(0).StringValue == "代码系统代码")
+                {
+                    continue;
+                }
+                else
+                {
+
+                    var aaa = new code_set_excel_entity();
+                    aaa.code_sys_code = row.GetCellOrNull(0).StringValue;
+                    aaa.code_sys_name = row.GetCellOrNull(1).StringValue;
+
+                    var ser = row.GetCellOrNull(2);
+                    aaa.memo = sheet.Hyperlinks.FirstOrDefault(p => (p.Area.StartRow == ser.Row && p.Area.StartColumn == ser.Column)).Address;
+                    if (!string.IsNullOrWhiteSpace(aaa.memo))
+                    {
+                        aaa.show_name = aaa.memo.Split('!')[0];
+                    }
+                    //aaa.memo = row.GetCellOrNull(2).
+                    //aaa.code = row.GetCellOrNull(2).StringValue;
+                    //aaa.name = row.GetCellOrNull(3).StringValue;
+                    //aaa.memo = row.GetCellOrNull(4).StringValue;
+                    codesystemCels.Add(aaa);
+                }
+            }
+
+            foreach (var item in codesystemCels) //所有的代码系统
+            {
+                string sheetNameCodeSet = item.code_sys_code;
+
+                Cells codeSetCells = workbook.Worksheets[item.show_name]?.Cells;
+                if (codeSetCells != null)
+                {//读取worksheet codeset
+                    for (int k = 2; k <= codeSetCells.MaxDataRow; k++) //单个codeset 从第二行开始
+                    {
+
+                        var row = codeSetCells.CheckRow(k);
+                        if (row == null || row.FirstDataCell == null)
+                        {
+                            continue;
+                        }
+
+                        if (row.GetCellOrNull(0).StringValue.StartsWith("代码", StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            var aaa = new code_set_excel_entity();
+                            aaa.code_sys_code = item.code_sys_code;
+                            aaa.code_sys_name = item.code_sys_name;
+                            aaa.code = row.GetCellOrNull(0).StringValue;
+                            aaa.name = row.GetCellOrNull(1).StringValue;
+                            aaa.show_name = row.GetCellOrNull(2).StringValue;
+                            codesetexcels1.Add(aaa);
+                        }
+                    }
+                }
+            }//循环所有的代码系统
+
+
+            #region 插入数据
+            var connstr = System.Configuration.ConfigurationManager.ConnectionStrings[dbConnName].ConnectionString;
+            using (NpgsqlConnection conn = new NpgsqlConnection(connstr))
+            {
+                foreach (var item in codesystemCels)
+                {
+                    var code_sys_id_list = conn.Query<int>($"select code_sys_id from mdm.code_system where code_sys_code = '{item.code_sys_code}' ").ToList();
+                    int code_sys_id = -1;
+                    if (code_sys_id_list == null || code_sys_id_list.Count == 0)
+                    {
+
+                        Serilog.Log.Warning($"{item.code_sys_code}{'\t'}{item.code_sys_name}");
+                    }
+                    else
+                    {
+                        code_sys_id = code_sys_id_list.FirstOrDefault();
+                    }
+
+                    var codesets = codesetexcels1.Where(p => p.code_sys_code == item.code_sys_code);
+                    int sortno = 0;
+                    foreach (var codeset in codesets)
+                    {
+
+                        var codeistm = new code_set_entity
+                        {
+                            //code_id = "879 ",
+                            code = codeset.code,
+                            name = codeset.name,
+                            show_name = codeset.show_name,
+                            spell_code = "",
+                            wb_code = "",
+                            code_sys_id = code_sys_id,
+                            is_std = true,
+                            std_class_id = 0,
+                            unit_id = 0,
+                            unit_name = null,
+                            value_type = 0,
+                            range = null,
+                            range_low = null,
+                            range_high = null,
+                            note = item.show_name,
+                            quote_code_id = 0,
+                            state = 1,
+                            sort_no = ++sortno,
+                            oper_id = 3,
+                            oper_time = DateTime.Now,
+                            etl_time = DateTime.Now,
+                            tenant_id = 0,
+                            is_valid = true
+                        };
+                        conn.Insert<code_set_entity>(codeistm);
+                    }
+
+
+                }
+
+                //生成拼音、五笔码
+                conn.Execute("update mdm.code_set set spell_code = substring(get_pym_pg(name) from 0 for 20) ,wb_code = substring(get_wbm(name) from 0 for 20) ", commandTimeout: 300);
+                conn.Execute("update mdm.code_domain set spell_code = substring(get_pym_pg(domain_name) from 0 for 20) ,wb_code = substring(get_wbm(domain_name) from 0 for 20)", commandTimeout: 300);
+                conn.Execute("update mdm.code_system set spell_code = substring(get_pym_pg(code_sys_name) from 0 for 20),wb_code = substring(get_wbm(code_sys_name) from 0 for 20) ", commandTimeout: 300);
+
+            }
+
+
+
+            #endregion
+
+
+
+
+
+        }
+
+        #endregion
+
+
+        #region 清理重置代码系统
+        public void ClearandResetMdmCodeSysCodeset(string connstr)
+        {
+            using (NpgsqlConnection conn = new NpgsqlConnection(connstr))
+            {
+                //清除数据
+                conn.Execute("truncate table mdm.code_domain;");
+                conn.Execute("truncate table mdm.code_set;");
+                conn.Execute("truncate table mdm.code_system;");
+
+                //重置序列 先执行
+                conn.Execute("alter sequence mdm.code_domain_domain_id_seq minvalue 0 start with 1;");
+                conn.Execute("alter sequence mdm.code_set_code_id_seq1 minvalue 0 start with 1;");
+                conn.Execute("alter sequence mdm.code_system_code_sys_id_seq1 minvalue 0 start with 1;");
+
+                //再执行 从1开始递增
+                conn.Execute("SELECT setval('mdm.code_domain_domain_id_seq', 0)");
+                conn.Execute("SELECT setval('mdm.code_set_code_id_seq1', 0)");
+                conn.Execute("SELECT setval('mdm.code_system_code_sys_id_seq1', 0)");
+
+            }
+        }
+
+        #endregion
 
     }
 }

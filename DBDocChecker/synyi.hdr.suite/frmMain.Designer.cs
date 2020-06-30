@@ -42,19 +42,15 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btnSplitScripts = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.btnExportMdmCodesysCodeSet = new System.Windows.Forms.Button();
-            this.btnBuildCodeSet = new System.Windows.Forms.Button();
-            this.btnBuildMdmCodeSystem = new System.Windows.Forms.Button();
+            this.btnHDrMDMMaintain = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnExportHDRExcel
             // 
-            this.btnExportHDRExcel.Location = new System.Drawing.Point(703, 56);
+            this.btnExportHDRExcel.Location = new System.Drawing.Point(799, 83);
             this.btnExportHDRExcel.Name = "btnExportHDRExcel";
             this.btnExportHDRExcel.Size = new System.Drawing.Size(85, 34);
             this.btnExportHDRExcel.TabIndex = 0;
@@ -64,7 +60,7 @@
             // 
             // btnLoadSchemaAndTables
             // 
-            this.btnLoadSchemaAndTables.Location = new System.Drawing.Point(703, 12);
+            this.btnLoadSchemaAndTables.Location = new System.Drawing.Point(799, 43);
             this.btnLoadSchemaAndTables.Name = "btnLoadSchemaAndTables";
             this.btnLoadSchemaAndTables.Size = new System.Drawing.Size(85, 34);
             this.btnLoadSchemaAndTables.TabIndex = 1;
@@ -74,15 +70,15 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(5, 430);
+            this.richTextBox1.Location = new System.Drawing.Point(5, 464);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(683, 125);
+            this.richTextBox1.Size = new System.Drawing.Size(767, 210);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
             // 
             // btnLoadHdr_v105
             // 
-            this.btnLoadHdr_v105.Location = new System.Drawing.Point(703, 191);
+            this.btnLoadHdr_v105.Location = new System.Drawing.Point(799, 218);
             this.btnLoadHdr_v105.Name = "btnLoadHdr_v105";
             this.btnLoadHdr_v105.Size = new System.Drawing.Size(103, 49);
             this.btnLoadHdr_v105.TabIndex = 7;
@@ -92,7 +88,7 @@
             // 
             // btnLoadJson
             // 
-            this.btnLoadJson.Location = new System.Drawing.Point(703, 96);
+            this.btnLoadJson.Location = new System.Drawing.Point(795, 123);
             this.btnLoadJson.Name = "btnLoadJson";
             this.btnLoadJson.Size = new System.Drawing.Size(85, 34);
             this.btnLoadJson.TabIndex = 8;
@@ -112,16 +108,16 @@
             // 
             // txtHDRExcelPath
             // 
-            this.txtHDRExcelPath.Location = new System.Drawing.Point(86, 9);
+            this.txtHDRExcelPath.Location = new System.Drawing.Point(12, 9);
             this.txtHDRExcelPath.Name = "txtHDRExcelPath";
-            this.txtHDRExcelPath.Size = new System.Drawing.Size(602, 21);
+            this.txtHDRExcelPath.Size = new System.Drawing.Size(712, 21);
             this.txtHDRExcelPath.TabIndex = 11;
             // 
             // btnLocationHDRExcel
             // 
-            this.btnLocationHDRExcel.Location = new System.Drawing.Point(5, 8);
+            this.btnLocationHDRExcel.Location = new System.Drawing.Point(778, 1);
             this.btnLocationHDRExcel.Name = "btnLocationHDRExcel";
-            this.btnLocationHDRExcel.Size = new System.Drawing.Size(75, 23);
+            this.btnLocationHDRExcel.Size = new System.Drawing.Size(124, 38);
             this.btnLocationHDRExcel.TabIndex = 12;
             this.btnLocationHDRExcel.Text = "浏览";
             this.btnLocationHDRExcel.UseVisualStyleBackColor = true;
@@ -130,15 +126,15 @@
             // grid
             // 
             this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grid.Location = new System.Drawing.Point(5, 35);
+            this.grid.Location = new System.Drawing.Point(5, 36);
             this.grid.Name = "grid";
             this.grid.RowTemplate.Height = 23;
-            this.grid.Size = new System.Drawing.Size(683, 387);
+            this.grid.Size = new System.Drawing.Size(767, 422);
             this.grid.TabIndex = 13;
             // 
             // btnLoad_SD
             // 
-            this.btnLoad_SD.Location = new System.Drawing.Point(703, 136);
+            this.btnLoad_SD.Location = new System.Drawing.Point(799, 163);
             this.btnLoad_SD.Name = "btnLoad_SD";
             this.btnLoad_SD.Size = new System.Drawing.Size(103, 49);
             this.btnLoad_SD.TabIndex = 14;
@@ -160,7 +156,7 @@
             // 
             this.groupBox1.Controls.Add(this.btnLoadHDR_SD);
             this.groupBox1.Controls.Add(this.btnLoadHdr_v106);
-            this.groupBox1.Location = new System.Drawing.Point(703, 246);
+            this.groupBox1.Location = new System.Drawing.Point(797, 273);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(126, 103);
             this.groupBox1.TabIndex = 16;
@@ -170,7 +166,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.btnSplitScripts);
-            this.groupBox2.Location = new System.Drawing.Point(703, 355);
+            this.groupBox2.Location = new System.Drawing.Point(797, 391);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(128, 67);
             this.groupBox2.TabIndex = 17;
@@ -187,54 +183,22 @@
             this.btnSplitScripts.UseVisualStyleBackColor = true;
             this.btnSplitScripts.Click += new System.EventHandler(this.btnSplitScripts_Click);
             // 
-            // groupBox3
+            // btnHDrMDMMaintain
             // 
-            this.groupBox3.Controls.Add(this.btnExportMdmCodesysCodeSet);
-            this.groupBox3.Controls.Add(this.btnBuildCodeSet);
-            this.groupBox3.Controls.Add(this.btnBuildMdmCodeSystem);
-            this.groupBox3.Location = new System.Drawing.Point(703, 428);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(126, 166);
-            this.groupBox3.TabIndex = 18;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "groupBox3";
-            // 
-            // btnExportMdmCodesysCodeSet
-            // 
-            this.btnExportMdmCodesysCodeSet.Location = new System.Drawing.Point(28, 113);
-            this.btnExportMdmCodesysCodeSet.Name = "btnExportMdmCodesysCodeSet";
-            this.btnExportMdmCodesysCodeSet.Size = new System.Drawing.Size(75, 34);
-            this.btnExportMdmCodesysCodeSet.TabIndex = 2;
-            this.btnExportMdmCodesysCodeSet.Text = "导出代码系统及值集";
-            this.btnExportMdmCodesysCodeSet.UseVisualStyleBackColor = true;
-            this.btnExportMdmCodesysCodeSet.Click += new System.EventHandler(this.btnExportMdmCodesysCodeSet_Click);
-            // 
-            // btnBuildCodeSet
-            // 
-            this.btnBuildCodeSet.Location = new System.Drawing.Point(28, 71);
-            this.btnBuildCodeSet.Name = "btnBuildCodeSet";
-            this.btnBuildCodeSet.Size = new System.Drawing.Size(75, 36);
-            this.btnBuildCodeSet.TabIndex = 1;
-            this.btnBuildCodeSet.Text = "构建代码集合";
-            this.btnBuildCodeSet.UseVisualStyleBackColor = true;
-            this.btnBuildCodeSet.Click += new System.EventHandler(this.btnBuildCodeSet_Click);
-            // 
-            // btnBuildMdmCodeSystem
-            // 
-            this.btnBuildMdmCodeSystem.Location = new System.Drawing.Point(28, 31);
-            this.btnBuildMdmCodeSystem.Name = "btnBuildMdmCodeSystem";
-            this.btnBuildMdmCodeSystem.Size = new System.Drawing.Size(75, 34);
-            this.btnBuildMdmCodeSystem.TabIndex = 0;
-            this.btnBuildMdmCodeSystem.Text = "构建代码系统";
-            this.btnBuildMdmCodeSystem.UseVisualStyleBackColor = true;
-            this.btnBuildMdmCodeSystem.Click += new System.EventHandler(this.btnBuildMdmCodeSystem_Click);
+            this.btnHDrMDMMaintain.Location = new System.Drawing.Point(799, 509);
+            this.btnHDrMDMMaintain.Name = "btnHDrMDMMaintain";
+            this.btnHDrMDMMaintain.Size = new System.Drawing.Size(75, 23);
+            this.btnHDrMDMMaintain.TabIndex = 18;
+            this.btnHDrMDMMaintain.Text = "MDM维护";
+            this.btnHDrMDMMaintain.UseVisualStyleBackColor = true;
+            this.btnHDrMDMMaintain.Click += new System.EventHandler(this.btnHDrMDMMaintain_Click);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(843, 606);
-            this.Controls.Add(this.groupBox3);
+            this.ClientSize = new System.Drawing.Size(944, 681);
+            this.Controls.Add(this.btnHDrMDMMaintain);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnLoad_SD);
@@ -252,7 +216,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
-            this.groupBox3.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -274,10 +237,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button btnSplitScripts;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button btnBuildMdmCodeSystem;
-        private System.Windows.Forms.Button btnBuildCodeSet;
-        private System.Windows.Forms.Button btnExportMdmCodesysCodeSet;
+        private System.Windows.Forms.Button btnHDrMDMMaintain;
     }
 }
 

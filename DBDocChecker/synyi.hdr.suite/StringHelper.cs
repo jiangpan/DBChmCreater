@@ -11,25 +11,18 @@ namespace synyi.hdr.suite
         public static IList<string> Split(string inputfile)
         {
             IList<string> reslt = new List<string>();
-
-
-            int i = 0;
+            
             System.IO.StreamWriter outfile = null;
             string line;
-
             try
             {
                 using (var infile = new System.IO.StreamReader(inputfile))
                 {
-
                     while (!infile.EndOfStream)
                     {
                         line = infile.ReadLine();
-
                         reslt.Add(line);
-
                     }
-
                 }
             }
             finally

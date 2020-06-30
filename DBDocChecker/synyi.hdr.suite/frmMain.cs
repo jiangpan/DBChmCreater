@@ -430,6 +430,7 @@ namespace synyi.hdr.suite
 
         #endregion
         
+
         #region 读取最新的HDR 生成对比Excel
 
         private void btnLoadHdr_Click(object sender, EventArgs e)
@@ -526,6 +527,7 @@ namespace synyi.hdr.suite
 
         #endregion
 
+
         #region 读取最新的SD 生成对比Excel
         private void btnLoadHDR_SD_Click(object sender, EventArgs e)
         {
@@ -612,6 +614,7 @@ namespace synyi.hdr.suite
         }
         #endregion
 
+
         #region 文件对话框
         private void btnLocationHDRExcel_Click(object sender, EventArgs e)
         {
@@ -631,6 +634,7 @@ namespace synyi.hdr.suite
             }
         }
         #endregion
+
 
         #region 生成SD的数据  对比数据
 
@@ -690,6 +694,7 @@ namespace synyi.hdr.suite
 
 
         #endregion
+
 
         #region 切分脚本
         private void btnSplitScripts_Click(object sender, EventArgs e)
@@ -792,63 +797,18 @@ namespace synyi.hdr.suite
             this.richTextBox1.AppendText($"Finish! Used {st.Elapsed.TotalMilliseconds}ms");
 
         }
+
         #endregion
 
-        private void btnBuildMdmCodeSystem_Click(object sender, EventArgs e)
+
+        #region MDM维护
+        private void btnHDrMDMMaintain_Click(object sender, EventArgs e)
         {
+            frmMdmMgr frmMdmMgr = new frmMdmMgr();
+            frmMdmMgr.Show();
+        } 
+        #endregion
 
-            if (string.IsNullOrEmpty(this.txtHDRExcelPath.Text))
-            {
-                return;
-            }
-            if (!File.Exists(this.txtHDRExcelPath.Text))
-            {
-                return;
-            }
-            string filePathWithName = this.txtHDRExcelPath.Text;
-
-            MdmBizHelper helper = new MdmBizHelper();
-
-
-            helper.BuildMdmCodeSystem(filePathWithName,"","");
-        }
-
-        private void btnExportMdmCodesysCodeSet_Click(object sender, EventArgs e)
-        {
-            MdmBizHelper helper = new MdmBizHelper();
-
-
-            helper.ExportCodeSysCodeSet("", "", "");
-            MessageBox.Show("完成");
-        }
-
-        private void btnBuildCodeSet_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(this.txtHDRExcelPath.Text))
-            {
-                return;
-            }
-            if (!File.Exists(this.txtHDRExcelPath.Text))
-            {
-                return;
-            }
-            string filePathWithName = this.txtHDRExcelPath.Text;
-
-            MdmBizHelper helper = new MdmBizHelper();
-
-            Action<string, string, string> act = helper.InsertCodeSet;
-
-
-           
-            AsyncCallback callback = new AsyncCallback((x) =>
-            {
-            });
-
-            var res = act.BeginInvoke(filePathWithName, "", "",callback, "object vlaue");
-
-            act.EndInvoke(res);
-            MessageBox.Show("完成");
-        }
     }
 
 

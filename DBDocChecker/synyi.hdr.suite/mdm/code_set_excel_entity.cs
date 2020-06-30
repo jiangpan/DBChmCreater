@@ -16,6 +16,8 @@ namespace synyi.hdr.suite.mdm
 
         public string name { get; set; }
 
+        public string show_name { get; set; }
+
         public string memo { get; set; }
 
 
