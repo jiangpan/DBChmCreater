@@ -70,7 +70,7 @@ namespace DBChmCreater.Core
         }
         public IList<DataTableColumnDefCollection> GetTableStruct(List<string> tables)
         {
-            var strSql = @"  select cols.table_schema tableschema
+            var strSql1 = @"  select cols.table_schema tableschema
  ,quote_ident(cols.table_name)  tablename
 ,cols.ordinal_position ordinal
 ,cols.column_name  colname
@@ -90,6 +90,32 @@ from
 information_schema.columns cols inner join information_schema.tables tbs  on cols.TABLE_NAME = tbs.TABLE_NAME
 where tbs.table_type = 'BASE TABLE'
               ORDER BY 1, 2 ";
+
+            var strSql = @"with a as (select cols.table_schema tableschema
+ , quote_ident(cols.table_name)  tablename
+,cols.ordinal_position ordinal
+, cols.column_name colname
+ , col_description((cols.table_schema || '.' || cols.table_name)::regclass::oid, cols.ordinal_position ) as description
+,case when position('_' in cols.udt_name) > 0 then regexp_replace(cols.udt_name,'(_)(.*)','\2[]') when cols.udt_name  ~ '^int\d$' then cols.data_type else cols.udt_name end  datatype
+,case cols.data_type when 'character varying' then cols.character_maximum_length when 'numeric' then cols.numeric_precision else null end length
+, cols.numeric_scale as precision
+, CASE WHEN position('extval(' in cols.column_default) > 1 THEN '√' ELSE '' END as identity
+, case when EXISTS(select a.table_schema, a.table_name, b.constraint_name, a.ordinal_position as position,a.column_name as key_column
+from information_schema.table_constraints b inner
+join information_schema.key_column_usage a on a.constraint_name = b.constraint_name
+
+and a.constraint_schema = b.constraint_schema  and a.constraint_name = b.constraint_name
+where b.constraint_type = 'PRIMARY KEY' and a.table_schema = cols.table_schema and a.table_name = cols.table_name and a.column_name = cols.column_name) then '√' ELSE '' END primaykey
+,case when cols.is_nullable = 'YES' THEN '√' ELSE '' END as isnull
+,cols.column_default coldefault
+,'' as memo
+from
+information_schema.columns cols inner
+join information_schema.tables tbs  on cols.TABLE_NAME = tbs.TABLE_NAME
+where tbs.table_type = 'BASE TABLE' and tbs.table_schema not in ('information_schema', 'pg_catalog'))
+,b as (select a.tableschema,a.tablename,a.ordinal,a.colname,a.description,a.datatype,a.length,a.precision,a.identity,a.primaykey,a.isnull,a.coldefault,a.memo,b.tablenamech,b.schema,b.schemach,b.tablecomment,b.serialnumber,b.columnname,b.columncomment,b.datatype datatypeex, b.isnulled,b.foreignkey,b.codesystem,b.isstandard,b.description descriptionex, b.opertime from a left join public.hdr_columns b on a.tableschema = b.schema and a.tablename = b.tablename and a.colname = b.columnname)
+select * from b where b.schema is not null
+order by 1,2 asc";
             var result  = help.Query< DataTableColumnDef>(strSql).ToList();
 
             IList<DataTableColumnDefCollection> result11 = new List<DataTableColumnDefCollection>();

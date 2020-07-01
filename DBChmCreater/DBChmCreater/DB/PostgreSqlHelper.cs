@@ -51,10 +51,10 @@ namespace Synyi.DBChmCreater.DB
 
         #endregion
 
-        public  IEnumerable<T> Query<T>(string query)
+        public IEnumerable<T> Query<T>(string query)
         {
             NpgsqlConnection conn = null;
-            IEnumerable<T> result;
+            IEnumerable<T> result = null;
 
             using (conn = new NpgsqlConnection(this.connectionString))
             {
@@ -63,8 +63,15 @@ namespace Synyi.DBChmCreater.DB
                     conn.Open();
                 }
 
-                result = conn.Query<T>(query);
+                try
+                {
+                    result = conn.Query<T>(query);
 
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
             }
             return result;
         }

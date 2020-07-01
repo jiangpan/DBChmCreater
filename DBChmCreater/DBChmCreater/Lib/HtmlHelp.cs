@@ -18,6 +18,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using DBChmCreater.Ext;
+using DBChmCreater.MDM;
 using Synyi.DBChmCreater.Entity;
 
 namespace DBChmCreater.DB
@@ -40,7 +41,7 @@ namespace DBChmCreater.DB
         /// <param name="hasReturn">携带返回目录链接</param>
         /// <param name="tableDesc">携带返回目录链接</param>
         /// <param name="alternateColor">是否隔行变色</param>
-        public static void CreateHtml(DataTableColumnDefCollection dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "",bool alternateColor = true)
+        public static void CreateHtml(DataTableColumnDefCollection dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "", bool alternateColor = true)
         {
             var code = new StringBuilder();
             code.AppendLine("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
@@ -86,7 +87,7 @@ namespace DBChmCreater.DB
             code.AppendLine("<body>");
             code.AppendLine("    <div style=\"text-align: center\">");
             code.AppendLine("        <div>");
-            code.AppendLine("            <table border=\"0\" cellpadding=\"5\" cellspacing=\"0\" width=\"90%\" style=\"text-align: left\">");
+            code.AppendLine("            <table border=\"0\" cellpadding=\"5\" cellspacing=\"0\" width=\"95%\" style=\"text-align: left\">");
             code.AppendLine("                <tr>");
             code.AppendLine("                    <td bgcolor=\"#FBFBFB\">");
             code.AppendLine("                        <table cellspacing=\"0\" cellpadding=\"5\" border=\"1\" width=\"100%\" bordercolorlight=\"#D7D7E5\" bordercolordark=\"#D3D8E0\">");
@@ -100,9 +101,9 @@ namespace DBChmCreater.DB
             //构建表头
 
             Type itemtype = typeof(DataTableColumnDef);
-            var dtStructProps = itemtype.GetProperties().ToArray();
+            var dtStructProps = itemtype.GetProperties().Where(p => p.CustomAttributes.Count() > 0).ToArray();
 
-            for (int i = 2; i < dtStructProps.Length; i++)
+            for (int i = 0; i < dtStructProps.Length; i++)
             {
                 var dc = dtStructProps[i];
                 var prop = dc.GetCustomAttribute<DescriptionAttribute>();
@@ -124,7 +125,7 @@ namespace DBChmCreater.DB
                 code.AppendLine("            <tr>");
 
 
-                for (int i = 2; i < dtStructProps.Length; i++)
+                for (int i = 0; i < dtStructProps.Length; i++)
                 {
                     var dc = dtStructProps[i];
                     if (KeepNull && dc.GetValue(dr) == DBNull.Value)
@@ -154,6 +155,396 @@ namespace DBChmCreater.DB
         #endregion
 
 
+        public static void CreateMDMCodeSystemHtml(mdmExcelRawEntity dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "", bool alternateColor = true)
+        {
+            var code = new StringBuilder();
+            code.AppendLine("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+            code.AppendLine("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
+            code.AppendLine("<head>");
+            code.AppendLine("    <META http-equiv=\"Content-Type\" content=\"text/html; charset=gb2312\"> ");
+            code.AppendLine($"    <title>{dt.代码系统}</title>");
+            code.AppendLine("    <style type=\"text/css\">");
+            code.AppendLine("        body");
+            code.AppendLine("        {");
+            code.AppendLine("            font-size: 9pt;");
+            code.AppendLine("        }");
+            code.AppendLine("        .styledb");
+            code.AppendLine("        {");
+            code.AppendLine("            font-size: 14px;");
+            code.AppendLine("        }");
+            code.AppendLine("        .styletab");
+            code.AppendLine("        {");
+            code.AppendLine("            font-size: 14px;");
+            code.AppendLine("            padding-top: 15px;");
+            code.AppendLine("        }");
+            code.AppendLine("        a");
+            code.AppendLine("        {");
+            code.AppendLine("            color: #015FB6;");
+            code.AppendLine("        }");
+            code.AppendLine("        a:link, a:visited, a:active");
+            code.AppendLine("        {");
+            code.AppendLine("            color: #015FB6;");
+            code.AppendLine("            text-decoration: none;");
+            code.AppendLine("        }");
+            code.AppendLine("        a:hover");
+            code.AppendLine("        {");
+            code.AppendLine("            color: #E33E06;");
+            code.AppendLine("        }");
+            if (alternateColor)
+            {
+                code.AppendLine("		tr:nth-child(even) {bgcolor: #CCC}");
+                code.AppendLine("		tr:nth-child(odd) {bgcolor: #FFF}");
+
+            }
+            code.AppendLine("    </style>");
+            code.AppendLine("</head>");
+            code.AppendLine("<body>");
+            code.AppendLine("    <div style=\"text-align: center\">");
+            code.AppendLine("        <div>");
+            code.AppendLine("            <table border=\"0\" cellpadding=\"5\" cellspacing=\"0\" width=\"95%\" style=\"text-align: left\">");
+            code.AppendLine("                <tr>");
+            code.AppendLine("                    <td bgcolor=\"#FBFBFB\">");
+            code.AppendLine("                        <table cellspacing=\"0\" cellpadding=\"5\" border=\"1\" width=\"100%\" bordercolorlight=\"#D7D7E5\" bordercolordark=\"#D3D8E0\">");
+            code.AppendLine("                        <caption>");
+            code.AppendLine($"        <div class=\"styletab\">{dt.代码系统}{(string.IsNullOrEmpty(tableDesc) ? string.Empty : "  （" + tableDesc + "） ")}{(hasReturn ? "<a href ='../../数据库表目录.html' style = 'float: left; margin-top: 6px;'>返回目录</a>" : string.Empty)}</div>");
+            //.FormatString(dt.TableName,
+            //tableDesc.Length == 0 ? string.Empty : "  （" + tableDesc + "） ",
+            //(hasReturn ? "<a href='../数据库表目录.html' style='float: right; margin-top: 6px;'>返回目录</a>" : string.Empty));
+            code.AppendLine("                        </caption>");
+            code.AppendLine("                        <tr bgcolor=\"#DEEBF7\">");  //bgcolor="#DEEBF7"
+            //构建表头
+
+            Type itemtype = typeof(DataTableColumnDef);
+            var dtStructProps = itemtype.GetProperties().Where(p => p.CustomAttributes.Count() > 0).ToArray();
+
+            for (int i = 0; i < dtStructProps.Length; i++)
+            {
+                var dc = dtStructProps[i];
+                var prop = dc.GetCustomAttribute<DescriptionAttribute>();
+                code.AppendLine($"            <td>{prop.Description}</td>");//属性描述 作为列名
+            }
+
+
+
+
+            //foreach (DataColumn dc in dt.Columns)
+            //{
+            //    code.AppendLine($"            <td>{dc.ColumnName}</td>");//.FormatString(dc.ColumnName));
+            //}
+            code.AppendLine("                         </tr>");
+            //构建数据行
+            //if (dt.代码集明细 != null && dt.代码集明细.Count > 0)
+            //{
+            //    var dtsort = dt.代码集明细;
+            //    foreach (var dr in dtsort)
+            //    {
+            //        code.AppendLine("            <tr>");
+
+
+            //        for (int i = 0; i < dtStructProps.Length; i++)
+            //        {
+            //            var dc = dtStructProps[i];
+            //            if (KeepNull && dc.GetValue(dr) == DBNull.Value)
+            //            {
+            //                code.AppendLine("            <td>&nbsp;</td>");
+            //            }
+            //            else
+            //            {
+            //                code.AppendLine($"            <td>{(!string.IsNullOrWhiteSpace(dc.GetValue(dr)?.ToString()) ? dc.GetValue(dr)?.ToString() : "&nbsp;")}</td>");//.FormatString(
+            //                                                                                                                                                              //dr[dc.ColumnName].ToString().Trim().Length > 0 ? dr[dc.ColumnName].ToString() : "&nbsp;"));
+            //            }
+            //        }
+            //        code.AppendLine("            </tr>");
+            //    }
+            //}
+
+            code.AppendLine("                        </table>");
+            code.AppendLine("                    </td>");
+            code.AppendLine("                </tr>");
+            code.AppendLine("            </table>");
+            code.AppendLine("        </div>");
+            code.AppendLine("    </div>");
+            code.AppendLine("</body>");
+            code.AppendLine("</html>");
+            File.WriteAllText(Path, code.ToString(), Encoding.GetEncoding("gb2312"));
+            //File.WriteAllText(Path, code.ToString(), Encoding.UTF8);
+        }
+
+
+
+        public static void CreateMDMCodeSysIndexHtml(IList<mdmExcelRawEntity> dt, bool KeepNull, string Path, string rootdir, string mdmdir, bool hasReturn = true, string tableDesc = "", bool alternateColor = false)
+        {
+            var title = "主数据目录";
+            var code = new StringBuilder();
+            code.AppendLine("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
+            code.AppendLine("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
+            code.AppendLine("<head>");
+            code.AppendLine("    <META http-equiv=\"Content-Type\" content=\"text/html; charset=gb2312\"> ");
+            code.AppendLine($"    <title>{title}</title>");
+            code.AppendLine("    <style type=\"text/css\">");
+            code.AppendLine("        body");
+            code.AppendLine("        {");
+            code.AppendLine("            font-size: 9pt;");
+            code.AppendLine("        }");
+            code.AppendLine("        .styledb");
+            code.AppendLine("        {");
+            code.AppendLine("            font-size: 14px;");
+            code.AppendLine("        }");
+            code.AppendLine("        .styletab");
+            code.AppendLine("        {");
+            code.AppendLine("            font-size: 14px;");
+            code.AppendLine("            padding-top: 15px;");
+            code.AppendLine("        }");
+            code.AppendLine("        a");
+            code.AppendLine("        {");
+            code.AppendLine("            color: #015FB6;");
+            code.AppendLine("        }");
+            code.AppendLine("        a:link, a:visited, a:active");
+            code.AppendLine("        {");
+            code.AppendLine("            color: #015FB6;");
+            code.AppendLine("            text-decoration: none;");
+            code.AppendLine("        }");
+            code.AppendLine("        a:hover");
+            code.AppendLine("        {");
+            code.AppendLine("            color: #E33E06;");
+            code.AppendLine("        }");
+            if (alternateColor)
+            {
+                code.AppendLine("		tr:nth-child(even) {bgcolor: #CCC}");
+                code.AppendLine("		tr:nth-child(odd) {bgcolor: #FFF}");
+
+            }
+            code.AppendLine("    </style>");
+            code.AppendLine("</head>");
+            code.AppendLine("<body>");
+            code.AppendLine("    <div style=\"text-align: center\">");
+            code.AppendLine("        <div>");
+            code.AppendLine("            <table border=\"0\" cellpadding=\"5\" cellspacing=\"0\" width=\"90%\" style=\"text-align: left\">");
+            code.AppendLine("                <tr>");
+            code.AppendLine("                    <td bgcolor=\"#FBFBFB\">");
+            code.AppendLine("                        <table cellspacing=\"0\" cellpadding=\"5\" border=\"1\" width=\"100%\" bordercolorlight=\"#D7D7E5\" bordercolordark=\"#D3D8E0\">");
+            code.AppendLine("                        <caption>");
+            code.AppendLine($"        <div class=\"styletab\">{title}{(tableDesc.Length == 0 ? string.Empty : "  （" + tableDesc + "） ")}{(hasReturn ? "<a href='../../数据库表目录.html' style='float: right; margin-top: 6px;'>返回目录</a>" : string.Empty)}</div>");//.FormatString(
+            code.AppendLine("                        </caption>");
+            code.AppendLine("                        <tr bgcolor=\"#DEEBF7\">");
+            //构建表头
+
+            #region 列头
+            code.AppendLine($"            <td>{"一级域代码"}</td>");//
+            code.AppendLine($"            <td>{"一级域"}</td>");//
+            code.AppendLine($"            <td>{"二级域代码"}</td>");//
+            code.AppendLine($"            <td>{"二级域"}</td>");//
+            code.AppendLine($"            <td>{"三级域代码"}</td>");//
+            code.AppendLine($"            <td>{"三级域"}</td>");//
+            code.AppendLine($"            <td>{"代码系统"}</td>");//
+            code.AppendLine($"            <td>{"代码系统名称"}</td>");//
+            code.AppendLine($"            <td>{"标准来源"}</td>");//
+            code.AppendLine($"            <td>{"标准级别"}</td>");//
+            code.AppendLine($"            <td>{"标准完整性"}</td>");//
+            code.AppendLine($"            <td>{"值集合"}</td>");//
+            code.AppendLine($"            <td>{"ETL转换"}</td>");//
+            code.AppendLine($"            <td>{"应用转换"}</td>");//
+            code.AppendLine($"            <td>{"示例数据"}</td>");//
+
+            #endregion
+
+            code.AppendLine("                         </tr>");
+            //构建数据行
+
+            //var dtgroupByDomain = dt.GroupBy(p => new { p.一级域代码, p.二级域代码, p.三级域代码 }).OrderBy(p => p.Key);
+            var dtgroupByDomain = dt;
+            int rownum = 0;
+            foreach (var domainitem in dtgroupByDomain)
+            {
+                ++rownum;
+                //一个domain
+
+
+
+
+                code.AppendLine("            <tr>");
+
+                //code.AppendLine($"            <td {sfsd}>{(dc.GetValue(dritem).ToString().Trim().Length > 0 ? dc.GetValue(dritem).ToString() : "&nbsp;")}</td>");
+                //code.AppendLine("            <td>&nbsp;</td>");
+
+
+                #region 内容               
+                code.AppendLine($"            <td>{domainitem.一级域代码}</td>");//
+                code.AppendLine($"            <td>{domainitem.一级域}</td>");//
+                if (!string.IsNullOrWhiteSpace(domainitem.二级域代码))
+                {
+                    code.AppendLine($"            <td>{domainitem.二级域代码}</td>");//
+                }
+                else
+                {
+                    code.AppendLine($"            <td>&nbsp;</td>");//
+                }
+                if (!string.IsNullOrWhiteSpace(domainitem.二级域))
+                {
+                    code.AppendLine($"            <td>{domainitem.二级域}</td>");//
+                }
+                else
+                {
+                    code.AppendLine($"            <td>&nbsp;</td>");//
+                }
+
+                if (!string.IsNullOrWhiteSpace(domainitem.三级域代码))
+                {
+                    code.AppendLine($"            <td>{domainitem.三级域代码}</td>");//
+                }
+                else
+                {
+                    code.AppendLine($"            <td>&nbsp;</td>");//
+                }
+
+                if (!string.IsNullOrWhiteSpace(domainitem.三级域))
+                {
+                    code.AppendLine($"            <td>{domainitem.三级域}</td>");//
+                }
+                else
+                {
+                    code.AppendLine($"            <td>&nbsp;</td>");//
+                }
+
+                if (!string.IsNullOrWhiteSpace(domainitem.代码系统))
+                {
+                    //code.AppendLine($"            <td><a href=\"{ }\"> {domainitem.代码集}</a></td>");//
+                    var hyplink = string.Empty;
+                    if (!string.IsNullOrWhiteSpace(domainitem.三级域代码))
+                    {
+                        hyplink = System.IO.Path.Combine(mdmdir, domainitem.一级域代码, domainitem.二级域代码, domainitem.三级域代码, domainitem.代码系统 + ".html");
+                    }
+                    else if (!string.IsNullOrWhiteSpace(domainitem.二级域代码))
+                    {
+                        hyplink = System.IO.Path.Combine(mdmdir, domainitem.一级域代码, domainitem.二级域代码, domainitem.代码系统 + ".html");
+
+                    }
+                    else if (!string.IsNullOrWhiteSpace(domainitem.一级域代码))
+                    {
+                        hyplink = System.IO.Path.Combine(mdmdir, domainitem.一级域代码, domainitem.代码系统 + ".html");
+                    }
+
+
+
+                    code.AppendLine($"            <td><a href=\"{hyplink }\">{domainitem.代码系统}</a></td>");//
+                }
+                else
+                {
+                    code.AppendLine($"            <td>&nbsp;</td>");//
+                }
+
+                if (!string.IsNullOrWhiteSpace(domainitem.代码系统名称))
+                {
+                    code.AppendLine($"            <td>{domainitem.代码系统名称}</td>");//
+                }
+                else
+                {
+                    code.AppendLine($"            <td>&nbsp;</td>");//
+                }
+
+                if (!string.IsNullOrWhiteSpace(domainitem.标准来源))
+                {
+                    code.AppendLine($"            <td>{domainitem.标准来源}</td>");//
+                }
+                else
+                {
+                    code.AppendLine($"            <td>&nbsp;</td>");//
+                }
+
+                if (!string.IsNullOrWhiteSpace(domainitem.标准级别))
+                {
+                    code.AppendLine($"            <td>{domainitem.标准级别}</td>");//
+                }
+                else
+                {
+                    code.AppendLine($"            <td>&nbsp;</td>");//
+                }
+
+                if (!string.IsNullOrWhiteSpace(domainitem.标准完整性))
+                {
+                    code.AppendLine($"            <td>{domainitem.标准完整性}</td>");//
+                }
+                else
+                {
+                    code.AppendLine($"            <td>&nbsp;</td>");//
+                }
+
+                if (!string.IsNullOrWhiteSpace(domainitem.值集合))
+                {
+                    code.AppendLine($"            <td>{domainitem.值集合}</td>");//
+                }
+                else
+                {
+                    code.AppendLine($"            <td>&nbsp;</td>");//
+                }
+
+                if (!string.IsNullOrWhiteSpace(domainitem.ETL转换))
+                {
+                    code.AppendLine($"            <td>{domainitem.ETL转换}</td>");//
+                }
+                else
+                {
+                    code.AppendLine($"            <td>&nbsp;</td>");//
+                }
+
+                if (!string.IsNullOrWhiteSpace(domainitem.应用转换))
+                {
+                    code.AppendLine($"            <td>{domainitem.应用转换}</td>");//
+                }
+                else
+                {
+                    code.AppendLine($"            <td>&nbsp;</td>");//
+                }
+
+                if (!string.IsNullOrWhiteSpace(domainitem.示例数据))
+                {
+                    code.AppendLine($"            <td>{domainitem.示例数据}</td>");//
+                }
+                else
+                {
+                    code.AppendLine($"            <td>&nbsp;</td>");//
+                }
+
+
+                #endregion
+
+                code.AppendLine("            </tr>");
+
+
+
+            }
+
+
+
+            //foreach (DataTableStructure dr in dt)
+            //{
+            //    code.AppendLine("            <tr>");
+            //    foreach (PropertyInfo dc in dtStructProps)
+            //    {
+            //        if (KeepNull &&  dc.GetValue(dr) == DBNull.Value)
+            //        {
+            //            code.AppendLine("            <td>&nbsp;</td>");
+            //        }
+            //        else
+            //        {
+            //            code.AppendLine($"            <td>{(dc.GetValue(dr).ToString().Trim().Length > 0 ? dc.GetValue(dr).ToString() : "&nbsp;")}</td>");
+            //        }
+            //    }
+            //    code.AppendLine("            </tr>");
+            //}
+            code.AppendLine("                        </table>");
+            code.AppendLine("                    </td>");
+            code.AppendLine("                </tr>");
+            code.AppendLine("            </table>");
+            code.AppendLine("        </div>");
+            code.AppendLine("    </div>");
+            code.AppendLine("</body>");
+            code.AppendLine("</html>");
+            File.WriteAllText(Path, code.ToString(), Encoding.GetEncoding("gb2312"));
+            //File.WriteAllText(Path, code.ToString(), Encoding.UTF8);
+        }
+
+
         #region 导出数据库表目录列表
         /// <summary>
         ///  导出表数据为html格式 居中表格样式
@@ -164,7 +555,7 @@ namespace DBChmCreater.DB
         /// <param name="hasReturn">携带返回目录链接</param>
         /// <param name="tableDesc">携带返回目录链接</param>
         /// <param name="alternateColor">是否隔行变色</param>
-        public static void CreateHtml(Synyi.DBChmCreater.Entity.DataTableCollection dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "",bool alternateColor = false)
+        public static void CreateHtml(Synyi.DBChmCreater.Entity.DataTableCollection dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "", bool alternateColor = false)
         {
             var code = new StringBuilder();
             code.AppendLine("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
@@ -336,7 +727,7 @@ namespace DBChmCreater.DB
         /// <param name="KeepNull">保持Null为Null值，否则为空</param>
         /// <param name="Path">保存路径</param>
         /// <param name="alternateColor">是否隔行变色</param>
-        public static void CreateHtml2(DataTable dt, bool KeepNull, string Path,bool alternateColor =  true)
+        public static void CreateHtml2(DataTable dt, bool KeepNull, string Path, bool alternateColor = true)
         {
             var code = new StringBuilder();
             code.AppendLine("<html>");

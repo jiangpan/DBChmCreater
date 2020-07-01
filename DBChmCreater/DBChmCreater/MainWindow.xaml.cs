@@ -21,6 +21,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Newtonsoft.Json;
+using DBChmCreater.MDM;
 
 namespace DBChmCreater
 {
@@ -37,6 +38,9 @@ namespace DBChmCreater
         private ChmHelp chmhlp;
         private IList<IList<string>> hdrtables;
 
+        public string rootdir = "tmp";
+        public string res = "resources";
+        public string mdmdir = "主数据集合";
         #endregion
 
         #region 构造函数
@@ -99,6 +103,12 @@ namespace DBChmCreater
                     case "btnHelp":
                         btnHelp_Click(sender, e);
                         break;
+                    case "btnBrowMDMPath":
+                        btnBrowMDMPath_Click(sender, e);
+                        break;
+                    case "btnGenHtmlMDM":
+                        btnGenHtmlMDM_Click(sender, e);
+                        break;
                     default:
                         break;
                 }
@@ -107,6 +117,34 @@ namespace DBChmCreater
 
                 }
 
+            }
+        }
+        /// <summary>
+        /// 浏览定位MDM
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnGenHtmlMDM_Click(object sender, RoutedEventArgs e)
+        {
+            ExportHtmlMDM();
+        }
+
+        /// <summary>
+        /// 生成MDM的
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnBrowMDMPath_Click(object sender, RoutedEventArgs e)
+        {
+
+            Microsoft.Win32.OpenFileDialog ofd = new Microsoft.Win32.OpenFileDialog();
+            ofd.RestoreDirectory = false;
+            ofd.DefaultExt = ".xls";
+            ofd.Filter = "Excel file|*.xls;*.xlsx|All file|*.*";
+            ofd.Multiselect = false;
+            if (ofd.ShowDialog() == true)
+            {
+                this.txtMDMFilePath.Text = ofd.FileName;
             }
         }
 
@@ -140,16 +178,16 @@ namespace DBChmCreater
                     selected.Add(tablefullname);
                 }
             }
-            if ( !(selected.Count == hdrtables.Count))
+            if (!(selected.Count == hdrtables.Count))
             {
                 var logpath = System.IO.Path.Combine(AppContext.BaseDirectory, $"{DateTime.Now.ToString("yyyyMMddHHmmss")}.log");
 
-                var difftables = hdrtables.Where(p => !selected.Contains($"{p[0]}.{p[1]}")).Select(p=> $"{p[0]}.{p[1]}");
+                var difftables = hdrtables.Where(p => !selected.Contains($"{p[0]}.{p[1]}")).Select(p => $"{p[0]}.{p[1]}");
 
-                File.WriteAllText(logpath, $"{DateTime.Now.ToString("yyyyMMddHHmmss")}日志:标准库中{string.Join(";",difftables)}");
-                MessageBox.Show("当前库中表不完整！", "提示", MessageBoxButton.OK,  MessageBoxImage.Information);
+                File.WriteAllText(logpath, $"{DateTime.Now.ToString("yyyyMMddHHmmss")}日志:标准库中{string.Join(";", difftables)}");
+                MessageBox.Show("当前库中表不完整！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-           
+
 
         }
 
@@ -260,7 +298,7 @@ namespace DBChmCreater
             ini.WriteValue("Set", "title", txtTitle.Text);
             //使用后台线程去导出
 
-            
+
             Task.Factory.StartNew(
                 (x) =>
                 {
@@ -303,9 +341,7 @@ namespace DBChmCreater
             string tableDataDirName = "表数据示例";
             string tableStructureDirName = "表结构说明";
 
-            Directory.CreateDirectory(".//tmp");
-
-            Directory.CreateDirectory(".//tmp//resources");
+            MakeDir();
 
 
             //定义目录DataTable 结构
@@ -332,12 +368,15 @@ namespace DBChmCreater
                 //得到选中的表结构的字段信息
                 var lstDt = dal.GetTableStruct(selectTabStructList);
                 var pathTables = $"./tmp/{tableStructureDirName}";
-                Directory.CreateDirectory(pathTables);
-                var tables = dal.GetTables();
+                if (!Directory.Exists(pathTables))
+                {
+                    Directory.CreateDirectory(pathTables);
+                }
+                var tables = dal.GetTables(); //库中所有的表名
                 var allSchemas = tables.Select(p => p.Domain).Distinct();
                 foreach (var item in allSchemas)
                 {
-                    Directory.CreateDirectory(System.IO.Path.Combine(pathTables,item));
+                    Directory.CreateDirectory(System.IO.Path.Combine(pathTables, item));
                 }
                 var tableIndex = 1;
                 foreach (var dt in lstDt)
@@ -353,15 +392,15 @@ namespace DBChmCreater
                         desp = drs.TableDescription;
                     }
                     //创建表字段信息的html
-                    HtmlHelp.CreateHtml(dt, true, System.IO.Path.Combine(pathTables, dt[0].tableschema, $"{dt.TableName}.html"), true, desp,true);
-                    //构建表目录
+                    HtmlHelp.CreateHtml(dt, true, System.IO.Path.Combine(pathTables, dt[0].tableschema, $"{dt.TableName}.html"), true, desp, true);
+                    //构建表目录数据
                     dataTableStructures.Add(new DataTableItem { TableNo = tableIndex++, Domain = drs.Domain, TableName = $"<a href=\"{tableStructureDirName}\\{drs.Domain}\\{ dt.TableName}.html\">{ dt.TableName.Split('.').GetValue(1)}</a>", TableDescription = desp });
                     //改变进度
                     Dispatcher.Invoke(new Action(() => { tpbExport.Value++; }));
 
                 }
-                //导出表目录
-                HtmlHelp.CreateHtml(dataTableStructures, false, "./tmp/" + defaultHtml, false,string.Empty,false); //默认页面
+                //导出表目录为html，索引页面
+                HtmlHelp.CreateHtml(dataTableStructures, false, "./tmp/" + defaultHtml, false, string.Empty, false); //默认页面
                 Dispatcher.Invoke(new Action(() => { tpbExport.Value++; }));
             }
             #endregion
@@ -378,7 +417,7 @@ namespace DBChmCreater
                 Dispatcher.Invoke(new Action(() => { lblMessage.Content = "正在生成表数据数据..."; }));
 
                 //读取ini
-                int result = ini.GetInt32 ("Set", "maxrow", -1);
+                int result = ini.GetInt32("Set", "maxrow", -1);
 
                 var lstDt = dal.GetTableData(selectTabStructList, result);
                 //创建常用数据的html
@@ -392,13 +431,121 @@ namespace DBChmCreater
 
                 foreach (var dt in lstDt)
                 {
-                    HtmlHelp.CreateHtml2(dt, true, System.IO.Path.Combine(System.IO.Path.Combine(pathTables, dt.TableName.Split('.')[0]), dt.TableName + ".html"),true);
+                    HtmlHelp.CreateHtml2(dt, true, System.IO.Path.Combine(System.IO.Path.Combine(pathTables, dt.TableName.Split('.')[0]), dt.TableName + ".html"), true);
                     Dispatcher.Invoke(new Action(() => { tpbExport.Value++; }));
                 }
             }
 
             Dispatcher.Invoke(new Action(() => { lblMessage.Content = "成功生成HTML..."; }));
             #endregion
+        }
+
+        private void MakeDir()
+        {
+            if (!Directory.Exists(System.IO.Path.Combine(rootdir)))
+            {
+                Directory.CreateDirectory(System.IO.Path.Combine(rootdir));
+            }
+            if (!Directory.Exists(System.IO.Path.Combine(rootdir, res)))
+            {
+                Directory.CreateDirectory(System.IO.Path.Combine(rootdir, res));
+            }
+            if (!Directory.Exists(System.IO.Path.Combine(rootdir, mdmdir)))
+            {
+                Directory.CreateDirectory(System.IO.Path.Combine(rootdir, mdmdir));
+            }
+
+        }
+
+        private void ExportHtmlMDM()
+        {
+
+            MakeDir();
+            string tableDataDirName = "表数据示例";
+            string tableStructureDirName = "表结构说明";
+            lblMessage.Content = "读取Excel文件...";
+
+            MdmBizHelper heper = new MdmBizHelper();
+            var codeDomainSystemSetAll = heper.ParseExcelToEntity(this.txtMDMFilePath.Text, "");
+
+            #region 创建目录
+            //一级域
+            var level1domain = codeDomainSystemSetAll.Select(p => p.一级域代码).Distinct();
+            foreach (var l1item in level1domain)
+            {
+                if (!string.IsNullOrWhiteSpace(l1item))
+                {
+                    if (!Directory.Exists(System.IO.Path.Combine(rootdir, mdmdir, l1item)))
+                    {
+                        Directory.CreateDirectory(System.IO.Path.Combine(rootdir, mdmdir, l1item));
+                    }
+                }
+            }
+            //二级域
+            var level2domain = codeDomainSystemSetAll.Select(p => new { p.一级域代码, p.二级域代码 }).Distinct();
+            foreach (var l2item in level2domain)
+            {
+                if (!string.IsNullOrWhiteSpace(l2item.一级域代码) && !string.IsNullOrWhiteSpace(l2item.二级域代码))
+                {
+
+                    if (!Directory.Exists(System.IO.Path.Combine(rootdir, mdmdir, l2item.一级域代码, l2item.二级域代码)))
+                    {
+                        Directory.CreateDirectory(System.IO.Path.Combine(rootdir, mdmdir, l2item.一级域代码, l2item.二级域代码));
+                    }
+                }
+            }
+
+
+            //三级域
+            var level3domain = codeDomainSystemSetAll.Select(p => new { p.一级域代码, p.二级域代码, p.三级域代码 }).Distinct();
+            foreach (var l3item in level3domain)
+            {
+                if (!string.IsNullOrWhiteSpace(l3item.一级域代码) && !string.IsNullOrWhiteSpace(l3item.二级域代码) && !string.IsNullOrWhiteSpace(l3item.三级域代码))
+                {
+
+                    if (!Directory.Exists(System.IO.Path.Combine(rootdir, mdmdir, l3item.一级域代码, l3item.二级域代码, l3item.三级域代码)))
+                    {
+                        Directory.CreateDirectory(System.IO.Path.Combine(rootdir, mdmdir, l3item.一级域代码, l3item.二级域代码, l3item.三级域代码));
+                    }
+                }
+            }
+            #endregion
+
+            #region 生成页面
+
+            foreach (var codesysitem in codeDomainSystemSetAll)
+            {
+                var storePath = string.Empty;
+                if (!string.IsNullOrWhiteSpace(codesysitem.三级域代码))
+                {
+                    storePath = System.IO.Path.Combine(rootdir, mdmdir, codesysitem.一级域代码, codesysitem.二级域代码, codesysitem.三级域代码);
+                }
+                else if (!string.IsNullOrWhiteSpace(codesysitem.二级域代码))
+                {
+                    storePath = System.IO.Path.Combine(rootdir, mdmdir, codesysitem.一级域代码, codesysitem.二级域代码);
+
+                }
+                else if (!string.IsNullOrWhiteSpace(codesysitem.一级域代码))
+                {
+                    storePath = System.IO.Path.Combine(rootdir, mdmdir, codesysitem.一级域代码);
+                }
+
+                var storePathFull = System.IO.Path.Combine(storePath, $"{codesysitem.代码系统}.html");
+
+                HtmlHelp.CreateMDMCodeSystemHtml(codesysitem, true, storePathFull);
+            }
+
+
+            #endregion
+
+            #region 生成索引
+            //存放目录为根目录
+            string mdmIndexPath = System.IO.Path.Combine(rootdir, $"{"主数据目录"}.html");
+
+            HtmlHelp.CreateMDMCodeSysIndexHtml(codeDomainSystemSetAll, true, mdmIndexPath, rootdir, mdmdir);
+
+            #endregion
+            lblMessage.Content = "完成mdm的html处理...";
         }
 
         private void ExportChmProject(ChmHelp chmHelp)
