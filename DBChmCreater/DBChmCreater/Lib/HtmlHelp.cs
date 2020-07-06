@@ -217,7 +217,7 @@ namespace DBChmCreater.DB
             code.AppendLine("                    <td bgcolor=\"#FBFBFB\">");
             code.AppendLine("                        <table cellspacing=\"0\" cellpadding=\"5\" border=\"1\" width=\"100%\" bordercolorlight=\"#D7D7E5\" bordercolordark=\"#D3D8E0\">");
             code.AppendLine("                        <caption>");
-            code.AppendLine($"        <div class=\"styletab\">{dt.代码系统}{(string.IsNullOrEmpty(tableDesc) ? string.Empty : "  （" + tableDesc + "） ")}{(hasReturn ? $"<a href ='{rellikl}' style = 'float: left; margin-top: 6px;'>返回目录</a>" : string.Empty)}</div>");
+            code.AppendLine($"        <div class=\"styletab\">{dt.代码系统}{(string.IsNullOrEmpty(dt.代码系统名称) ? string.Empty : "  （" + dt.代码系统名称 + "） ")}{(hasReturn ? $"<a href ='{rellikl}' style = 'float: left; margin-top: 6px;'>返回目录</a>" : string.Empty)}</div>");
             code.AppendLine("                        </caption>");
 
             #region 插入代码系统额外属性
