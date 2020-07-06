@@ -6,6 +6,19 @@
         xmlns:local="clr-namespace:DBChmCreater"
         mc:Ignorable="d"
         Title="数据库连接" Height="303" Width="457" ResizeMode="NoResize">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="5"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <!--<Setter Property="FontSize" Value="15"/>-->
+                    <Setter Property="Foreground" Value="DarkCyan"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
@@ -44,9 +57,9 @@
         <DockPanel Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2">
             <TextBlock Margin="50 5 0 5" DockPanel.Dock="Top" Name="txtConn" TextWrapping="Wrap" ></TextBlock>
         </DockPanel>
-        <StackPanel Grid.Row="5" Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Left" >
-            <Button Margin="5 5 5 5" Width="90" Height="30" Name="okbtn" Click="okbtn_Click">确  定</Button>
-            <Button Margin="5 5 5 5" Width="90" Height="30" Name="cancelbtn" Click="cancelbtn_Click">取  消</Button>
+        <StackPanel Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"  Orientation="Horizontal" HorizontalAlignment="Right" >
+            <Button Width="90" Height="30" Name="okbtn" Click="okbtn_Click">确  定</Button>
+            <Button Width="90" Height="30" Name="cancelbtn" Click="cancelbtn_Click">取  消</Button>
         </StackPanel>
         
     </Grid>

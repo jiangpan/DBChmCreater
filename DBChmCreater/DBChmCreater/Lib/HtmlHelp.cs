@@ -9,6 +9,8 @@
    * 修改描述: 
    * 版    本: v1.0.0.0
    * ==============================================================================*/
+using DBChmCreater.MDM;
+using Synyi.DBChmCreater.Entity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,9 +19,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using DBChmCreater.Ext;
-using DBChmCreater.MDM;
-using Synyi.DBChmCreater.Entity;
 
 namespace DBChmCreater.DB
 {
@@ -158,6 +157,18 @@ namespace DBChmCreater.DB
         public static void CreateMDMCodeSystemHtml(mdmExcelRawEntity dt, bool KeepNull, string Path, bool hasReturn = true, string tableDesc = "", bool alternateColor = true)
         {
             var code = new StringBuilder();
+
+            var erere = Path.Split('\\');
+            var rellikl = string.Empty;
+
+            for (int j = erere.Length - 2; j >= 1; j--)
+            {
+                rellikl += "../";
+            }
+            rellikl += "主数据目录.html";
+
+
+
             code.AppendLine("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">");
             code.AppendLine("<html xmlns=\"http://www.w3.org/1999/xhtml\">");
             code.AppendLine("<head>");
@@ -206,7 +217,7 @@ namespace DBChmCreater.DB
             code.AppendLine("                    <td bgcolor=\"#FBFBFB\">");
             code.AppendLine("                        <table cellspacing=\"0\" cellpadding=\"5\" border=\"1\" width=\"100%\" bordercolorlight=\"#D7D7E5\" bordercolordark=\"#D3D8E0\">");
             code.AppendLine("                        <caption>");
-            code.AppendLine($"        <div class=\"styletab\">{dt.代码系统}{(string.IsNullOrEmpty(tableDesc) ? string.Empty : "  （" + tableDesc + "） ")}{(hasReturn ? "<a href ='../../数据库表目录.html' style = 'float: left; margin-top: 6px;'>返回目录</a>" : string.Empty)}</div>");
+            code.AppendLine($"        <div class=\"styletab\">{dt.代码系统}{(string.IsNullOrEmpty(tableDesc) ? string.Empty : "  （" + tableDesc + "） ")}{(hasReturn ? $"<a href ='{rellikl}' style = 'float: left; margin-top: 6px;'>返回目录</a>" : string.Empty)}</div>");
             //.FormatString(dt.TableName,
             //tableDesc.Length == 0 ? string.Empty : "  （" + tableDesc + "） ",
             //(hasReturn ? "<a href='../数据库表目录.html' style='float: right; margin-top: 6px;'>返回目录</a>" : string.Empty));
@@ -214,18 +225,58 @@ namespace DBChmCreater.DB
             code.AppendLine("                        <tr bgcolor=\"#DEEBF7\">");  //bgcolor="#DEEBF7"
             //构建表头
 
-            Type itemtype = typeof(DataTableColumnDef);
-            var dtStructProps = itemtype.GetProperties().Where(p => p.CustomAttributes.Count() > 0).ToArray();
 
-            for (int i = 0; i < dtStructProps.Length; i++)
+            string[] headers = new string[] { "代码", "名称", "显示名" };
+
+            for (int i = 0; i < headers.Length; i++)
             {
-                var dc = dtStructProps[i];
-                var prop = dc.GetCustomAttribute<DescriptionAttribute>();
-                code.AppendLine($"            <td>{prop.Description}</td>");//属性描述 作为列名
+                var prop = headers[i];
+                code.AppendLine($"            <td>{prop}</td>");//属性描述 作为列名
             }
 
+            if (dt.代码集明细 != null && dt.代码集明细.Count > 0)
+            {
+                //生成代码集合明细
 
 
+                foreach (var item in dt.代码集明细)
+                {
+                    //起始标签
+                    code.AppendLine("            <tr>");
+                    if (!string.IsNullOrWhiteSpace(item.code))
+                    {
+                        code.AppendLine($"            <td>{item.code}</td>");
+                    }
+                    else
+                    {
+                        code.AppendLine("            <td>&nbsp;</td>");
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(item.name))
+                    {
+                        code.AppendLine($"            <td>{item.name}</td>");
+                    }
+                    else
+                    {
+                        code.AppendLine("            <td>&nbsp;</td>");
+                    }
+
+
+                    if (!string.IsNullOrWhiteSpace(item.show_name))
+                    {
+                        code.AppendLine($"            <td>{item.show_name}</td>");
+                    }
+                    else
+                    {
+                        code.AppendLine("            <td>&nbsp;</td>");
+                    }
+
+
+
+                    //结束标签
+                    code.AppendLine("            </tr>");
+                }
+            }
 
             //foreach (DataColumn dc in dt.Columns)
             //{
@@ -272,7 +323,7 @@ namespace DBChmCreater.DB
 
 
 
-        public static void CreateMDMCodeSysIndexHtml(IList<mdmExcelRawEntity> dt, bool KeepNull, string Path, string rootdir, string mdmdir, bool hasReturn = true, string tableDesc = "", bool alternateColor = false)
+        public static void CreateMDMCodeSysIndexHtml(IList<mdmExcelRawEntity> dt, bool KeepNull, string Path, string rootdir, string mdmdir, bool hasReturn = false, string tableDesc = "", bool alternateColor = false)
         {
             var title = "主数据目录";
             var code = new StringBuilder();
@@ -423,9 +474,6 @@ namespace DBChmCreater.DB
                     {
                         hyplink = System.IO.Path.Combine(mdmdir, domainitem.一级域代码, domainitem.代码系统 + ".html");
                     }
-
-
-
                     code.AppendLine($"            <td><a href=\"{hyplink }\">{domainitem.代码系统}</a></td>");//
                 }
                 else

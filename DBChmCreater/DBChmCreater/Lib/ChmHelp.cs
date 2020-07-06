@@ -131,6 +131,8 @@ namespace DBChmCreater.Chm.Common
                 {
                     hhcBody.AppendLine("	<LI> <OBJECT type=\"text/sitemap\">");
                     hhcBody.AppendLine($"		<param name=\"Name\" value=\"{Path.GetFileName(dirname)}\">");//.FormatString(Path.GetFileName(dirname)));
+                    //判断当前目录的子目录是否有同名文件
+                    //todo: 待实现
                     hhcBody.AppendLine("		<param name=\"ImageNumber\" value=\"1\">");
                     hhcBody.AppendLine("		</OBJECT>");
                 }
