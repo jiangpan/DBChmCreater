@@ -221,10 +221,10 @@ namespace DBChmCreater.DB
             code.AppendLine("                        </caption>");
 
             #region 插入代码系统额外属性
-            code.AppendLine($"<tr><td bgcolor=\"#DEEBF7\">代码系统</td><td colspan=\"2\">{dt.代码系统}</td></tr>");
-            code.AppendLine($"<tr><td bgcolor=\"#DEEBF7\">代码系统名称</td><td colspan=\"2\">{dt.代码系统名称}</td></tr>");
-            code.AppendLine($"<tr><td bgcolor=\"#DEEBF7\">标准来源</td><td colspan=\"2\">{dt.标准来源}</td></tr>");
-            code.AppendLine($"<tr><td bgcolor=\"#DEEBF7\">标准级别</td><td colspan=\"2\">{dt.标准级别}</td></tr>");
+            code.AppendLine($"<tr><td bgcolor=\"#DEEBF7\">代码系统</td><td colspan=\"2\">{System.Net.WebUtility.HtmlEncode(dt.代码系统)}</td></tr>");
+            code.AppendLine($"<tr><td bgcolor=\"#DEEBF7\">代码系统名称</td><td colspan=\"2\">{System.Net.WebUtility.HtmlEncode(dt.代码系统名称)}</td></tr>");
+            code.AppendLine($"<tr><td bgcolor=\"#DEEBF7\">标准来源</td><td colspan=\"2\">{System.Net.WebUtility.HtmlEncode(dt.标准来源)}</td></tr>");
+            code.AppendLine($"<tr><td bgcolor=\"#DEEBF7\">标准级别</td><td colspan=\"2\">{System.Net.WebUtility.HtmlEncode(dt.标准级别)}</td></tr>");
 
             #endregion
 
@@ -249,7 +249,8 @@ namespace DBChmCreater.DB
                     code.AppendLine("            <tr>");
                     if (!string.IsNullOrWhiteSpace(item.code))
                     {
-                        code.AppendLine($"            <td>{item.code}</td>");
+
+                        code.AppendLine($"            <td>{System.Net.WebUtility.HtmlEncode(item.code)}</td>");
                     }
                     else
                     {
@@ -258,7 +259,7 @@ namespace DBChmCreater.DB
 
                     if (!string.IsNullOrWhiteSpace(item.name))
                     {
-                        code.AppendLine($"            <td>{item.name}</td>");
+                        code.AppendLine($"            <td>{System.Net.WebUtility.HtmlEncode(item.name)}</td>");
                     }
                     else
                     {
@@ -268,7 +269,7 @@ namespace DBChmCreater.DB
 
                     if (!string.IsNullOrWhiteSpace(item.show_name))
                     {
-                        code.AppendLine($"            <td>{item.show_name}</td>");
+                        code.AppendLine($"            <td>{System.Net.WebUtility.HtmlEncode(item.show_name)}</td>");
                     }
                     else
                     {
