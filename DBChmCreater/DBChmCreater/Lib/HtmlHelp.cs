@@ -218,14 +218,18 @@ namespace DBChmCreater.DB
             code.AppendLine("                        <table cellspacing=\"0\" cellpadding=\"5\" border=\"1\" width=\"100%\" bordercolorlight=\"#D7D7E5\" bordercolordark=\"#D3D8E0\">");
             code.AppendLine("                        <caption>");
             code.AppendLine($"        <div class=\"styletab\">{dt.代码系统}{(string.IsNullOrEmpty(tableDesc) ? string.Empty : "  （" + tableDesc + "） ")}{(hasReturn ? $"<a href ='{rellikl}' style = 'float: left; margin-top: 6px;'>返回目录</a>" : string.Empty)}</div>");
-            //.FormatString(dt.TableName,
-            //tableDesc.Length == 0 ? string.Empty : "  （" + tableDesc + "） ",
-            //(hasReturn ? "<a href='../数据库表目录.html' style='float: right; margin-top: 6px;'>返回目录</a>" : string.Empty));
             code.AppendLine("                        </caption>");
-            code.AppendLine("                        <tr bgcolor=\"#DEEBF7\">");  //bgcolor="#DEEBF7"
+
+            #region 插入代码系统额外属性
+            code.AppendLine($"<tr><td bgcolor=\"#DEEBF7\">代码系统</td><td colspan=\"2\">{dt.代码系统}</td></tr>");
+            code.AppendLine($"<tr><td bgcolor=\"#DEEBF7\">代码系统名称</td><td colspan=\"2\">{dt.代码系统名称}</td></tr>");
+            code.AppendLine($"<tr><td bgcolor=\"#DEEBF7\">标准来源</td><td colspan=\"2\">{dt.标准来源}</td></tr>");
+            code.AppendLine($"<tr><td bgcolor=\"#DEEBF7\">标准级别</td><td colspan=\"2\">{dt.标准级别}</td></tr>");
+
+            #endregion
+
             //构建表头
-
-
+            code.AppendLine("                        <tr bgcolor=\"#DEEBF7\">");  //bgcolor="#DEEBF7"
             string[] headers = new string[] { "代码", "名称", "显示名" };
 
             for (int i = 0; i < headers.Length; i++)
@@ -270,44 +274,12 @@ namespace DBChmCreater.DB
                     {
                         code.AppendLine("            <td>&nbsp;</td>");
                     }
-
-
-
                     //结束标签
                     code.AppendLine("            </tr>");
                 }
             }
 
-            //foreach (DataColumn dc in dt.Columns)
-            //{
-            //    code.AppendLine($"            <td>{dc.ColumnName}</td>");//.FormatString(dc.ColumnName));
-            //}
             code.AppendLine("                         </tr>");
-            //构建数据行
-            //if (dt.代码集明细 != null && dt.代码集明细.Count > 0)
-            //{
-            //    var dtsort = dt.代码集明细;
-            //    foreach (var dr in dtsort)
-            //    {
-            //        code.AppendLine("            <tr>");
-
-
-            //        for (int i = 0; i < dtStructProps.Length; i++)
-            //        {
-            //            var dc = dtStructProps[i];
-            //            if (KeepNull && dc.GetValue(dr) == DBNull.Value)
-            //            {
-            //                code.AppendLine("            <td>&nbsp;</td>");
-            //            }
-            //            else
-            //            {
-            //                code.AppendLine($"            <td>{(!string.IsNullOrWhiteSpace(dc.GetValue(dr)?.ToString()) ? dc.GetValue(dr)?.ToString() : "&nbsp;")}</td>");//.FormatString(
-            //                                                                                                                                                              //dr[dc.ColumnName].ToString().Trim().Length > 0 ? dr[dc.ColumnName].ToString() : "&nbsp;"));
-            //            }
-            //        }
-            //        code.AppendLine("            </tr>");
-            //    }
-            //}
 
             code.AppendLine("                        </table>");
             code.AppendLine("                    </td>");
