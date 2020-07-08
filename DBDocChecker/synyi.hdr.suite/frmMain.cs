@@ -49,7 +49,7 @@ namespace synyi.hdr.suite
             //this.btnLoadJson.PerformClick();
             //this.btnTest.PerformClick();
             //this.btnLoadHdr_v106.PerformClick();
-        } 
+        }
         #endregion
 
 
@@ -337,20 +337,14 @@ namespace synyi.hdr.suite
             var result4 = hdrExcelProcesser.ProcessSchemaFee(worksheets);
             cols.AddRange(result4);
 
-
-
             var result5 = hdrExcelProcesser.ProcessSchemaDiag(worksheets);
             cols.AddRange(result5);
-
 
             var result6 = hdrExcelProcesser.ProcessSchemaAllergy(worksheets);
             cols.AddRange(result6);
 
-
-
             var result7 = hdrExcelProcesser.ProcessSchemaChecks(worksheets);
             cols.AddRange(result7);
-
 
             var result8 = hdrExcelProcesser.ProcessSchemaLab(worksheets);
             cols.AddRange(result8);
@@ -417,19 +411,16 @@ namespace synyi.hdr.suite
 
             wb.Save(outfilePath, SaveFormat.Xlsx);
 
-
-
             using (var conn = new PostgresHelper(dbConnectionString))
             {
-                var bulkinserthelper = conn.BulkinsertHdrColumns(cols,false);
-
+                var bulkinserthelper = conn.BulkinsertHdrColumns(cols, false);
             }
 
             Process.Start("Explorer", "/select," + outfilePath);
         }
 
         #endregion
-        
+
 
         #region 读取最新的HDR 生成对比Excel
 
@@ -687,7 +678,7 @@ namespace synyi.hdr.suite
 
             using (var conn = new PostgresHelper(dbConnectionString))
             {
-                var bulkinserthelper = conn.BulkinsertHdrColumns(cols,false);
+                var bulkinserthelper = conn.BulkinsertHdrColumns(cols, false);
             }
             Process.Start("Explorer", "/select," + outfilePath);
         }
@@ -787,7 +778,7 @@ namespace synyi.hdr.suite
 
             foreach (var item in dicsnippets)
             {
-                scripthand.ScriptSnippetToFile(basePath,item.Key,item.Value);
+                scripthand.ScriptSnippetToFile(basePath, item.Key, item.Value);
             }
 
 
@@ -806,7 +797,7 @@ namespace synyi.hdr.suite
         {
             frmMdmMgr frmMdmMgr = new frmMdmMgr();
             frmMdmMgr.Show();
-        } 
+        }
         #endregion
 
     }

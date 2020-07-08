@@ -15,8 +15,6 @@ namespace synyi.hdr.suite
 {
     public class AsposeHelper
     {
-
-
         /// <summary>  
         /// 导入Excel  
         /// </summary>  

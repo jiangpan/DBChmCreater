@@ -526,6 +526,66 @@ namespace synyi.hdr.suite
                 {
                     conn.Open();
                 }
+                #region 判断表是否存在 
+                if (true)
+                {
+                    string createTable = @"create table hdr_columns(
+                                            tablename varchar(255),
+                                            tablenamech varchar(500),
+                                            schema varchar(255),
+                                            schemach varchar(500),
+                                            tablecomment varchar(500),
+                                            serialnumber varchar(255),
+                                            columnname varchar(500),
+                                            columncomment varchar(1000),
+                                            datatype varchar(255),
+                                            isnulled varchar(255),
+                                            foreignkey varchar(255),
+                                            codesystem varchar(255),
+                                            isstandard varchar(255),
+                                            description varchar(1000),
+                                            opertime timestamp default now() ); ";
+
+
+                    int isTableExist = conn.ExecuteScalar<int>("select count(1) from information_schema.tables where table_schema = 'public' and  table_name = 'hdr_columns'");
+
+                    if (isTableExist == 1)
+                    {
+                        //判断表列是否一致
+                        string[] tablecolsdef = new string[] { "tablename", "tablenamech", "schema", "schemach", "tablecomment", "serialnumber", "columnname", "columncomment", "datatype", "isnulled", "foreignkey", "codesystem", "isstandard", "description", "opertime" };
+                        var tablecols = conn.Query<string>("select column_name from information_schema.columns where table_schema = 'public' and  table_name = 'hdr_columns' order by ordinal_position asc");
+                        if (tablecols.Count() != tablecolsdef.Length)
+                        {
+                            //表结构不一致 字段数目不一致
+                            conn.Execute("drop table public.hdr_columns");
+                            conn.Execute(createTable);
+                        }
+                        else
+                        {
+                            for (int i = 0; i < tablecolsdef.Length; i++)
+                            {
+                                var colname = tablecolsdef[i];
+                                if (!tablecols.Any(p => p.Equals(colname, StringComparison.OrdinalIgnoreCase)))
+                                {
+                                    //默认列中 在 库表中不存在，则删除重建
+                                    conn.Execute("drop table public.hdr_columns");
+                                    conn.Execute(createTable);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        conn.Execute(createTable);
+                    }
+
+
+
+
+                }
+                #endregion
+
+
                 if (isClearExistData)
                 {
                     conn.Execute("truncate table public.hdr_columns");
