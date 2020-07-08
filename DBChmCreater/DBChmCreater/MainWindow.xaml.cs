@@ -162,7 +162,7 @@ namespace DBChmCreater
 
             if (tablelist == null || tablelist.Count() == 0)
             {
-                MessageBox.Show("标准表集合获取失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("标准表集合hdr_columns获取失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             IList<string> selected = new List<string>();
 
@@ -198,19 +198,22 @@ namespace DBChmCreater
         /// <param name="e"></param>
         private void dataDefaultTableData_Click(object sender, RoutedEventArgs e)
         {
-            var result = ini.GetString("Set", "hdrtables", string.Empty);
-            if (hdrtables == null)
+            var dal = DALFacotry.Create(cbbDbtype.Text, txtConn.Text);
+
+            var tablelist = dal.Query<DataTableItem>("with a as (select distinct  schema as Domain,tablename as TableName, tablecomment as TableDescription from public.hdr_columns) select row_number() over() TableNo, domain, tablename, TableDescription from a");
+
+            if (tablelist == null || tablelist.Count() == 0)
             {
-                hdrtables = JsonConvert.DeserializeObject<IList<IList<string>>>(result);
+                MessageBox.Show("未读取到hdr_columns表数据！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
             }
 
             for (int i = 0; i < this.ckbData.Items.Count; i++)
             {
                 var tablefullname = this.ckbData.Items[i].ToString();
 
-                var hdrtableitems = hdrtables.FirstOrDefault(p => tablefullname == $"{p[0]}.{p[1]}");
+                var hdrtableitems = tablelist.FirstOrDefault(p => tablefullname == $"{p.Domain}.{p.TableName}");
 
-                if (hdrtableitems != null && (hdrtableitems[0] == "mdm" || hdrtableitems[1] == "hdr_versions" || hdrtableitems[1] == "hdr_versions_modify_rec"))
+                if (hdrtableitems != null && (hdrtableitems.Domain == "mdm" || hdrtableitems.TableName == "hdr_versions" || hdrtableitems.TableName == "hdr_versions_modify_rec"))
                 {
                     this.ckbData.SelectedItems.Add(this.ckbData.Items.GetItemAt(i));
                 }
