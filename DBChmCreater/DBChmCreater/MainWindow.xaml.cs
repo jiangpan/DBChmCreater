@@ -155,12 +155,12 @@ namespace DBChmCreater
         /// <param name="e"></param>
         private void tablesDefaultTable_Click(object sender, RoutedEventArgs e)
         {
-            var result = ini.GetString("Set", "hdrtables", string.Empty);
-            if (hdrtables == null)
-            {
-                hdrtables = JsonConvert.DeserializeObject<IList<IList<string>>>(result);
-            }
-            if (hdrtables == null)
+            var dal = DALFacotry.Create(cbbDbtype.Text, txtConn.Text);
+
+            var tablelist = dal.Query<DataTableItem>("with a as (select distinct  schema as Domain,tablename as TableName, tablecomment as TableDescription from public.hdr_columns) select row_number() over() TableNo, domain, tablename, TableDescription from a");
+
+
+            if (tablelist == null || tablelist.Count() == 0)
             {
                 MessageBox.Show("标准表集合获取失败！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -170,7 +170,7 @@ namespace DBChmCreater
             {
                 var tablefullname = this.ckbTables.Items[i].ToString();
 
-                var hdrtableitems = hdrtables.FirstOrDefault(p => tablefullname == $"{p[0]}.{p[1]}");
+                var hdrtableitems = tablelist.FirstOrDefault(p => tablefullname == $"{p.Domain }.{p.TableName}");
 
                 if (hdrtableitems != null)
                 {
@@ -178,11 +178,11 @@ namespace DBChmCreater
                     selected.Add(tablefullname);
                 }
             }
-            if (!(selected.Count == hdrtables.Count))
+            if (!(selected.Count == tablelist.Count()))
             {
                 var logpath = System.IO.Path.Combine(AppContext.BaseDirectory, $"{DateTime.Now.ToString("yyyyMMddHHmmss")}.log");
 
-                var difftables = hdrtables.Where(p => !selected.Contains($"{p[0]}.{p[1]}")).Select(p => $"{p[0]}.{p[1]}");
+                var difftables = tablelist.Where(p => !selected.Contains($"{p.Domain}.{p.TableName}")).Select(p => $"{p.Domain}.{p.TableName}");
 
                 File.WriteAllText(logpath, $"{DateTime.Now.ToString("yyyyMMddHHmmss")}日志:标准库中{string.Join(";", difftables)}");
                 MessageBox.Show("当前库中表不完整！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);

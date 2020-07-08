@@ -159,7 +159,11 @@ order by 1,2 asc";
             }
             return lst;
         }
-       
+
+        public IEnumerable<T> Query<T>(string sql)
+        {
+            return help.Query<T>(sql);
+        }
     }
 }
 
