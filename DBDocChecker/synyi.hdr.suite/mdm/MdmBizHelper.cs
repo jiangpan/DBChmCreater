@@ -92,6 +92,10 @@ order by domain_id desc
                 }
 
                 Cell cel = row[CellsHelper.ColumnNameToIndex("A")];
+                if (cel == null || cel.Value == null)
+                {
+                    continue;
+                }
 
                 if (cel.IsMerged)
                 {
