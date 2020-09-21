@@ -399,6 +399,12 @@ namespace synyi.hdr.suite
             var result21 = hdrExcelProcesser.ProcessSchemaPublic(worksheets);
             cols.AddRange(result21);
 
+
+            var result22 = hdrExcelProcesser.ProcessSchemaCure(worksheets);
+            cols.AddRange(result22);
+
+
+
             string outfilePath = Path.Combine(basePath, $"{inputfilename}_hdrcolumns_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx");
 
             Workbook wb = new Workbook();
@@ -463,7 +469,7 @@ namespace synyi.hdr.suite
                 }
                 if (p.data_typ == "int4")
                 {
-                    p.data_typ = "int(4)";
+                    p.data_typ = "int";
                 }
                 if (p.data_typ == "int8")
                 {

@@ -410,6 +410,18 @@ namespace synyi.hdr.suite
 
         }
 
+
+        public IList<ExcelColumn> ProcessSchemaCure(WorksheetCollection worksheets)
+        {
+            var sheet = worksheets.Where(p => p.Name == "cure").FirstOrDefault();
+            var cells = sheet.Cells;
+
+            var result = Process(cells);
+
+            return result;
+
+        }
+
         public IList<ExcelColumn> ProcessSchemaSd(WorksheetCollection worksheets)
         {
             var sheet = worksheets.Where(p => p.Name == "sd").FirstOrDefault();
