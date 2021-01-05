@@ -277,11 +277,6 @@ namespace synyi.hdr.suite
                 HdrTablesCollection t = default(HdrTablesCollection);
                 for (int i = startrow + startSkipRows; i <= totalRows - tailIgnoreRows; i++)
                 {
-                    if (i > 70)
-                    {
-
-                    }
-
                     t = Activator.CreateInstance<HdrTablesCollection>();
                     Row row = rows[i];
                     Cell schema = row[0];
