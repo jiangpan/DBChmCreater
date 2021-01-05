@@ -28,7 +28,7 @@ namespace synyi.hdr.suite
             {
                 Row current_row = cells.CheckRow(row);
 
-                if ( current_row == null || current_row.FirstDataCell == null)
+                if (current_row == null || current_row.FirstDataCell == null)
                 {
                     continue;
                 }
@@ -49,6 +49,10 @@ namespace synyi.hdr.suite
                     }
                     continue;
                 }
+                else if (string.IsNullOrWhiteSpace(cel.GetStringValue(CellValueFormatStrategy.None)))
+                {
+                    continue;
+                }
                 else if (cel.GetStringValue(CellValueFormatStrategy.None) == "序号") //列头
                 {
                     continue;
@@ -63,7 +67,7 @@ namespace synyi.hdr.suite
                     var schemaarray = Schema.Split(new string[4] { "（", "）", "(", ")" }, StringSplitOptions.None);
 
                     ec.Schema = schemaarray[0];//业务域（mdm（主数据））
-                    ec.SchemaCh = string.Join("", schemaarray.Where(p => p != schemaarray[0]).ToArray()) ;//业务域（mdm（主数据））
+                    ec.SchemaCh = string.Join("", schemaarray.Where(p => p != schemaarray[0]).ToArray());//业务域（mdm（主数据））
 
                     ec.TableComment = TableComment;//表说明 （机构信息，如：医疗机构、科研机构等） 
                     ec.SerialNumber = cel.GetStringValue(CellValueFormatStrategy.None);//序号	
@@ -98,7 +102,7 @@ namespace synyi.hdr.suite
             string Schema = string.Empty; //业务域（mdm（主数据））
             string TableComment = string.Empty; //表说明 （机构信息，如：医疗机构、科研机构等） 
 
-            for (int row = 0; row <= cells.MaxDataRow ; row++)
+            for (int row = 0; row <= cells.MaxDataRow; row++)
             {
                 Row current_row = cells.CheckRow(row);
 
@@ -398,6 +402,18 @@ namespace synyi.hdr.suite
         public IList<ExcelColumn> ProcessSchemaPublic(WorksheetCollection worksheets)
         {
             var sheet = worksheets.Where(p => p.Name == "public").FirstOrDefault();
+            var cells = sheet.Cells;
+
+            var result = Process(cells);
+
+            return result;
+
+        }
+
+
+        public IList<ExcelColumn> ProcessSchemaCure(WorksheetCollection worksheets)
+        {
+            var sheet = worksheets.Where(p => p.Name == "cure").FirstOrDefault();
             var cells = sheet.Cells;
 
             var result = Process(cells);

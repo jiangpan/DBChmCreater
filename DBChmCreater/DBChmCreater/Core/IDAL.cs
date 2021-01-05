@@ -26,5 +26,6 @@ namespace DBChmCreater.Core
         IList<DataTableItem> GetTables();
         IList<DataTableColumnDefCollection> GetTableStruct(List<string> tables);
         List<DataTable> GetTableData(List<string> tables ,int limitRows);
+        IEnumerable<T> Query<T>(string sql);
     }
 }
